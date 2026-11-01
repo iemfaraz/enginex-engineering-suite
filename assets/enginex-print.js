@@ -1,10 +1,41 @@
 /* Shared report preview. Print clones never modify live project inputs. */
 (()=>{'use strict';
-let dialog,frame,source,title,hasLetterhead=false,orientation='portrait',fit=false,fitChosen=false,oldFocus;
+let dialog,frame,source,title,quotationWidth=0,hasLetterhead=false,orientation='portrait',fit=false,fitChosen=false,oldFocus;
 const isWorkspace=location.pathname.endsWith('/workspace.html');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function stored(key){try{return JSON.parse(localStorage.getItem(key)||'{}');}catch{return {};}}
 function mode(){const main=document.querySelector('#root>.engx-pro-workspace>main');if(!main)return 'Document';if(main.classList.contains('ex-overview-mode'))return 'Overview';if(main.querySelector('input[placeholder="Load description..."]'))return 'Load Schedule';if(main.textContent.includes('Commercial Terms Editor'))return 'Commercial Quotation';if(main.textContent.includes('Bill of Quantities (BOQ)'))return 'Bill of Quantities';if(main.textContent.includes('Material Technical Submittal')&&main.querySelector('[class*="print:shadow-none"]'))return 'Quality Document';return 'Engineering Report';}
+function originalQuotation(element){
+ const copy=element.cloneNode(true), originals=[element,...element.querySelectorAll('*')],clones=[copy,...copy.querySelectorAll('*')];
+ // Freeze the original document's rendered styles, including responsive columns.
+ // No shared BOQ/QC report styles are applied to this copy.
+ const properties=['display','box-sizing','width','min-width','max-width','min-height','padding-top','padding-right','padding-bottom','padding-left','margin-top','margin-right','margin-bottom','margin-left','font-family','font-size','font-weight','font-style','line-height','letter-spacing','text-align','text-transform','text-decoration','color','background-color','background-image','border-top','border-right','border-bottom','border-left','border-collapse','border-spacing','border-radius','vertical-align','white-space','overflow-wrap','word-break','direction','unicode-bidi','flex-direction','flex-wrap','flex-grow','flex-shrink','flex-basis','justify-content','align-items','align-self','gap','row-gap','column-gap','grid-template-columns','grid-template-rows','grid-auto-flow','object-fit','object-position','list-style-type'];
+ for(let i=0;i<originals.length;i++){
+  const from=originals[i],to=clones[i],style=getComputedStyle(from);
+  for(const property of properties)to.style.setProperty(property,style.getPropertyValue(property));
+  to.style.setProperty('box-shadow','none');
+  for(const a of [...to.attributes])if(a.name.startsWith('on')||a.name==='id'||a.name==='contenteditable')to.removeAttribute(a.name);
+ }
+ const originalControls=[...element.querySelectorAll('input,textarea,select')];
+ [...copy.querySelectorAll('input,textarea,select')].forEach((input,i)=>{const o=originalControls[i],value=document.createElement('span');value.style.cssText=input.style.cssText;value.textContent=o.tagName==='SELECT'?o.selectedOptions[0]?.textContent||'':o.value;input.replaceWith(value);});
+ copy.querySelectorAll('button,script,style,link,iframe,input[type=file]').forEach(x=>x.remove());
+ quotationWidth=element.getBoundingClientRect().width;
+ copy.style.width=quotationWidth+'px';copy.style.maxWidth='none';copy.style.height='auto';copy.style.boxShadow='none';copy.style.border='0';copy.style.borderRadius='0';
+ return copy;
+}
+function renderOriginalQuotation(){
+ const availableWidth=(orientation==='landscape'?277:190)*96/25.4;
+ const pageHeight=(orientation==='landscape'?190:277)*96/25.4-6;
+ frame.onload=()=>{
+  const paper=frame.contentDocument.getElementById('print-paper');if(!paper)return;
+  const widthScale=Math.min(1,availableWidth/quotationWidth),naturalHeight=paper.getBoundingClientRect().height;
+  let scale=fit?Math.min(widthScale,pageHeight/naturalHeight):widthScale;
+  if(fit&&!fitChosen&&scale<widthScale*.8){fit=false;scale=widthScale;dialog.querySelector('#ex-print-fit').checked=false;}
+  paper.style.zoom=String(scale);
+  dialog.querySelector('#ex-print-hint').textContent='Original quotation layout · '+(fit?'Fit to one page':'Automatic pages')+' · '+Math.round(scale*100)+'% · Letterhead, columns, totals, terms and signatures preserved.';
+ };
+ frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><base href="'+esc(location.href)+'"><title>Quotation — ENGINEX</title><style>html,body{margin:0;background:white;}#print-paper{width:'+quotationWidth+'px;margin:0 auto;overflow:visible;}table{break-inside:auto;}thead{display:table-header-group;}tr{break-inside:avoid;}p{orphans:3;widows:3;}@page{size:A4 '+orientation+';margin:10mm;}@media print{html,body{overflow:visible!important;}#print-paper{margin:0!important;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div id="print-paper">'+source.outerHTML+'</div></body></html>';
+}
 function prepareSource(){
  title=isWorkspace?mode():document.querySelector('.sheet h1')?.textContent||'Site Document';
  if(title==='Overview'){alert('Open a document, BOQ, quotation or load schedule before printing.');return false;}
@@ -12,6 +43,7 @@ function prepareSource(){
  const main=isWorkspace?document.querySelector('#root>.engx-pro-workspace>main'):document.querySelector('.sheet');
  if(!main){alert('Select a document before printing.');return false;}
  const official=main.querySelector('[class*="print:shadow-none"]');hasLetterhead=!!official||!isWorkspace;source=(official||main).cloneNode(true);
+ if(title==='Commercial Quotation'){if(!official){alert('Open the original quotation document before printing.');return false;}source=originalQuotation(official);return true;}
  // Keep current editor values, selected options and all multiline notes in the printed clone.
  const originals=[...(official||main).querySelectorAll('input,textarea,select')];
  const copies=[...source.querySelectorAll('input,textarea,select')];
@@ -56,6 +88,7 @@ body.document .ex-report-body table[data-columns="2"] tr>:first-child{width:25%!
 @media print{html,body{width:auto!important;height:auto!important;overflow:visible!important}.ex-paper{width:100%!important;box-shadow:none!important;margin:0!important}header,button,nav{display:none!important}}
 `;
 function render(){
+ if(title==='Commercial Quotation'){renderOriginalQuotation();return;}
  const project=stored('copperline_project_v3'),company=stored('copperline_company_v3');
  const baseStyles=[...document.querySelectorAll('style')].filter(s=>!s.id).slice(0,1).map(s=>s.textContent).join('\n');
  const width=orientation==='landscape'?277:190;
