@@ -1,18 +1,22 @@
-# ENGINEX Engineering Suite
+# ENGINEX Engineering Suite v8.5
 
-A browser-based workspace for electrical design, estimating, project controls and site documentation by Engineer Faraz Nawaz.
+Professional electrical engineering tools, project controls and site documentation by Engineer Faraz Nawaz, with a Node.js backend and SQLite account database.
 
 ## Run
-Open `index.html` in a modern browser, or serve the repository root with a static web host. Keep `app/` and `assets/` in their existing locations. No build step is required.
+Install Node.js 24+, run `npm start`, then open `http://localhost:3000`. Select **Create an account** to register. No package installation or frontend build step is required.
 
-## Interface v8.4
-- Responsive overview dashboard with direct module launchers
-- Searchable workspace navigation and collapsible sidebar
-- Shared navy, copper and white interface across six engineering modules
-- Redesigned sign-in portal, accessible focus states and reduced-motion support
-- Original engineering engines, saved-project keys and print layouts retained
+The server must run for authentication, protected modules and database-backed account backups. GitHub Pages/static-only hosting does not run this backend. See [DEPLOYMENT.md](DEPLOYMENT.md) for HTTPS, persistent storage and first administrator configuration.
 
-## Before production use
-This offline edition uses browser-local accounts and storage. It does not provide server-enforced authentication or shared project storage. Do not store confidential production data in a public demonstration. Use project exports/backups; review calculated outputs against the actual project requirements before use.
+## Included
+- Email/password registration and login
+- scrypt password hashing, HttpOnly sessions, CSRF checks and rate limits
+- Password changes with session revocation
+- Administrator user-role and access management
+- Separate account storage and database-backed workspace backups
+- Professional responsive dashboard and searchable engineering tools
+- Existing calculation engines, export tools and report layouts
 
-The original offline account information is in `README-OFFLINE.md`. Introduction videos are compressed for web delivery.
+## Verify
+Run `npm test`. Integration tests use temporary databases.
+
+No production credentials or default administrator password are included. Configure administrator secrets through your hosting environment. Email verification and email password recovery require an email provider and are not enabled. Project backups use last-write-wins; keep important exports and avoid simultaneous edits on multiple devices.

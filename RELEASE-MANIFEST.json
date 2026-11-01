@@ -1,10 +1,35 @@
 {
   "product": "ENGINEX Engineering Suite",
-  "version": "8.4-professional-interface",
+  "version": "8.5-backend-accounts",
   "package": "ENGINEX-Engineering-Suite-Professional-Workspace-v8.3-Scheduler-P6.zip",
   "createdBy": "ENGINEX",
   "generatedAt": "2026-09-15T19:30:00+00:00",
   "files": [
+    {
+      "file": ".dockerignore",
+      "bytes": 48,
+      "sha256": "f7b985438298bee4b686c3f4c0634e372e377b8d507fece11e854d491ff34510"
+    },
+    {
+      "file": ".env.example",
+      "bytes": 411,
+      "sha256": "a584b42946a465b647cddb088b02aa8185bcd8c565fcdbb7fdd117f322416c76"
+    },
+    {
+      "file": ".gitignore",
+      "bytes": 81,
+      "sha256": "e4232f6fd9b44f00c8ae01f8b838f71c1970a8133b39a525477ec215e1eb9fa6"
+    },
+    {
+      "file": "DEPLOYMENT.md",
+      "bytes": 5012,
+      "sha256": "a5852a7654ac53775f03f6fe13300135afea468683afd8643521b0d8338ecd76"
+    },
+    {
+      "file": "Dockerfile",
+      "bytes": 408,
+      "sha256": "bd78be25456ceb2811091c20a56b5343ecef3e2091060e845efdca888a0f8bae"
+    },
     {
       "file": "README-OFFLINE.md",
       "bytes": 4131,
@@ -17,8 +42,13 @@
     },
     {
       "file": "README.md",
-      "bytes": 1170,
-      "sha256": "e58cfbfee075227bdcf448d3ee4686bf18047e678ffb08e6af21b4f93d9019dc"
+      "bytes": 1468,
+      "sha256": "51cca84ec2cd773e2b17c8480fabdc3ef8581de82d6fc6817be74006f7623181"
+    },
+    {
+      "file": "account.html",
+      "bytes": 1910,
+      "sha256": "9d5dd3a14d6767a8a0a427a3848ffa652dcf97dd3bfbbef77c9666ab51b13197"
     },
     {
       "file": "app/copperline-transformer-suite.html",
@@ -51,6 +81,16 @@
       "sha256": "8021564b98ddaf2765b6e7c32019fed52643c5f036c577fea444eafbc4d1fa9b"
     },
     {
+      "file": "assets/enginex-account.js",
+      "bytes": 2051,
+      "sha256": "ac181613428f3f92734d96c57798c977adcaa5e2b1d2fa4e75cca72354eec47a"
+    },
+    {
+      "file": "assets/enginex-auth.js",
+      "bytes": 4973,
+      "sha256": "d783207e7f9d8f2eaaca1cdb9b7012d28eb3fd35d71f1bd14da64abd01247374"
+    },
+    {
       "file": "assets/enginex-engineering-suite-introduction.mp4",
       "bytes": 3959476,
       "sha256": "9c52dc66a97ccb17a219a0768309360e9b6ce0921e1e52200aa67ed1a42b9068"
@@ -76,14 +116,44 @@
       "sha256": "af77b6eedc78d4646a89765bc1c3b119ad18044cbb61f1ef2cd2c569ccc75631"
     },
     {
+      "file": "assets/enginex-login.js",
+      "bytes": 1412,
+      "sha256": "769d99527640dd4be916c3195018ce2c420a5eae5b886f798ca5bfffa8eb227d"
+    },
+    {
       "file": "assets/enginex-professional-introduction-fullscreen.mp4",
       "bytes": 3590352,
       "sha256": "35689d9539ce5ae2a42cad6ec7dc0caf762e34732a68ce5f4be1f771f8c863da"
     },
     {
+      "file": "compose.yaml",
+      "bytes": 402,
+      "sha256": "029aceff8316e89dda4b66e2974b3512951f71b430858a876d7c5bf0c22c510e"
+    },
+    {
       "file": "index.html",
       "bytes": 614,
       "sha256": "5f94e4f56d8bebacbc7ea406ac99573031c497c6c4122e6712042df85572bb7d"
+    },
+    {
+      "file": "login.html",
+      "bytes": 3543,
+      "sha256": "eda442f5798232b03c47cd14b5bdb43431423c8d54c81db4da81fa56333326ca"
+    },
+    {
+      "file": "package.json",
+      "bytes": 227,
+      "sha256": "8945ee50ec4193f0e6854a523ba5807c59f4f3fc17d7e058e6b1762d251a6106"
+    },
+    {
+      "file": "server/server.js",
+      "bytes": 10978,
+      "sha256": "48ebdf76cd9cd90c7412013cefe9a3177fe4a9df79852f8307a1b9fc517659ad"
+    },
+    {
+      "file": "tests/auth.test.js",
+      "bytes": 5160,
+      "sha256": "9bcf2def3fd71d71974c58bee84021f95a5790ba1d69cabc6ecbb1ed4d8593f1"
     }
   ],
   "updates": [
@@ -102,7 +172,8 @@
     "Smart Schedule replaced with EngineX Scheduler P6: full CPM engine (forward/backward pass, total/free float, critical path), FS/SS/FF/SF relationships with lag/lead, working-day calendars with KSA holidays, constraints (SNET/SNLT/FNET/FNLT/MSO/MFO/ALAP), baselines with variance, EVM (PV/EV/AC/SPI/CPI/EAC), resource histograms, DCMA 14-point schedule quality check, and CSV/JSON import-export. Same launcher slot and file name, so no other workspace changes were needed.",
     "Users & Access is now Administrator-only: non-administrator accounts do not see the Users & Access tab, and create/delete user actions are also blocked by an in-app role check. The administrator can provision usernames, passwords, and roles while regular engineers retain normal workspace access.",
     "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed.",
-    "Professional interface refresh: responsive overview, searchable navigation, unified module styling, accessible portal and honest browser-local storage labels."
+    "Professional interface refresh: responsive overview, searchable navigation, unified module styling, accessible portal and honest browser-local storage labels.",
+    "Node 24 + SQLite backend: registration, scrypt password hashing, server-side sessions, CSRF, rate limits, role management and per-account database workspace backups."
   ],
   "notes": "Added functional Users & Access account provisioning, username/password login validation, password update persistence, reliable Home Portal sign-out return, and Administrator-only user management access."
 }

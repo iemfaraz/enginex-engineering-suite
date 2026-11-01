@@ -1,0 +1,15 @@
+services:
+  enginex:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      APP_ORIGIN: ${APP_ORIGIN:?Set the external HTTPS URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Set the administrator email}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set a unique administrator password}
+    volumes:
+      - enginex-data:/data
+    restart: unless-stopped
+volumes:
+  enginex-data:
