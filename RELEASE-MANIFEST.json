@@ -1,6 +1,6 @@
 {
   "product": "ENGINEX Engineering Suite",
-  "version": "8.3-scheduler-p6",
+  "version": "8.4-professional-interface",
   "package": "ENGINEX-Engineering-Suite-Professional-Workspace-v8.3-Scheduler-P6.zip",
   "createdBy": "ENGINEX",
   "generatedAt": "2026-09-15T19:30:00+00:00",
@@ -16,39 +16,54 @@
       "sha256": "94e10cd9b03e0cca79d7cdbdaa2408a57bf2a0f6c3aed9be0fefb4ca62507dd9"
     },
     {
+      "file": "README.md",
+      "bytes": 1170,
+      "sha256": "e58cfbfee075227bdcf448d3ee4686bf18047e678ffb08e6af21b4f93d9019dc"
+    },
+    {
       "file": "app/copperline-transformer-suite.html",
-      "bytes": 49715,
-      "sha256": "b6956c5bcebcdbdce98fc9e9ad5362867b2c9b608d47763203aafde2543db3d1"
+      "bytes": 49833,
+      "sha256": "87da8433cfc296e2c9b1132db3043341cfe5986b5440289cc084d502f6adbf98"
     },
     {
       "file": "app/enginex-automatic-board-sizing.html",
-      "bytes": 33660,
-      "sha256": "99e9d1eff13a923fbd8ff59df42ab2f9d783e894ae0ce6dcf7f4c92717ec1ad3"
+      "bytes": 33778,
+      "sha256": "e9d649696f1dcdeb7bd84d5ba50202c45b95bf23b519a9360e82507e239ee041"
     },
     {
       "file": "app/enginex-project-planning-tutorial.html",
-      "bytes": 136005,
-      "sha256": "b1f0f16c62c32dc76dc332f954cf41c4e3d267c7558b5730f91621880021f392"
+      "bytes": 136123,
+      "sha256": "19e627fdf3278a685ab3c2e1853d10cfe74845e4e373226064d898eb600575a9"
     },
     {
       "file": "app/enginex-site-forms.html",
-      "bytes": 95221,
-      "sha256": "cbee513887c67fd1ad216d3b96a9e1d7250ee64f14b0a6c8a8be8c0ba5124a77"
+      "bytes": 95339,
+      "sha256": "334c0fccce70d54b97a31e501dc9b27a2065e9bbb92ce79baa2cdacf5300b748"
     },
     {
       "file": "app/enginex-smart-project-schedule.html",
-      "bytes": 118442,
-      "sha256": "5cc59ca3441046e675700a229a8a9e180d5d7ea1a14148622493fc048591cc14"
+      "bytes": 118560,
+      "sha256": "e514669a34f2449da833e5c1afcf7b1bd190952e7b06e5f3bcdac1f437dd2673"
     },
     {
       "file": "app/workspace.html",
-      "bytes": 1990998,
-      "sha256": "b809ded5e95920c4493c2bb84ce7699b91d662e86c4661bfa0bcfb2b8a231378"
+      "bytes": 1991116,
+      "sha256": "8021564b98ddaf2765b6e7c32019fed52643c5f036c577fea444eafbc4d1fa9b"
     },
     {
       "file": "assets/enginex-engineering-suite-introduction.mp4",
       "bytes": 3959476,
       "sha256": "9c52dc66a97ccb17a219a0768309360e9b6ce0921e1e52200aa67ed1a42b9068"
+    },
+    {
+      "file": "assets/enginex-interface.css",
+      "bytes": 18275,
+      "sha256": "0fd9322bc4e02e006403b9bade37043ab336422ff18ac2d989339870eae1e03a"
+    },
+    {
+      "file": "assets/enginex-interface.js",
+      "bytes": 6329,
+      "sha256": "c56e99d1983f2f1dff092f583dbc0fa80e6098dfbc2d5a50ddf8799e1e8e26b0"
     },
     {
       "file": "assets/enginex-login-cover.png",
@@ -86,7 +101,8 @@
     "All three dedicated tools return cleanly to the Workspace when closed.",
     "Smart Schedule replaced with EngineX Scheduler P6: full CPM engine (forward/backward pass, total/free float, critical path), FS/SS/FF/SF relationships with lag/lead, working-day calendars with KSA holidays, constraints (SNET/SNLT/FNET/FNLT/MSO/MFO/ALAP), baselines with variance, EVM (PV/EV/AC/SPI/CPI/EAC), resource histograms, DCMA 14-point schedule quality check, and CSV/JSON import-export. Same launcher slot and file name, so no other workspace changes were needed.",
     "Users & Access is now Administrator-only: non-administrator accounts do not see the Users & Access tab, and create/delete user actions are also blocked by an in-app role check. The administrator can provision usernames, passwords, and roles while regular engineers retain normal workspace access.",
-    "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed."
+    "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed.",
+    "Professional interface refresh: responsive overview, searchable navigation, unified module styling, accessible portal and honest browser-local storage labels."
   ],
   "notes": "Added functional Users & Access account provisioning, username/password login validation, password update persistence, reliable Home Portal sign-out return, and Administrator-only user management access."
 }
