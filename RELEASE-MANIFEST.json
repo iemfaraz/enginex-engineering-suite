@@ -1,6 +1,6 @@
 {
   "product": "ENGINEX Engineering Suite",
-  "version": "8.5-backend-accounts",
+  "version": "8.5.1-reference-login",
   "package": "ENGINEX-Engineering-Suite-Professional-Workspace-v8.3-Scheduler-P6.zip",
   "createdBy": "ENGINEX",
   "generatedAt": "2026-09-15T19:30:00+00:00",
@@ -116,9 +116,19 @@
       "sha256": "af77b6eedc78d4646a89765bc1c3b119ad18044cbb61f1ef2cd2c569ccc75631"
     },
     {
+      "file": "assets/enginex-login-reference.png",
+      "bytes": 2708970,
+      "sha256": "dba743d222ba0ddb964f61a693543c78bf2538f0bf8db2df4b65f432e33fb14a"
+    },
+    {
+      "file": "assets/enginex-login.css",
+      "bytes": 7008,
+      "sha256": "3d738483ea123aedbf258260108307248679327f125b42e9a19468c3231c799a"
+    },
+    {
       "file": "assets/enginex-login.js",
-      "bytes": 1412,
-      "sha256": "769d99527640dd4be916c3195018ce2c420a5eae5b886f798ca5bfffa8eb227d"
+      "bytes": 2143,
+      "sha256": "c1cb21b910c4b7e333585a917f94b4f728965571c08a115756d29ad0fe28a4c5"
     },
     {
       "file": "assets/enginex-professional-introduction-fullscreen.mp4",
@@ -137,18 +147,18 @@
     },
     {
       "file": "login.html",
-      "bytes": 3543,
-      "sha256": "eda442f5798232b03c47cd14b5bdb43431423c8d54c81db4da81fa56333326ca"
+      "bytes": 4547,
+      "sha256": "19a07de1f207cca9dcf4a4f52982086b10a69fe83f1058dd0f64b70c870f2ba7"
     },
     {
       "file": "package.json",
-      "bytes": 227,
-      "sha256": "8945ee50ec4193f0e6854a523ba5807c59f4f3fc17d7e058e6b1762d251a6106"
+      "bytes": 282,
+      "sha256": "209753f4df4da45e1e59d2af8998567d3b8b26b5db8ae59ef9fb2cc1ed93500c"
     },
     {
       "file": "server/server.js",
-      "bytes": 10978,
-      "sha256": "48ebdf76cd9cd90c7412013cefe9a3177fe4a9df79852f8307a1b9fc517659ad"
+      "bytes": 11044,
+      "sha256": "09c54c78a28f156984e635add2a400d14e5741b2ed6c3b09f3f43d27af5daed3"
     },
     {
       "file": "tests/auth.test.js",
@@ -173,7 +183,8 @@
     "Users & Access is now Administrator-only: non-administrator accounts do not see the Users & Access tab, and create/delete user actions are also blocked by an in-app role check. The administrator can provision usernames, passwords, and roles while regular engineers retain normal workspace access.",
     "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed.",
     "Professional interface refresh: responsive overview, searchable navigation, unified module styling, accessible portal and honest browser-local storage labels.",
-    "Node 24 + SQLite backend: registration, scrypt password hashing, server-side sessions, CSRF, rate limits, role management and per-account database workspace backups."
+    "Node 24 + SQLite backend: registration, scrypt password hashing, server-side sessions, CSRF, rate limits, role management and per-account database workspace backups.",
+    "Reference-inspired navy/gold login artwork, interactive light/dark theme, accessible password visibility control and matching registration card."
   ],
   "notes": "Added functional Users & Access account provisioning, username/password login validation, password update persistence, reliable Home Portal sign-out return, and Administrator-only user management access."
 }

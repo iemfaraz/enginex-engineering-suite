@@ -85,7 +85,7 @@ export const server=http.createServer(async(req,res)=>{headers(res);try{
  }
  if(!['GET','HEAD'].includes(method))fail(405,'Method not allowed');
  if(path==='/'||path==='/index.html'){res.writeHead(302,{Location:u?'/app/workspace.html':'/login.html'});return res.end();}
- const publicFiles=new Set(['/login.html','/assets/enginex-interface.css','/assets/enginex-login.js']);
+ const publicFiles=new Set(['/login.html','/assets/enginex-interface.css','/assets/enginex-login.js','/assets/enginex-login.css','/assets/enginex-login-reference.png']);
  if(!publicFiles.has(path)&&!u){res.writeHead(302,{Location:'/login.html'});return res.end();}
  // Explicit allow-list: database, server, tests and configuration cannot be downloaded.
  if(path!=='/account.html'&&!publicFiles.has(path)&&!/^\/(app\/[a-z0-9-]+\.html|assets\/[a-z0-9-]+\.(png|mp4|css|js))$/.test(path))fail(404,'Not found');
