@@ -8,7 +8,7 @@ if(!location.pathname.endsWith('/workspace.html'))return;
 function mark(){
  const shell=document.querySelector('#root>.engx-pro-workspace'),header=shell?.querySelector(':scope>header');
  if(header&&!document.getElementById('ex-browser-banner')){
-  const note=document.createElement('div');note.id='ex-browser-banner';note.textContent='Browser edition · Projects are saved on this device · Export backups regularly';note.style.cssText='padding:9px 24px 9px 278px;background:#fff6e9;border-top:1px solid #ecdcca;color:#765128;font:11px/1.5 Segoe UI,Arial,sans-serif';const account=document.createElement('a');account.href='../dashboard.html';account.textContent='Account dashboard / Sign in →';account.style.cssText='margin-left:18px;color:#765128;font-weight:700';note.append(account);header.append(note);
+  const note=document.createElement('div');note.id='ex-browser-banner';note.textContent='Browser edition · Projects are saved on this device · Export backups regularly';note.style.cssText='padding:9px 24px 9px 278px;background:#fff6e9;border-top:1px solid #ecdcca;color:#765128;font:11px/1.5 Segoe UI,Arial,sans-serif';const account=document.createElement('a');account.href='../dashboard.html';account.textContent='Account dashboard / Sign in →';account.style.cssText='margin-left:18px;color:#765128;font-weight:700';note.append(account);const receive=document.createElement('a');receive.href='../receive.html';receive.textContent='Receive / Import Data';receive.style.cssText='margin-left:18px;color:#765128;font-weight:700';note.append(receive);header.append(note);
  }
  if(header)for(const b of header.querySelectorAll('button')){
   const label=b.textContent+' '+b.title+' '+b.getAttribute('aria-label');
