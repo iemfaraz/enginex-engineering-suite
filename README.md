@@ -23,3 +23,6 @@ No production credentials or default administrator password are included. Config
 
 ## Printing
 Open a document, BOQ, quotation or load schedule and select **Print / Export**. The report preview uses A4 portrait for documents/BOQs/quotations and A4 landscape for load schedules. Choose the paper orientation and **Fit one page**, then **Print / Save PDF**. Short reports fit automatically; longer reports remain multi-page at readable size. Repeated table headings, wrapped descriptions and preserved current field values prevent the workspace layout from clipping content. Choose A4 and disable the browser’s own headers/footers in the system print dialog for the cleanest result.
+
+## GitHub Pages browser edition
+The public GitHub Pages website opens the engineering workspace directly. Projects stay in that browser on that device; export JSON backups and import them to move work. This edition has no server-backed accounts, cloud database or cross-device synchronization. Its local guest profile is for interface display only and is not a security boundary. The Node backend remains available in this repository for a separate backend-capable host. Quotation printing preserves the original document layout.
