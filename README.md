@@ -20,3 +20,6 @@ The server must run for authentication, protected modules and database-backed ac
 Run `npm test`. Integration tests use temporary databases.
 
 No production credentials or default administrator password are included. Configure administrator secrets through your hosting environment. Email verification and email password recovery require an email provider and are not enabled. Project backups use last-write-wins; keep important exports and avoid simultaneous edits on multiple devices.
+
+## Printing
+Open a document, BOQ, quotation or load schedule and select **Print / Export**. The report preview uses A4 portrait for documents/BOQs/quotations and A4 landscape for load schedules. Choose the paper orientation and **Fit one page**, then **Print / Save PDF**. Short reports fit automatically; longer reports remain multi-page at readable size. Repeated table headings, wrapped descriptions and preserved current field values prevent the workspace layout from clipping content. Choose A4 and disable the browser’s own headers/footers in the system print dialog for the cleanest result.

@@ -1,6 +1,6 @@
 {
   "product": "ENGINEX Engineering Suite",
-  "version": "8.5.1-reference-login",
+  "version": "8.5.2-professional-print",
   "package": "ENGINEX-Engineering-Suite-Professional-Workspace-v8.3-Scheduler-P6.zip",
   "createdBy": "ENGINEX",
   "generatedAt": "2026-09-15T19:30:00+00:00",
@@ -42,8 +42,8 @@
     },
     {
       "file": "README.md",
-      "bytes": 1468,
-      "sha256": "51cca84ec2cd773e2b17c8480fabdc3ef8581de82d6fc6817be74006f7623181"
+      "bytes": 2069,
+      "sha256": "d4552cbaa6cd4ecebd3fac67662f70a112a15b8515ff39e70cb054ff2c89c83d"
     },
     {
       "file": "account.html",
@@ -67,8 +67,8 @@
     },
     {
       "file": "app/enginex-site-forms.html",
-      "bytes": 95339,
-      "sha256": "334c0fccce70d54b97a31e501dc9b27a2065e9bbb92ce79baa2cdacf5300b748"
+      "bytes": 95390,
+      "sha256": "dda82c4c3d9dce6a998b4c35afc2e9f0c3d86dadcae3a83491cff0afb9a3d1f1"
     },
     {
       "file": "app/enginex-smart-project-schedule.html",
@@ -77,8 +77,8 @@
     },
     {
       "file": "app/workspace.html",
-      "bytes": 1991116,
-      "sha256": "8021564b98ddaf2765b6e7c32019fed52643c5f036c577fea444eafbc4d1fa9b"
+      "bytes": 1991167,
+      "sha256": "510215e65a58eeffea666b50f03941aea9239e85305a10fc52136638242cc663"
     },
     {
       "file": "assets/enginex-account.js",
@@ -131,6 +131,11 @@
       "sha256": "c1cb21b910c4b7e333585a917f94b4f728965571c08a115756d29ad0fe28a4c5"
     },
     {
+      "file": "assets/enginex-print.js",
+      "bytes": 16230,
+      "sha256": "cd8b04c0b181184d5fd53efcebabea2cd62781961fd48ea0310e3b03621a2e38"
+    },
+    {
       "file": "assets/enginex-professional-introduction-fullscreen.mp4",
       "bytes": 3590352,
       "sha256": "35689d9539ce5ae2a42cad6ec7dc0caf762e34732a68ce5f4be1f771f8c863da"
@@ -153,7 +158,7 @@
     {
       "file": "package.json",
       "bytes": 282,
-      "sha256": "209753f4df4da45e1e59d2af8998567d3b8b26b5db8ae59ef9fb2cc1ed93500c"
+      "sha256": "131ad7744279ec2ad40292959dd777bf34e2b02a7c2a3971c3fc60a62c02198c"
     },
     {
       "file": "server/server.js",
@@ -184,7 +189,8 @@
     "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed.",
     "Professional interface refresh: responsive overview, searchable navigation, unified module styling, accessible portal and honest browser-local storage labels.",
     "Node 24 + SQLite backend: registration, scrypt password hashing, server-side sessions, CSRF, rate limits, role management and per-account database workspace backups.",
-    "Reference-inspired navy/gold login artwork, interactive light/dark theme, accessible password visibility control and matching registration card."
+    "Reference-inspired navy/gold login artwork, interactive light/dark theme, accessible password visibility control and matching registration card.",
+    "Unified A4 report preview for BOQs, quotations, QC/site documents and load schedules; adaptive one-page fitting, portrait/landscape selection, current-value capture, wrapped columns and repeated headings."
   ],
   "notes": "Added functional Users & Access account provisioning, username/password login validation, password update persistence, reliable Home Portal sign-out return, and Administrator-only user management access."
 }
