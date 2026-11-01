@@ -1,13 +1,14 @@
 /* GitHub Pages browser edition. Local profile metadata is not authentication. */
 (()=>{'use strict';
 if(location.hostname!=='iemfaraz.github.io')return;
+if(window.ENGINEX_CLOUD?.url&&window.ENGINEX_CLOUD?.publishableKey){window.ENGINEX_READY=import('./enginex-cloud-workspace.js').then(m=>m.start()).catch(()=>{document.documentElement.style.visibility='';document.body.replaceChildren();const p=document.createElement('p');p.textContent='Unable to connect to account services. Check your connection and reload this page.';p.style.cssText='padding:40px;font:18px Segoe UI,sans-serif';document.body.append(p);return new Promise(()=>{});});return;}
 const profile={username:'browser-workspace',displayName:'Browser workspace',role:'Engineer',title:'Browser edition'};
 try{localStorage.setItem('copperline_session_user',JSON.stringify(profile));}catch{}
 if(!location.pathname.endsWith('/workspace.html'))return;
 function mark(){
  const shell=document.querySelector('#root>.engx-pro-workspace'),header=shell?.querySelector(':scope>header');
  if(header&&!document.getElementById('ex-browser-banner')){
-  const note=document.createElement('div');note.id='ex-browser-banner';note.textContent='Browser edition · Projects are saved on this device · Export backups regularly';note.style.cssText='padding:9px 24px 9px 278px;background:#fff6e9;border-top:1px solid #ecdcca;color:#765128;font:11px/1.5 Segoe UI,Arial,sans-serif';header.append(note);
+  const note=document.createElement('div');note.id='ex-browser-banner';note.textContent='Browser edition · Projects are saved on this device · Export backups regularly';note.style.cssText='padding:9px 24px 9px 278px;background:#fff6e9;border-top:1px solid #ecdcca;color:#765128;font:11px/1.5 Segoe UI,Arial,sans-serif';const account=document.createElement('a');account.href='../dashboard.html';account.textContent='Account dashboard / Sign in →';account.style.cssText='margin-left:18px;color:#765128;font-weight:700';note.append(account);header.append(note);
  }
  if(header)for(const b of header.querySelectorAll('button')){
   const label=b.textContent+' '+b.title+' '+b.getAttribute('aria-label');
