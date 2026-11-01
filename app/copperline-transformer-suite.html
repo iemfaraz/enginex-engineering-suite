@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ENGINEX Transformer Engineering Suite</title>
+<style>
+  :root{
+    --amber:#f59e0b; --amber-dark:#d97706; --amber-50:#fffbeb;
+    --slate-950:#0a0e17; --slate-900:#0f172a; --slate-800:#1e293b; --slate-700:#334155;
+    --slate-500:#64748b; --slate-400:#94a3b8; --slate-300:#cbd5e1; --slate-200:#e2e8f0; --slate-100:#f1f5f9; --slate-50:#f8fafc;
+    --emerald:#059669; --emerald-bg:#d1fae5; --rose:#e11d48; --rose-bg:#ffe4e6; --blue:#2563eb; --blue-bg:#dbeafe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:var(--slate-100);color:var(--slate-900);font-size:13px;}
+  header{background:var(--slate-950);color:#fff;border-bottom:1px solid var(--slate-800);position:sticky;top:0;z-index:30;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+  .header-inner{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-badge{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1c1204;font-size:16px}
+  .brand h1{font-size:15px;margin:0;font-weight:800;letter-spacing:.2px}
+  .brand span{color:var(--amber);font-weight:600;font-size:11px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);padding:2px 8px;border-radius:99px;margin-left:8px}
+  .subtitle{font-size:11px;color:var(--slate-400);margin-top:2px}
+  .kpi-pill{font-size:10px;font-weight:700;color:#fcd34d;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:4px 10px;border-radius:99px}
+
+  nav.tabs{background:var(--slate-900);border-bottom:2px solid var(--amber);overflow-x:auto}
+  .tabs-inner{max-width:1180px;margin:0 auto;display:flex;gap:4px;padding:6px 14px}
+  .tab-btn{flex:0 0 auto;background:transparent;border:1px solid transparent;color:var(--slate-400);font-weight:700;font-size:11.5px;padding:9px 13px;border-radius:9px 9px 0 0;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tab-btn:hover{color:#fff;background:rgba(255,255,255,.05)}
+  .tab-btn.active{color:#0a0e17;background:var(--amber)}
+
+  main{max-width:1180px;margin:0 auto;padding:22px 20px 60px}
+  .panel{display:none}
+  .panel.active{display:block;animation:fade .18s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+
+  .card{background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card h2{font-size:14px;margin:0 0 3px;font-weight:800;color:var(--slate-900);display:flex;align-items:center;gap:8px}
+  .card .desc{font-size:11.5px;color:var(--slate-500);margin:0 0 16px}
+  .grid{display:grid;gap:12px}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:720px){.grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:repeat(2,1fr)}}
+
+  label.field{display:block}
+  label.field span{display:block;font-size:10px;font-weight:800;color:var(--slate-500);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+  input[type=text],input[type=number],input[type=date],select,textarea{
+    width:100%;font-size:12.5px;padding:8px 10px;border:1px solid var(--slate-300);border-radius:8px;background:var(--slate-50);color:var(--slate-900);font-family:inherit
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+  textarea{resize:vertical}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:8px 14px;border-radius:8px;border:1px solid var(--slate-300);background:#fff;color:var(--slate-700);cursor:pointer;transition:.15s}
+  .btn:hover{background:var(--slate-100)}
+  .btn-primary{background:var(--amber);border-color:var(--amber-dark);color:#241a03}
+  .btn-primary:hover{background:var(--amber-dark);color:#fff}
+  .btn-dark{background:var(--slate-900);border-color:var(--slate-900);color:#fff}
+  .btn-dark:hover{background:var(--slate-800)}
+  .btn-danger{color:var(--rose);border-color:#fecdd3}
+  .btn-danger:hover{background:var(--rose-bg)}
+  .btn-sm{padding:5px 9px;font-size:10.5px}
+
+  .result-box{background:var(--slate-950);color:#fff;border-radius:12px;padding:16px 18px;margin-top:14px}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--slate-300)}
+  .result-row:last-child{border-bottom:none}
+  .result-row b{color:#fff}
+  .result-hero{font-size:24px;font-weight:900;color:#fbbf24}
+  .result-hero .unit{font-size:12px;font-weight:600;color:var(--slate-400)}
+  .badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;border:1px solid}
+  .badge.ok{background:var(--emerald-bg);color:#065f46;border-color:#a7f3d0}
+  .badge.warn{background:#fef3c7;color:#92400e;border-color:#fde68a}
+  .badge.bad{background:var(--rose-bg);color:#9f1239;border-color:#fecdd3}
+  .badge.blue{background:var(--blue-bg);color:#1e40af;border-color:#bfdbfe}
+
+  table{width:100%;border-collapse:collapse;font-size:11.5px}
+  th{background:var(--slate-100);color:var(--slate-600);font-size:9.5px;text-transform:uppercase;letter-spacing:.3px;font-weight:800;text-align:left;padding:8px 9px;border-bottom:1px solid var(--slate-200)}
+  td{padding:6px 9px;border-bottom:1px solid var(--slate-100);vertical-align:middle}
+  td input,td select{padding:5px 7px;font-size:11.5px}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--slate-200);border-radius:10px}
+
+  .note{font-size:11px;color:var(--slate-600);background:var(--slate-50);border:1px solid var(--slate-200);border-radius:10px;padding:10px 12px;line-height:1.5}
+  .note b{color:var(--slate-900)}
+  .flex{display:flex;align-items:center}
+  .between{justify-content:space-between}
+  .gap{gap:8px}
+  .mt{margin-top:14px}
+  .mb{margin-bottom:14px}
+  .right{text-align:right}
+  .center{text-align:center}
+  .muted{color:var(--slate-500)}
+  .doc-header{border:2px solid var(--slate-900);border-radius:10px;overflow:hidden;margin-bottom:18px}
+  .doc-strip{background:var(--slate-900);color:#fcd34d;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:6px 14px}
+  .doc-boxes{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--slate-900)}
+  .doc-box{padding:11px 13px;border-right:2px solid var(--slate-900);background:var(--slate-50)}
+  .doc-box:last-child{border-right:none}
+  .doc-box .lbl{font-size:9px;font-weight:800;color:var(--slate-500);text-transform:uppercase;margin-bottom:3px}
+  .doc-title{padding:12px;text-align:center;background:linear-gradient(90deg,var(--slate-100),var(--amber-50),var(--slate-100))}
+  .doc-title h3{margin:0;font-size:14px;font-weight:900;color:var(--slate-900);text-transform:uppercase}
+  .disp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+  @media(max-width:720px){.disp-grid{grid-template-columns:repeat(2,1fr)}}
+  .disp-opt{border:2px solid var(--slate-200);border-radius:10px;padding:10px;cursor:pointer;transition:.15s}
+  .disp-opt.sel{border-color:var(--slate-900);box-shadow:0 0 0 2px var(--slate-900) inset;background:var(--slate-50)}
+  .disp-opt .code{font-size:9px;font-weight:900;padding:2px 7px;border-radius:6px;float:right}
+  .std-item{border:1px solid var(--slate-200);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:#fff}
+  .std-item .tag{display:inline-block;font-family:monospace;font-weight:800;font-size:10px;background:var(--slate-900);color:#fcd34d;padding:2px 7px;border-radius:5px;margin-right:8px}
+  .checklist label{display:flex;gap:9px;align-items:flex-start;padding:8px 10px;border:1px solid var(--slate-200);border-radius:8px;margin-bottom:6px;font-size:11.5px;cursor:pointer}
+  .checklist input{width:auto;margin-top:2px}
+  footer{max-width:1180px;margin:0 auto;padding:0 20px 40px;font-size:10.5px;color:var(--slate-400);text-align:center}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--slate-900);color:#fff;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:99;opacity:0;transform:translateY(8px);transition:.25s}
+  .toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-badge">⚡T</div>
+      <div>
+        <h1>ENGINEX <span>Transformer Suite</span></h1>
+        <div class="subtitle">Sizing, protection, QA/QC &amp; documentation — IEC 60076 / SASO / SEC standards</div>
+      </div>
+    </div>
+    <div class="kpi-pill">Engr. Faraz Nawaz · Electrical Engineering</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabBar"></div>
+</nav>
+
+<main id="mainArea"></main>
+
+<footer>Offline single-file engineering tool. All calculations are for preliminary design guidance — verify against project specification, manufacturer datasheets, and applicable codes before construction.</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TABS = [
+  {id:'sizing', label:'Current & Sizing'},
+  {id:'shortcircuit', label:'Short-Circuit'},
+  {id:'losses', label:'Losses & Efficiency'},
+  {id:'loading', label:'Loading %'},
+  {id:'qc', label:'QA/QC Test Report'},
+  {id:'bom', label:'BOM & Submittal'},
+  {id:'standards', label:'Standards & Docs'},
+];
+let activeTab = 'sizing';
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function num(v, d=0){ const n = typeof v === 'number' ? v : parseFloat(v); return Number.isFinite(n) ? n : d; }
+function fmt(n, d=2){ return Number.isFinite(n) ? n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}) : '—'; }
+function save(key, val){ try{ localStorage.setItem('cprln_xfmr_'+key, JSON.stringify(val)); }catch(e){} }
+function load(key, fallback){ try{ const v = localStorage.getItem('cprln_xfmr_'+key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; } }
+function uid(pfx){ return pfx + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function renderTabs(){
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = TABS.map(t => `<button class="tab-btn ${t.id===activeTab?'active':''}" data-tab="${t.id}">${t.label}</button>`).join('');
+  bar.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeTab = btn.dataset.tab; renderTabs(); renderPanel(); });
+  });
+}
+function renderPanel(){
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `<div class="panel active" id="panel-${activeTab}"></div>`;
+  RENDERERS[activeTab]();
+}
+const RENDERERS = {};
+</script>
+
+<script>
+/* ============ TAB 1: CURRENT & SIZING ============ */
+const STD_BREAKERS = [16,20,25,32,40,50,63,80,100,125,160,200,250,320,400,500,630,800,1000,1250,1600,2000,2500,3200,4000,5000,6300];
+const STD_CT = [5,10,15,20,25,30,40,50,60,75,100,150,200,250,300,400,500,600,800,1000,1200,1500,2000,2500,3000,4000,5000,6000];
+function nextStd(list, val){ for(const v of list){ if(v>=val) return v; } return list[list.length-1]; }
+
+let sizingState = load('sizing', {kva:1000, phase:'three', primaryV:11000, secondaryV:400, impedancePct:6});
+
+RENDERERS.sizing = function(){
+  const s = sizingState;
+  const el = document.getElementById('panel-sizing');
+  const isThree = s.phase === 'three';
+  const primFLC = isThree ? (s.kva*1000)/(Math.sqrt(3)*s.primaryV) : (s.kva*1000)/s.primaryV;
+  const secFLC = isThree ? (s.kva*1000)/(Math.sqrt(3)*s.secondaryV) : (s.kva*1000)/s.secondaryV;
+  const primBreaker = nextStd(STD_BREAKERS, primFLC*1.25);
+  const secBreaker = nextStd(STD_BREAKERS, secFLC*1.25);
+  const primCT = nextStd(STD_CT, primFLC*1.2);
+  const secCT = nextStd(STD_CT, secFLC*1.2);
+
+  el.innerHTML = `
+    <div class="card">
+      <h2>Transformer Full-Load Current &amp; Protection Sizing</h2>
+      <p class="desc">Calculates HV/LV full-load current, recommended breaker ratings (125% margin) and CT ratios per IEC 60076 / SEC practice.</p>
+      <div class="grid cols-4">
+        <label class="field"><span>Transformer Rating (kVA)</span><input type="number" id="sz_kva" value="${s.kva}"></label>
+        <label class="field"><span>System</span>
+          <select id="sz_phase">
+            <option value="three" ${isThree?'selected':''}>3-Phase</option>
+            <option value="single" ${!isThree?'selected':''}>1-Phase</option>
+          </select>
+        </label>
+        <label class="field"><span>Primary (HV) Voltage (V)</span><input type="number" id="sz_pv" value="${s.primaryV}"></label>
+        <label class="field"><span>Secondary (LV) Voltage (V)</span><input type="number" id="sz_sv" value="${s.secondaryV}"></label>
+      </div>
+      <div class="result-box mt">
+        <div class="grid cols-2" style="gap:20px">
+          <div>
+            <div class="muted" style="font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.3px;color:#94a3b8">Primary (HV) Side</div>
+            <div class="result-hero">${fmt(primFLC,2)} <span class="unit">A (FLC)</span></div>
+            <div class="result-row"><span>Design Current (125%)</span><b>${fmt(primFLC*1.25,1)} A</b></div>
+            <div class="result-row"><span>Recommended Breaker/Fuse</span><b>${primBreaker} A</b></div>
+            <div class="result-row"><span>Recommended CT Ratio</span><b>${primCT}/5 A</b></div>
+          </div>
+          <div>
+            <div class="muted" style="font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.3px;color:#94a3b8">Secondary (LV) Side</div>
+            <div class="result-hero">${fmt(secFLC,1)} <span class="unit">A (FLC)</span></div>
+            <div class="result-row"><span>Design Current (125%)</span><b>${fmt(secFLC*1.25,1)} A</b></div>
+            <div class="result-row"><span>Recommended Breaker/MCCB</span><b>${secBreaker} A</b></div>
+            <div class="result-row"><span>Recommended CT Ratio</span><b>${secCT}/5 A</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="note mt"><b>Reference:</b> Full-load current calculated as I = kVA×1000 / (√3×V) for 3-phase or kVA×1000/V for 1-phase. Breaker and CT ratios are rounded to the next standard size above the 120–125% design current — confirm against manufacturer protection coordination study before ordering.</div>
+    </div>`;
+
+  const bind = (id, key, isSelect) => {
+    document.getElementById(id).addEventListener(isSelect?'change':'input', e=>{
+      sizingState = {...sizingState, [key]: isSelect ? e.target.value : num(e.target.value)};
+      save('sizing', sizingState);
+      RENDERERS.sizing();
+    });
+  };
+  bind('sz_kva','kva'); bind('sz_phase','phase',true); bind('sz_pv','primaryV'); bind('sz_sv','secondaryV');
+};
+</script>
+
+<script>
+/* ============ TAB 2: SHORT-CIRCUIT CURRENT ESTIMATE ============ */
+let scState = load('shortcircuit', {kva:1000, impedancePct:6, secondaryV:400, xrRatio:8, ratedShortTimeKa:'', ratedShortTimeSec:1});
+
+RENDERERS.shortcircuit = function(){
+  const s = scState;
+  const el = document.getElementById('panel-shortcircuit');
+  const iscSym = (s.kva*1000) / (Math.sqrt(3) * s.secondaryV * (s.impedancePct/100));
+  // asymmetry / peak factor from X/R ratio (approx IEC 60909 k factor)
+  const k = 1.02 + 0.98*Math.exp(-3/s.xrRatio);
+  const iPeak = iscSym * Math.sqrt(2) * k;
+  const ratedKa = num(s.ratedShortTimeKa, 0);
+  const withstandOk = ratedKa > 0 ? (ratedKa*1000) >= iscSym : null;
+
+  el.innerHTML = `
+    <div class="card">
+      <h2>Transformer Short-Circuit Current Estimate</h2>
+      <p class="desc">Prospective symmetrical and peak asymmetrical fault current at transformer secondary terminals, per IEC 60909 simplified method.</p>
+      <div class="grid cols-4">
+        <label class="field"><span>Transformer Rating (kVA)</span><input type="number" id="sc_kva" value="${s.kva}"></label>
+        <label class="field"><span>Impedance (%Z)</span><input type="number" step="0.1" id="sc_z" value="${s.impedancePct}"></label>
+        <label class="field"><span>Secondary Voltage (V)</span><input type="number" id="sc_v" value="${s.secondaryV}"></label>
+        <label class="field"><span>X/R Ratio</span><input type="number" step="0.5" id="sc_xr" value="${s.xrRatio}"></label>
+      </div>
+      <div class="grid cols-2 mt">
+        <label class="field"><span>Switchgear Rated Short-Time Current (kA, optional)</span><input type="number" step="0.1" id="sc_rated" value="${s.ratedShortTimeKa}" placeholder="e.g. 25"></label>
+        <label class="field"><span>Rated Short-Time Duration (s)</span><input type="number" step="0.5" id="sc_dur" value="${s.ratedShortTimeSec}"></label>
+      </div>
+      <div class="result-box mt">
+        <div class="result-row"><span>Symmetrical Fault Current (Isc):</span><b style="color:#fbbf24;font-size:15px">${fmt(iscSym/1000,2)} kA</b></div>
+        <div class="result-row"><span>Peak Asymmetrical Current (Ip):</span><b>${fmt(iPeak/1000,2)} kA</b></div>
+        <div class="result-row"><span>Asymmetry Factor (k, IEC 60909):</span><b>${fmt(k,2)}</b></div>
+        ${withstandOk!==null ? `<div class="result-row"><span>Switchgear Withstand Check:</span><b>${withstandOk?'<span class="badge ok">ADEQUATE</span>':'<span class="badge bad">INSUFFICIENT — UPGRADE RATING</span>'}</b></div>` : ''}
+      </div>
+      <div class="note mt"><b>Method:</b> Isc = kVA×1000 / (√3 × V × %Z/100), giving the bolted 3-phase symmetrical fault current at the transformer's own terminals (source impedance upstream of the transformer is neglected — for a fuller network study, combine with upstream fault MVA in series). Peak current uses the IEC 60909 asymmetry factor κ derived from X/R ratio. Always confirm against a full short-circuit study for switchgear selection and protection coordination.</div>
+    </div>`;
+
+  const bind = (id, key) => document.getElementById(id).addEventListener('input', e=>{
+    scState = {...scState, [key]: e.target.value === '' ? '' : num(e.target.value)};
+    save('shortcircuit', scState);
+    RENDERERS.shortcircuit();
+  });
+  bind('sc_kva','kva'); bind('sc_z','impedancePct'); bind('sc_v','secondaryV'); bind('sc_xr','xrRatio');
+  bind('sc_rated','ratedShortTimeKa'); bind('sc_dur','ratedShortTimeSec');
+};
+</script>
+
+<script>
+/* ============ TAB 3: LOSSES & EFFICIENCY ============ */
+let lossState = load('losses', {kva:1000, noLoadLossW:1700, loadLossW:10500, loadPct:75, pf:0.9, hoursPerDay:24, daysPerYear:350, tariff:0.30});
+
+RENDERERS.losses = function(){
+  const s = lossState;
+  const el = document.getElementById('panel-losses');
+  const x = s.loadPct/100;
+  const lossAtLoad = s.noLoadLossW + (x*x)*s.loadLossW;
+  const outputW = s.kva*1000*x*s.pf;
+  const efficiency = outputW>0 ? outputW/(outputW+lossAtLoad)*100 : 0;
+  const maxEffLoadPct = s.loadLossW>0 ? Math.sqrt(s.noLoadLossW/s.loadLossW)*100 : 0;
+  const annualCoreLossKwh = s.noLoadLossW/1000*24*365;
+  const annualCopperLossKwh = (x*x*s.loadLossW/1000)*s.hoursPerDay*s.daysPerYear;
+  const annualTotalKwh = annualCoreLossKwh + annualCopperLossKwh;
+  const annualCost = annualTotalKwh * s.tariff;
+
+  el.innerHTML = `
+    <div class="card">
+      <h2>Transformer Losses &amp; Efficiency</h2>
+      <p class="desc">No-load (core) and load (copper) loss model, efficiency at operating load, and indicative annual energy-loss cost.</p>
+      <div class="grid cols-4">
+        <label class="field"><span>Transformer Rating (kVA)</span><input type="number" id="ls_kva" value="${s.kva}"></label>
+        <label class="field"><span>No-Load Loss / Core Loss (W)</span><input type="number" id="ls_p0" value="${s.noLoadLossW}"></label>
+        <label class="field"><span>Load Loss at Rated (W)</span><input type="number" id="ls_pk" value="${s.loadLossW}"></label>
+        <label class="field"><span>Operating Load (%)</span><input type="number" id="ls_load" value="${s.loadPct}"></label>
+      </div>
+      <div class="grid cols-4 mt">
+        <label class="field"><span>Load Power Factor</span><input type="number" step="0.01" id="ls_pf" value="${s.pf}"></label>
+        <label class="field"><span>Loaded Hours / Day</span><input type="number" id="ls_hrs" value="${s.hoursPerDay}"></label>
+        <label class="field"><span>Operating Days / Year</span><input type="number" id="ls_days" value="${s.daysPerYear}"></label>
+        <label class="field"><span>Energy Tariff (SAR/kWh)</span><input type="number" step="0.01" id="ls_tariff" value="${s.tariff}"></label>
+      </div>
+      <div class="result-box mt">
+        <div class="grid cols-2" style="gap:20px">
+          <div>
+            <div class="result-hero">${fmt(efficiency,2)}<span class="unit">%</span></div>
+            <div class="muted" style="font-size:10.5px">Efficiency at ${s.loadPct}% load, PF ${s.pf}</div>
+            <div class="result-row mt"><span>Total Loss at This Load</span><b>${fmt(lossAtLoad,0)} W</b></div>
+            <div class="result-row"><span>Output Power Delivered</span><b>${fmt(outputW/1000,1)} kW</b></div>
+            <div class="result-row"><span>Load % for Maximum Efficiency</span><b>${fmt(maxEffLoadPct,1)} %</b></div>
+          </div>
+          <div>
+            <div class="result-hero" style="color:#fca5a5">${fmt(annualTotalKwh,0)}<span class="unit">kWh/yr</span></div>
+            <div class="muted" style="font-size:10.5px">Estimated annual loss energy</div>
+            <div class="result-row mt"><span>Core Loss (24h/365d)</span><b>${fmt(annualCoreLossKwh,0)} kWh</b></div>
+            <div class="result-row"><span>Copper Loss (operating hrs)</span><b>${fmt(annualCopperLossKwh,0)} kWh</b></div>
+            <div class="result-row"><span>Estimated Annual Loss Cost</span><b>${fmt(annualCost,0)} SAR</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="note mt"><b>Model:</b> Loss at load = P₀ + x²×Pₖ where x is the per-unit load fraction. Core loss runs continuously (24h/365d) whenever the transformer is energized; copper loss only applies during loaded operating hours. This is a standard IEC 60076-1 loss model for budgeting — use manufacturer factory test loss figures once available for accuracy.</div>
+    </div>`;
+
+  const bind = (id, key) => document.getElementById(id).addEventListener('input', e=>{
+    lossState = {...lossState, [key]: num(e.target.value)};
+    save('losses', lossState);
+    RENDERERS.losses();
+  });
+  bind('ls_kva','kva'); bind('ls_p0','noLoadLossW'); bind('ls_pk','loadLossW'); bind('ls_load','loadPct');
+  bind('ls_pf','pf'); bind('ls_hrs','hoursPerDay'); bind('ls_days','daysPerYear'); bind('ls_tariff','tariff');
+};
+</script>
+
+<script>
+/* ============ TAB 4: LOADING PERCENTAGE ============ */
+let ldState = load('loading', {ratedKva:1000, measuredKva:820, ambientC:40, ratedTopOilRiseC:55, ratedHotSpotRiseC:65, coolingClass:'ONAN'});
+
+RENDERERS.loading = function(){
+  const s = ldState;
+  const el = document.getElementById('panel-loading');
+  const loadPct = s.ratedKva>0 ? (s.measuredKva/s.ratedKva)*100 : 0;
+  const loadFrac = loadPct/100;
+  // Indicative thermal estimate only (not a substitute for IEC 60076-7 detailed ageing model)
+  const topOilRise = s.ratedTopOilRiseC * Math.pow(loadFrac, 0.8);
+  const hotSpotRise = s.ratedHotSpotRiseC * Math.pow(loadFrac, 1.6);
+  const estTopOilTemp = s.ambientC + topOilRise;
+  const estHotSpotTemp = s.ambientC + hotSpotRise;
+
+  let status, statusClass, guidance;
+  if(loadPct <= 100){ status='NORMAL CONTINUOUS LOADING'; statusClass='ok';
+    guidance='Loading is within nameplate rating. Suitable for continuous operation under normal life expectancy.'; }
+  else if(loadPct <= 120){ status='PLANNED / EMERGENCY LOADING RANGE'; statusClass='warn';
+    guidance='Above nameplate rating. Per IEC 60076-7, short-duration loading up to ~120% may be acceptable with monitoring of hot-spot temperature and accelerated ageing accepted — limit duration and verify cooling adequacy.'; }
+  else{ status='OVERLOAD — NOT RECOMMENDED'; statusClass='bad';
+    guidance='Exceeds typical short-time emergency loading guidance. Risk of accelerated insulation ageing and reduced transformer life. Do not sustain without a detailed IEC 60076-7 thermal/ageing study and manufacturer confirmation.'; }
+
+  el.innerHTML = `
+    <div class="card">
+      <h2>Transformer Loading &amp; Thermal Loading Check</h2>
+      <p class="desc">Compares actual/measured load against nameplate rating and gives an indicative thermal loading estimate.</p>
+      <div class="grid cols-4">
+        <label class="field"><span>Rated Capacity (kVA)</span><input type="number" id="ld_rated" value="${s.ratedKva}"></label>
+        <label class="field"><span>Measured / Actual Load (kVA)</span><input type="number" id="ld_meas" value="${s.measuredKva}"></label>
+        <label class="field"><span>Ambient Temperature (°C)</span><input type="number" id="ld_amb" value="${s.ambientC}"></label>
+        <label class="field"><span>Cooling Class</span>
+          <select id="ld_cool">
+            ${['ONAN','ONAF','OFAF','ODAF'].map(c=>`<option ${s.coolingClass===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+      <div class="grid cols-2 mt">
+        <label class="field"><span>Rated Top-Oil Temperature Rise (°C)</span><input type="number" id="ld_oilrise" value="${s.ratedTopOilRiseC}"></label>
+        <label class="field"><span>Rated Hot-Spot Temperature Rise (°C)</span><input type="number" id="ld_hsrise" value="${s.ratedHotSpotRiseC}"></label>
+      </div>
+      <div class="result-box mt">
+        <div class="flex between">
+          <div>
+            <div class="result-hero">${fmt(loadPct,1)}<span class="unit">% of rating</span></div>
+            <div class="muted" style="font-size:10.5px">${fmt(s.measuredKva,0)} kVA of ${fmt(s.ratedKva,0)} kVA rated</div>
+          </div>
+          <span class="badge ${statusClass}" style="font-size:11px;padding:6px 12px">${status}</span>
+        </div>
+        <div class="result-row mt"><span>Estimated Top-Oil Temperature</span><b>${fmt(estTopOilTemp,1)} °C</b></div>
+        <div class="result-row"><span>Estimated Winding Hot-Spot Temperature</span><b>${fmt(estHotSpotTemp,1)} °C</b></div>
+      </div>
+      <div class="note mt">${guidance}</div>
+      <div class="note mt"><b>Disclaimer:</b> Top-oil and hot-spot estimates here use a simplified load-ratio exponent model for indicative screening only — they are <b>not</b> a substitute for the full clause-by-clause thermal and loss-of-life model in IEC 60076-7 / IEEE C57.91. For sustained overload decisions, use the manufacturer's loading guide or a detailed thermal study.</div>
+    </div>`;
+
+  const bind = (id, key, isSelect) => document.getElementById(id).addEventListener(isSelect?'change':'input', e=>{
+    ldState = {...ldState, [key]: isSelect ? e.target.value : num(e.target.value)};
+    save('loading', ldState);
+    RENDERERS.loading();
+  });
+  bind('ld_rated','ratedKva'); bind('ld_meas','measuredKva'); bind('ld_amb','ambientC');
+  bind('ld_cool','coolingClass',true); bind('ld_oilrise','ratedTopOilRiseC'); bind('ld_hsrise','ratedHotSpotRiseC');
+};
+</script>
+
+<script>
+/* ============ TAB 5: QA/QC TEST REPORT ============ */
+const qcDefault = {
+  docNumber:'TXR-ELE-2026-001', revision:'Rev. 00', date:new Date().toISOString().slice(0,10),
+  client:'', consultant:'', contractor:'ENGINEX Engineering',
+  tag:'TX-01', location:'Main Substation Room', manufacturer:'', serialNo:'', kva:1000,
+  primaryV:11000, secondaryV:400, vectorGroup:'Dyn11', impedancePct:6, coolingClass:'ONAN',
+  tests:[
+    {id:uid('t'), item:'Visual & Mechanical Inspection', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Insulation Resistance (IR) HV-E / LV-E / HV-LV', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Winding Resistance Measurement (all taps)', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Voltage Ratio & Polarity / Vector Group Check', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Magnetizing Current & No-Load Loss', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Load Loss & Impedance Voltage', standardRef:'IEC 60076-1', result:'Pass'},
+    {id:uid('t'), item:'Insulation Power Factor / Tan-Delta', standardRef:'IEC 60076-3', result:'Pass'},
+    {id:uid('t'), item:'Dielectric (Oil) Breakdown Voltage (BDV) Test', standardRef:'IEC 60156', result:'Pass'},
+    {id:uid('t'), item:'Sweep Frequency Response Analysis (SFRA)', standardRef:'IEC 60076-18', result:'Pass'},
+    {id:uid('t'), item:'On-Load / Off-Load Tap Changer Operation Check', standardRef:'IEC 60214-1', result:'Pass'},
+  ],
+  statusCode:'A', remarks:'', contractorEng:'Eng. Faraz Nawaz', contractorSce:'', consultantEng:'',
+};
+let qcState = load('qc', qcDefault);
+
+const DISPOSITIONS = [
+  {code:'A', title:'CODE A: APPROVED', color:'ok', desc:'No exception taken — proceed with energization / next stage.'},
+  {code:'B', title:'CODE B: APPROVED AS NOTED', color:'blue', desc:'Proceed; incorporate reviewer remarks in the record.'},
+  {code:'C', title:'CODE C: REVISE & RE-TEST', color:'warn', desc:'One or more results out of tolerance — repeat test after corrective action.'},
+  {code:'D', title:'CODE D: REJECTED', color:'bad', desc:'Transformer does not comply with specification / standards.'},
+];
+
+RENDERERS.qc = function(){
+  const s = qcState;
+  const el = document.getElementById('panel-qc');
+  el.innerHTML = `
+    <div class="card">
+      <div class="flex between mb">
+        <h2 style="margin:0">Transformer Factory / Site Acceptance Test Report</h2>
+        <div class="flex gap">
+          <button class="btn btn-sm" id="qc_reset">Reset Template</button>
+          <button class="btn btn-primary btn-sm" id="qc_print">🖨️ Print / Export PDF</button>
+        </div>
+      </div>
+
+      <div class="doc-header">
+        <div class="doc-strip">Kingdom of Saudi Arabia · SBC 401 / SASO IEC 60076 / SEC Distribution Standards</div>
+        <div class="doc-boxes">
+          <div class="doc-box"><div class="lbl">Employer / Client</div><input type="text" id="qc_client" value="${s.client}" placeholder="Client name"></div>
+          <div class="doc-box"><div class="lbl">Supervising Consultant</div><input type="text" id="qc_consultant" value="${s.consultant}" placeholder="Consultant name"></div>
+          <div class="doc-box"><div class="lbl">Contractor</div><input type="text" id="qc_contractor" value="${s.contractor}"></div>
+        </div>
+        <div class="doc-title"><h3>Transformer Test Report</h3></div>
+      </div>
+
+      <div class="grid cols-4 mb">
+        <label class="field"><span>Document No.</span><input type="text" id="qc_docno" value="${s.docNumber}"></label>
+        <label class="field"><span>Revision</span><input type="text" id="qc_rev" value="${s.revision}"></label>
+        <label class="field"><span>Test Date</span><input type="date" id="qc_date" value="${s.date}"></label>
+        <label class="field"><span>Transformer Tag</span><input type="text" id="qc_tag" value="${s.tag}"></label>
+      </div>
+
+      <div class="grid cols-4 mb">
+        <label class="field"><span>Location</span><input type="text" id="qc_loc" value="${s.location}"></label>
+        <label class="field"><span>Manufacturer</span><input type="text" id="qc_mfr" value="${s.manufacturer}" placeholder="e.g. Al-Fanar"></label>
+        <label class="field"><span>Serial No.</span><input type="text" id="qc_serial" value="${s.serialNo}"></label>
+        <label class="field"><span>Vector Group</span><input type="text" id="qc_vector" value="${s.vectorGroup}"></label>
+      </div>
+      <div class="grid cols-4 mb">
+        <label class="field"><span>Rating (kVA)</span><input type="number" id="qc_kva" value="${s.kva}"></label>
+        <label class="field"><span>Primary Voltage (V)</span><input type="number" id="qc_pv" value="${s.primaryV}"></label>
+        <label class="field"><span>Secondary Voltage (V)</span><input type="number" id="qc_sv" value="${s.secondaryV}"></label>
+        <label class="field"><span>Impedance (%Z)</span><input type="number" step="0.1" id="qc_z" value="${s.impedancePct}"></label>
+      </div>
+
+      <div class="flex between" style="margin:16px 0 8px"><b style="font-size:12px">Routine / Site Acceptance Test Checklist</b>
+        <button class="btn btn-sm" id="qc_addtest">+ Add Test Item</button></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:45%">Test Item</th><th style="width:22%">Standard Reference</th><th style="width:18%" class="center">Result</th><th style="width:6%"></th></tr></thead>
+          <tbody id="qc_test_body">
+            ${s.tests.map(t=>`
+              <tr data-id="${t.id}">
+                <td><input type="text" class="qc-t-item" value="${t.item}"></td>
+                <td><input type="text" class="qc-t-ref" value="${t.standardRef}"></td>
+                <td class="center">
+                  <select class="qc-t-result">
+                    <option ${t.result==='Pass'?'selected':''}>Pass</option>
+                    <option ${t.result==='Fail'?'selected':''}>Fail</option>
+                    <option ${t.result==='N/A'?'selected':''}>N/A</option>
+                  </select>
+                </td>
+                <td class="center"><button class="btn btn-sm btn-danger qc-t-del">✕</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:20px;border:2px solid #0f172a">
+        <b style="font-size:12px">Disposition</b>
+        <div class="disp-grid">
+          ${DISPOSITIONS.map(d=>`
+            <div class="disp-opt ${s.statusCode===d.code?'sel':''}" data-code="${d.code}">
+              <span class="code badge ${d.color}">CODE ${d.code}</span>
+              <div style="font-weight:800;font-size:11.5px;margin-top:2px">${d.title}</div>
+              <div class="muted" style="font-size:10px;margin-top:4px">${d.desc}</div>
+            </div>`).join('')}
+        </div>
+        <label class="field"><span>Reviewer Remarks</span><textarea id="qc_remarks" rows="2">${s.remarks}</textarea></label>
+        <div class="grid cols-2 mt">
+          <label class="field"><span>Tested By (Contractor Engineer)</span><input type="text" id="qc_ceng" value="${s.contractorEng}"></label>
+          <label class="field"><span>Witnessed / Approved By (Consultant)</span><input type="text" id="qc_qeng" value="${s.consultantEng}"></label>
+        </div>
+      </div>
+    </div>`;
+
+  const bindT = (id, key) => document.getElementById(id).addEventListener('input', e=>{ qcState={...qcState,[key]:e.target.value}; save('qc',qcState); });
+  ['qc_client:client','qc_consultant:consultant','qc_contractor:contractor','qc_docno:docNumber','qc_rev:revision','qc_date:date',
+   'qc_tag:tag','qc_loc:location','qc_mfr:manufacturer','qc_serial:serialNo','qc_vector:vectorGroup','qc_remarks:remarks',
+   'qc_ceng:contractorEng','qc_qeng:consultantEng'].forEach(pair=>{ const [id,key]=pair.split(':'); bindT(id,key); });
+  ['qc_kva:kva','qc_pv:primaryV','qc_sv:secondaryV','qc_z:impedancePct'].forEach(pair=>{
+    const [id,key]=pair.split(':');
+    document.getElementById(id).addEventListener('input', e=>{ qcState={...qcState,[key]:num(e.target.value)}; save('qc',qcState); });
+  });
+
+  document.querySelectorAll('#qc_test_body tr').forEach(tr=>{
+    const id = tr.dataset.id;
+    tr.querySelector('.qc-t-item').addEventListener('input', e=>updateTest(id,'item',e.target.value));
+    tr.querySelector('.qc-t-ref').addEventListener('input', e=>updateTest(id,'standardRef',e.target.value));
+    tr.querySelector('.qc-t-result').addEventListener('change', e=>updateTest(id,'result',e.target.value));
+    tr.querySelector('.qc-t-del').addEventListener('click', ()=>{
+      qcState = {...qcState, tests: qcState.tests.filter(t=>t.id!==id)}; save('qc',qcState); RENDERERS.qc();
+    });
+  });
+  function updateTest(id,key,val){
+    qcState = {...qcState, tests: qcState.tests.map(t=>t.id===id?{...t,[key]:val}:t)};
+    save('qc',qcState);
+  }
+  document.getElementById('qc_addtest').addEventListener('click', ()=>{
+    qcState = {...qcState, tests:[...qcState.tests, {id:uid('t'), item:'New Test Item', standardRef:'', result:'Pass'}]};
+    save('qc',qcState); RENDERERS.qc();
+  });
+  document.querySelectorAll('.disp-opt').forEach(d=>{
+    d.addEventListener('click', ()=>{ qcState={...qcState, statusCode:d.dataset.code}; save('qc',qcState); RENDERERS.qc(); });
+  });
+  document.getElementById('qc_reset').addEventListener('click', ()=>{
+    qcState = {...qcDefault, tests: qcDefault.tests.map(t=>({...t,id:uid('t')}))};
+    save('qc',qcState); RENDERERS.qc(); toast('Test report reset to template.');
+  });
+  document.getElementById('qc_print').addEventListener('click', ()=> window.print());
+};
+</script>
+
+<script>
+/* ============ TAB 6: BOM & SUBMITTAL GENERATOR ============ */
+const bomTypical = [
+  {desc:'Oil-Immersed Distribution Transformer, ONAN Cooled, complete unit', unit:'set', qty:1, rate:185000},
+  {desc:'HV Bushings (per transformer spec)', unit:'set', qty:1, rate:6500},
+  {desc:'LV Bushings (per transformer spec)', unit:'set', qty:1, rate:3200},
+  {desc:'Off-Circuit Tap Changer (OCTC), ±2×2.5%', unit:'set', qty:1, rate:4800},
+  {desc:'Conservator Tank with Oil Level Gauge', unit:'set', qty:1, rate:5200},
+  {desc:'Buchholz Relay (Dual Float, Alarm/Trip)', unit:'pcs', qty:1, rate:3400},
+  {desc:'Silica Gel Breather', unit:'pcs', qty:1, rate:650},
+  {desc:'Pressure Relief Device (PRD)', unit:'pcs', qty:1, rate:1900},
+  {desc:'Winding Temperature Indicator (WTI)', unit:'pcs', qty:1, rate:2600},
+  {desc:'Oil Temperature Indicator (OTI)', unit:'pcs', qty:1, rate:2100},
+  {desc:'Radiator Bank (detachable, painted)', unit:'set', qty:1, rate:14500},
+  {desc:'Transformer Oil (Mineral, per IEC 60296)', unit:'liter', qty:1200, rate:9.5},
+  {desc:'Earthing Terminal Pads (2 no. per unit)', unit:'set', qty:1, rate:850},
+  {desc:'Rating & Diagram Nameplate (SS engraved)', unit:'pcs', qty:1, rate:450},
+  {desc:'Bi-Directional Rollers / Skid Base', unit:'set', qty:1, rate:3200},
+  {desc:'Factory Routine Test & SASO/SABER Certification', unit:'lot', qty:1, rate:6800},
+  {desc:'Transportation, Offloading & Site Positioning', unit:'lot', qty:1, rate:9500},
+];
+let bomState = load('bom', {vat:15, items: bomTypical.map(i=>({id:uid('b'), ...i}))});
+
+RENDERERS.bom = function(){
+  const s = bomState;
+  const el = document.getElementById('panel-bom');
+  const subtotal = s.items.reduce((a,i)=>a+num(i.qty)*num(i.rate),0);
+  const vatAmt = subtotal*(s.vat/100);
+  const grand = subtotal+vatAmt;
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="flex between mb" style="flex-wrap:wrap;gap:10px">
+        <div>
+          <h2 style="margin:0">Transformer Bill of Materials &amp; Technical Submittal</h2>
+          <p class="desc" style="margin-top:4px">Editable BOM with SAR pricing for procurement/quotation, plus a submittal package builder.</p>
+        </div>
+        <div class="flex gap">
+          <button class="btn btn-sm" id="bom_sync">↻ Load Typical Transformer BOM</button>
+          <button class="btn btn-sm" id="bom_add">+ Add Item</button>
+          <button class="btn btn-dark btn-sm" id="bom_csv">⬇ Export CSV</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:44%">Description</th><th>Unit</th><th class="right">Qty</th><th class="right">Rate (SAR)</th><th class="right">Total (SAR)</th><th></th></tr></thead>
+          <tbody id="bom_body">
+            ${s.items.map(i=>`
+              <tr data-id="${i.id}">
+                <td><input type="text" class="bom-desc" value="${i.desc}"></td>
+                <td><input type="text" class="bom-unit" value="${i.unit}" style="width:70px"></td>
+                <td><input type="number" class="bom-qty right" value="${i.qty}" style="width:70px;text-align:right"></td>
+                <td><input type="number" class="bom-rate right" value="${i.rate}" style="width:90px;text-align:right"></td>
+                <td class="right" style="font-weight:700">${fmt(num(i.qty)*num(i.rate),2)}</td>
+                <td class="center"><button class="btn btn-sm btn-danger bom-del">✕</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="flex between mt" style="align-items:flex-end;flex-wrap:wrap;gap:14px">
+        <label class="field" style="width:160px"><span>VAT Rate (%)</span><input type="number" id="bom_vat" value="${s.vat}"></label>
+        <div style="min-width:260px">
+          <div class="result-row"><span>Subtotal</span><b>${fmt(subtotal,2)} SAR</b></div>
+          <div class="result-row"><span>VAT (${s.vat}%)</span><b>${fmt(vatAmt,2)} SAR</b></div>
+          <div class="result-row" style="font-size:14px"><span><b>Grand Total</b></span><b style="color:#d97706">${fmt(grand,2)} SAR</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Technical Submittal Package Checklist</h2>
+      <p class="desc">Standard document set to accompany the transformer material technical submittal (MTS) for consultant approval.</p>
+      <div class="checklist">
+        ${['Manufacturer technical datasheet & GA (general arrangement) drawing',
+           'Nameplate rating details & connection diagram',
+           'Type test certificates (temperature rise, impulse, short-circuit withstand)',
+           'Routine test certificates (per unit, factory)',
+           'SASO / SABER Certificate of Conformity (SCoC)',
+           'Oil test certificate (BDV, moisture content) at dispatch',
+           'Packing, transport & storage instructions',
+           'Installation, operation & maintenance (O&M) manual',
+           'Warranty statement',
+           'Local content / LCGPA declaration (if applicable)']
+           .map((txt,idx)=>`<label><input type="checkbox" data-idx="${idx}" ${(load('bom_checklist',[])||[]).includes(idx)?'checked':''}><span>${txt}</span></label>`).join('')}
+      </div>
+    </div>`;
+
+  document.querySelectorAll('#bom_body tr').forEach(tr=>{
+    const id = tr.dataset.id;
+    tr.querySelector('.bom-desc').addEventListener('input', e=>updateItem(id,'desc',e.target.value));
+    tr.querySelector('.bom-unit').addEventListener('input', e=>updateItem(id,'unit',e.target.value));
+    tr.querySelector('.bom-qty').addEventListener('input', e=>updateItem(id,'qty',num(e.target.value)));
+    tr.querySelector('.bom-rate').addEventListener('input', e=>updateItem(id,'rate',num(e.target.value)));
+    tr.querySelector('.bom-del').addEventListener('click', ()=>{
+      bomState = {...bomState, items: bomState.items.filter(i=>i.id!==id)}; save('bom',bomState); RENDERERS.bom();
+    });
+  });
+  function updateItem(id,key,val){
+    bomState = {...bomState, items: bomState.items.map(i=>i.id===id?{...i,[key]:val}:i)};
+    save('bom',bomState); RENDERERS.bom();
+  }
+  document.getElementById('bom_vat').addEventListener('input', e=>{ bomState={...bomState, vat:num(e.target.value)}; save('bom',bomState); RENDERERS.bom(); });
+  document.getElementById('bom_add').addEventListener('click', ()=>{
+    bomState = {...bomState, items:[...bomState.items, {id:uid('b'), desc:'New Item', unit:'pcs', qty:1, rate:0}]};
+    save('bom',bomState); RENDERERS.bom();
+  });
+  document.getElementById('bom_sync').addEventListener('click', ()=>{
+    bomState = {...bomState, items: bomTypical.map(i=>({id:uid('b'), ...i}))};
+    save('bom',bomState); RENDERERS.bom(); toast('Loaded typical transformer BOM.');
+  });
+  document.getElementById('bom_csv').addEventListener('click', ()=>{
+    let csv = 'Description,Unit,Qty,Rate (SAR),Total (SAR)\n';
+    bomState.items.forEach(i=>{ csv += `"${i.desc}",${i.unit},${i.qty},${i.rate},${(num(i.qty)*num(i.rate)).toFixed(2)}\n`; });
+    csv += `,,,Subtotal,${subtotal.toFixed(2)}\n,,,VAT (${bomState.vat}%),${vatAmt.toFixed(2)}\n,,,Grand Total,${grand.toFixed(2)}\n`;
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='Transformer_BOM.csv'; a.click(); URL.revokeObjectURL(url);
+  });
+  document.querySelectorAll('.checklist input').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      let arr = load('bom_checklist',[]) || [];
+      const idx = num(cb.dataset.idx);
+      arr = cb.checked ? [...new Set([...arr, idx])] : arr.filter(x=>x!==idx);
+      save('bom_checklist', arr);
+    });
+  });
+};
+</script>
+
+<script>
+/* ============ TAB 7: STANDARDS & DOCUMENTATION REFERENCE ============ */
+const STANDARDS = [
+  {tag:'IEC 60076-1', title:'Power Transformers — General', note:'Base requirements: ratings, temperature rise limits, tests, tolerances.'},
+  {tag:'IEC 60076-2', title:'Temperature Rise for Liquid-Immersed Transformers', note:'Top-oil and winding temperature rise limits by cooling class.'},
+  {tag:'IEC 60076-3', title:'Insulation Levels, Dielectric Tests & External Clearances', note:'BIL, power-frequency withstand, and clearance requirements.'},
+  {tag:'IEC 60076-5', title:'Ability to Withstand Short Circuit', note:'Thermal and dynamic short-circuit withstand requirements.'},
+  {tag:'IEC 60076-7', title:'Loading Guide for Oil-Immersed Transformers', note:'Thermal ageing model and guidance for loading beyond nameplate.'},
+  {tag:'IEC 60076-10', title:'Determination of Sound Levels', note:'Noise measurement methodology for substation/room siting.'},
+  {tag:'IEC 60076-11', title:'Dry-Type Transformers', note:'Applies where cast-resin/dry-type units are specified.'},
+  {tag:'IEC 60076-18', title:'Frequency Response Analysis (SFRA)', note:'Mechanical integrity check for winding/core displacement.'},
+  {tag:'IEC 60214-1', title:'Tap-Changers', note:'On-load and off-circuit tap-changer requirements and testing.'},
+  {tag:'IEC 60296', title:'Mineral Insulating Oils', note:'Fluid specification for new and in-service transformer oil.'},
+  {tag:'IEC 60156', title:'Dielectric Strength of Insulating Liquids', note:'Oil breakdown voltage (BDV) test method.'},
+  {tag:'IEC 60909', title:'Short-Circuit Currents in Three-Phase AC Systems', note:'Calculation method for prospective fault currents (used in this suite).'},
+  {tag:'SASO IEC 60076', title:'Saudi National Adoption of IEC 60076 Series', note:'Mandatory for transformers supplied/installed in KSA.'},
+  {tag:'SEC Distribution Standards (SDS)', title:'Saudi Electricity Company Transformer Specifications', note:'Utility-specific ratings, accessories and approved vendor list (AVL) requirements.'},
+  {tag:'SBC 401', title:'Saudi Building Code — Electrical', note:'Installation, clearance, and protection requirements for building electrical systems.'},
+  {tag:'IEEE C57.91', title:'Guide for Loading Mineral-Oil-Immersed Transformers', note:'Alternative/complementary loading & ageing guide referenced internationally.'},
+];
+
+RENDERERS.standards = function(){
+  const el = document.getElementById('panel-standards');
+  el.innerHTML = `
+    <div class="card">
+      <h2>Applicable Standards Reference</h2>
+      <p class="desc">Quick reference of standards commonly invoked for transformer design, testing, and KSA compliance.</p>
+      ${STANDARDS.map(s=>`
+        <div class="std-item">
+          <span class="tag">${s.tag}</span><b style="font-size:12px">${s.title}</b>
+          <div class="muted" style="margin-top:4px;font-size:11px">${s.note}</div>
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <h2>Required Project Documentation (Typical)</h2>
+      <p class="desc">Documents typically required through design, procurement, and close-out — cross-check against your project's specification.</p>
+      <div class="grid cols-2">
+        <div>
+          <b style="font-size:11.5px">Design / Submittal Stage</b>
+          <ul style="font-size:11.5px;line-height:1.9;padding-left:18px;margin-top:6px">
+            <li>Material Technical Submittal (MTS) with datasheet &amp; GA drawing</li>
+            <li>Short-circuit &amp; protection coordination study</li>
+            <li>Loss evaluation / total-cost-of-ownership calculation</li>
+            <li>Earthing &amp; lightning protection interface drawing</li>
+          </ul>
+        </div>
+        <div>
+          <b style="font-size:11.5px">Delivery / Close-Out Stage</b>
+          <ul style="font-size:11.5px;line-height:1.9;padding-left:18px;margin-top:6px">
+            <li>Factory routine test certificates &amp; SASO/SABER SCoC</li>
+            <li>Site acceptance test report (this suite's QA/QC tab)</li>
+            <li>As-built drawings &amp; nameplate record</li>
+            <li>O&amp;M manual and warranty documentation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note mt"><b>Note:</b> This reference list is for orientation only — always confirm the exact document set, edition/year of each standard, and any project-specific deviations against the contract specification and the latest SEC / SASO circulars.</div>
+    </div>`;
+};
+</script>
+
+<script>
+/* ============ INIT ============ */
+renderTabs();
+renderPanel();
+</script>
+</body>
+</html>

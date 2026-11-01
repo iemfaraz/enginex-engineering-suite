@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENGINEX Site Forms &amp; Document Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101E2B;
+  --ink-soft:#3B4C5C;
+  --steel:#2E5266;
+  --steel-light:#5A7A8C;
+  --paper:#F6F5F1;
+  --sheet:#FFFFFF;
+  --line:#D6D9D6;
+  --line-soft:#E7E9E5;
+  --accent:#B9862F;
+  --accent-ink:#7A5416;
+  --accent-soft:#F1E4C9;
+  --danger:#A6432B;
+  --ok:#3C6E52;
+  --sans: 'IBM Plex Sans', -apple-system, Segoe UI, Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, monospace;
+  --serif: 'IBM Plex Serif', Georgia, serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  font-size:14px;
+  line-height:1.5;
+}
+button{font-family:inherit;cursor:pointer;}
+input,textarea,select{font-family:inherit;font-size:13px;}
+
+/* ---------- App shell ---------- */
+#app{display:flex;min-height:100vh;}
+
+.sidebar{
+  width:290px;flex:0 0 290px;
+  background:var(--ink);
+  color:#DCE3E8;
+  display:flex;flex-direction:column;
+  height:100vh;position:sticky;top:0;
+}
+.brand{
+  padding:20px 18px 14px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.brand .mark{
+  font-family:var(--serif);
+  font-size:20px;letter-spacing:.02em;color:#fff;font-weight:600;
+}
+.brand .sub{
+  font-family:var(--mono);
+  font-size:10.5px;color:var(--accent);letter-spacing:.08em;margin-top:3px;text-transform:uppercase;
+}
+.search-wrap{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);}
+.search-wrap input{
+  width:100%;padding:8px 10px;border-radius:2px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);color:#fff;
+}
+.search-wrap input::placeholder{color:#8FA0AC;}
+.nav{flex:1;overflow-y:auto;padding:8px 0 16px;}
+.nav-cat{
+  padding:12px 18px 6px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+  color:#7E93A1;text-transform:uppercase;
+}
+.nav-item{
+  display:flex;align-items:baseline;gap:8px;
+  padding:7px 18px;cursor:pointer;
+  border-left:2px solid transparent;
+  color:#C7D2D9;
+}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff;}
+.nav-item.active{
+  background:rgba(185,134,47,.14);
+  border-left-color:var(--accent);
+  color:#fff;
+}
+.nav-item .code{font-family:var(--mono);font-size:11px;color:var(--steel-light);flex:0 0 auto;}
+.nav-item.active .code{color:var(--accent);}
+.nav-item .nm{font-size:12.5px;flex:1;}
+.sidebar-foot{
+  padding:12px 18px;border-top:1px solid rgba(255,255,255,.1);
+  font-size:11px;color:#7E93A1;
+}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+
+.topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 28px;background:var(--sheet);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:5;
+}
+.topbar .company-chip{
+  display:flex;align-items:center;gap:10px;flex:1;min-width:0;
+}
+.company-chip img{height:34px;width:auto;max-width:120px;object-fit:contain;}
+.company-chip .logo-ph{
+  height:34px;width:34px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--ink-soft);flex:0 0 auto;
+}
+.company-chip .cname{font-weight:600;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.company-chip .cproj{font-size:11.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.btn{
+  padding:8px 14px;border-radius:2px;border:1px solid var(--line);
+  background:var(--sheet);color:var(--ink);font-size:12.5px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.btn:hover{border-color:var(--steel);}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink);}
+.btn.primary:hover{background:var(--steel);border-color:var(--steel);}
+.btn.accent{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn.ghost{border-color:transparent;background:transparent;}
+.btn.small{padding:5px 9px;font-size:11.5px;}
+.btn.danger{color:var(--danger);}
+
+.workspace{flex:1;padding:34px 28px 80px;display:flex;justify-content:center;}
+.empty-state{
+  max-width:520px;margin-top:80px;text-align:center;color:var(--ink-soft);
+}
+.empty-state h2{font-family:var(--serif);color:var(--ink);font-weight:600;}
+
+/* ---------- The Sheet (form) ---------- */
+.sheet{
+  width:100%;max-width:900px;background:var(--sheet);
+  border:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(16,30,43,.04), 0 10px 30px -18px rgba(16,30,43,.25);
+}
+.sheet-actions{
+  display:flex;gap:8px;align-items:center;justify-content:flex-end;
+  max-width:900px;width:100%;margin-bottom:10px;
+}
+.sheet-actions .spacer{flex:1;}
+
+.letterhead{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:22px 30px 14px;border-bottom:2px solid var(--ink);
+  gap:16px;
+}
+.letterhead .lh-left{display:flex;align-items:center;gap:12px;min-width:0;}
+.letterhead .lh-left img{max-height:52px;max-width:170px;object-fit:contain;}
+.letterhead .lh-co{font-weight:600;font-size:15px;color:var(--ink);}
+.letterhead .lh-co-addr{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+.letterhead .lh-right{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+.letterhead .lh-code{color:var(--ink);font-weight:600;font-size:12.5px;}
+
+.form-title-bar{
+  padding:16px 30px 4px;text-align:center;
+}
+.form-title-bar h1{
+  font-family:var(--serif);font-size:20px;font-weight:600;margin:0;letter-spacing:.01em;color:var(--ink);
+}
+.form-title-bar .form-sub{font-family:var(--mono);font-size:11px;color:var(--steel);margin-top:4px;letter-spacing:.04em;}
+
+.sheet-body{padding:10px 30px 34px;}
+
+.block{margin-top:20px;}
+.block:first-child{margin-top:16px;}
+.block-title{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--steel);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--line-soft);
+}
+
+.fgrid{display:grid;gap:12px 18px;}
+.fgrid.c1{grid-template-columns:1fr;}
+.fgrid.c2{grid-template-columns:1fr 1fr;}
+.fgrid.c3{grid-template-columns:1fr 1fr 1fr;}
+.fgrid.c4{grid-template-columns:1fr 1fr 1fr 1fr;}
+@media (max-width: 720px){.fgrid.c2,.fgrid.c3,.fgrid.c4{grid-template-columns:1fr;}}
+
+.field{display:flex;flex-direction:column;gap:4px;}
+.field.span2{grid-column:span 2;}
+.field label{font-size:10.5px;color:var(--ink-soft);letter-spacing:.02em;}
+.field input[type=text], .field input[type=date], .field input[type=number], .field select, .field textarea{
+  border:none;border-bottom:1px solid var(--line);background:transparent;
+  padding:5px 2px;color:var(--ink);width:100%;
+}
+.field textarea{resize:vertical;min-height:52px;font-family:var(--sans);border:1px solid var(--line);border-radius:2px;padding:7px 8px;}
+.field input:focus, .field textarea:focus, .field select:focus{
+  outline:none;border-color:var(--steel);
+}
+.field.mono input{font-family:var(--mono);}
+
+.row-flex{display:flex;gap:22px;flex-wrap:wrap;}
+.row-flex > div{flex:1;min-width:180px;}
+
+.check-group{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:2px;}
+.check-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink);}
+.check-item input{accent-color:var(--steel);}
+
+.note-block{
+  background:var(--paper);border-left:3px solid var(--steel);
+  padding:10px 14px;font-size:12px;color:var(--ink-soft);line-height:1.55;
+}
+
+.legend-block .legend-title{font-weight:600;font-size:12px;margin-bottom:6px;}
+.legend-list{display:flex;flex-direction:column;gap:4px;}
+.legend-row{display:flex;gap:10px;font-size:12px;align-items:baseline;}
+.legend-row .lc{
+  font-family:var(--mono);font-weight:700;color:var(--accent-ink);
+  background:var(--accent-soft);border-radius:2px;padding:0 6px;flex:0 0 auto;
+}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+table.tbl th{
+  background:var(--paper);color:var(--ink-soft);font-weight:600;text-align:left;
+  padding:6px 7px;border:1px solid var(--line);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;
+}
+table.tbl td{border:1px solid var(--line);padding:2px;vertical-align:top;}
+table.tbl td input, table.tbl td textarea{
+  width:100%;border:none;background:transparent;padding:5px 6px;font-size:12px;color:var(--ink);
+}
+table.tbl td input:focus, table.tbl td textarea:focus{outline:1px solid var(--steel);outline-offset:-1px;}
+table.tbl tr.total-row td{background:var(--paper);font-weight:600;}
+table.tbl .rowdel{
+  border:none;background:transparent;color:var(--ink-soft);width:22px;text-align:center;
+}
+table.tbl .rowdel:hover{color:var(--danger);}
+.table-wrap{overflow-x:auto;}
+.add-row-btn{
+  margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--steel);
+  background:none;border:1px dashed var(--line);padding:5px 10px;border-radius:2px;
+}
+.add-row-btn:hover{border-color:var(--steel);}
+
+.sign-grid{display:grid;gap:0 18px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+.sign-party{border-top:1px solid var(--ink);padding-top:8px;}
+.sign-party .party-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--steel);margin-bottom:8px;}
+.sign-party .sfield{margin-bottom:9px;}
+.sign-party .sfield label{font-size:10px;color:var(--ink-soft);display:block;margin-bottom:2px;}
+.sign-party .sfield input{width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;padding:3px 1px;font-size:12.5px;}
+
+.finance-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.finance-tbl td{padding:6px 4px;border-bottom:1px solid var(--line-soft);}
+.finance-tbl td.flabel{color:var(--ink);}
+.finance-tbl td.fval{text-align:right;width:190px;}
+.finance-tbl td.fval input{width:140px;text-align:right;border:none;border-bottom:1px solid var(--line);background:transparent;padding:3px 2px;font-family:var(--mono);}
+.finance-tbl td.fval .computed{font-family:var(--mono);font-weight:600;color:var(--ink);}
+.finance-tbl tr.highlight td{background:var(--accent-soft);font-weight:700;}
+.finance-tbl td.funit{width:36px;color:var(--ink-soft);font-family:var(--mono);font-size:11px;}
+
+.rating-cat{margin-bottom:14px;}
+.rating-cat-title{font-weight:600;font-size:12.5px;margin:14px 0 6px;color:var(--ink);}
+table.rating-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+table.rating-tbl th{background:var(--paper);border:1px solid var(--line);padding:5px 6px;font-size:10px;text-transform:uppercase;color:var(--ink-soft);}
+table.rating-tbl td{border:1px solid var(--line);padding:4px 6px;}
+.rating-btns{display:flex;gap:3px;}
+.rating-btn{
+  width:22px;height:22px;border:1px solid var(--line);background:#fff;border-radius:2px;font-size:11px;color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+}
+.rating-btn.active{background:var(--steel);color:#fff;border-color:var(--steel);}
+.rating-score{font-family:var(--mono);text-align:center;}
+.rating-total-row td{background:var(--ink);color:#fff;font-weight:700;}
+.rating-grand{
+  margin-top:16px;padding:12px 16px;background:var(--ink);color:#fff;display:flex;justify-content:space-between;align-items:center;
+}
+.rating-grand .gscore{font-family:var(--mono);font-size:22px;color:var(--accent-soft);}
+
+.sheet-footer{
+  border-top:1px solid var(--line);padding:10px 30px;
+  display:flex;justify-content:space-between;font-size:10px;color:var(--ink-soft);font-family:var(--mono);
+}
+
+/* ---------- Modal ---------- */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(16,30,43,.5);display:flex;align-items:center;justify-content:center;z-index:50;
+}
+.modal{
+  background:#fff;width:440px;max-width:92vw;border-radius:2px;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.modal h3{font-family:var(--serif);margin:0 0 14px;font-size:17px;}
+.modal .field{margin-bottom:14px;}
+.modal .field label{font-size:11px;color:var(--ink-soft);margin-bottom:4px;display:block;}
+.modal .field input[type=text]{width:100%;border:1px solid var(--line);padding:8px 9px;border-radius:2px;}
+.modal .logo-row{display:flex;align-items:center;gap:12px;}
+.modal .logo-preview{
+  height:56px;width:96px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:var(--paper);flex:0 0 auto;
+}
+.modal .logo-preview img{max-height:100%;max-width:100%;object-fit:contain;}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:9px 18px;border-radius:2px;font-size:12.5px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:80;opacity:0;transition:opacity .25s;pointer-events:none;
+}
+.toast.show{opacity:1;}
+
+/* ---------- Print ---------- */
+@media print{
+  .sidebar,.topbar,.sheet-actions,.workspace{all:unset;}
+  body{background:#fff;}
+  #app{display:block;}
+  .workspace{display:block;padding:0;}
+  .sheet{box-shadow:none;border:none;max-width:none;width:100%;}
+  .add-row-btn,.rowdel{display:none !important;}
+  table.tbl{page-break-inside:auto;}
+  table.tbl tr{page-break-inside:avoid;}
+  .block{page-break-inside:avoid;}
+  @page{size:A4;margin:14mm;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">ENGINEX</div>
+      <div class="sub">Site Forms &amp; Document Control</div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" id="searchBox" placeholder="Search forms…" oninput="renderNav()">
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-foot">24 standard site forms &middot; ENGINEX Engineering Suite</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="company-chip" id="companyChip"></div>
+      <button class="btn" onclick="openSettings()">Company &amp; Logo</button>
+      <button class="btn" onclick="exportAllJSON()">Export data</button>
+      <label class="btn" style="margin:0;">
+        Import data
+        <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
+      </label>
+    </div>
+    <div class="workspace" id="workspace"></div>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const FORMS = [{"code": "PD.SF002", "rev": "R2", "name": "Notice of Commencement and Site Handover", "short": "Site Handover", "category": "Site Establishment", "numberField": null, "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "date", "label": "Date", "kind": "date"}, {"key": "time", "label": "Time", "kind": "text"}, {"key": "projectRef", "label": "Project Ref.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectTitle", "label": "Project Title", "kind": "text"}, {"key": "siteLocation", "label": "Site Location", "kind": "text"}, {"key": "client", "label": "Client", "kind": "text"}, {"key": "pmc", "label": "PMC", "kind": "text"}, {"key": "contractorName", "label": "Name of Contractor", "kind": "text"}, {"key": "contractorAddress", "label": "Address of Contractor", "kind": "text"}, {"key": "dayOneDate", "label": "Official Date Counted As Day One", "kind": "date"}, {"key": "contractPeriod", "label": "Period of Contract", "kind": "text"}]}, {"type": "note", "text": "The aforementioned representatives have inspected the project site, and the Contractor hereby certifies that the site was received free from any obstacles. The Consultant has handed over the fixed points, benchmarks, and project boundaries shown on the drawings."}, {"type": "grid", "cols": 1, "fields": [{"key": "comments", "label": "Comments on Handover", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "client", "label": "Site Handed Over By (The Client)"}, {"key": "contractor", "label": "Site Received By (The Contractor)"}, {"key": "pmc", "label": "Site Witnessed By (The PMC)"}], "fields": ["Name", "Title", "Signature", "Date"]}]}, {"code": "PD.SF003", "rev": "R1", "name": "Start Work Request", "short": "Start Work Request", "category": "Site Establishment", "numberField": "requestNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "projectName", "label": "Project Name", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "workDescription", "label": "Work Description", "kind": "textarea"}, {"key": "gridLocation", "label": "Grid & Location", "kind": "textarea"}]}, {"type": "grid", "cols": 3, "fields": [{"key": "requestNo", "label": "Request No", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}, {"key": "shopDrawingRef", "label": "Shop Drawing Reference", "kind": "text"}, {"key": "approvedScheduleDate", "label": "Approved Schedule Date", "kind": "date"}, {"key": "startDate", "label": "Actual Start Date", "kind": "date"}, {"key": "completionDate", "label": "Completion Date", "kind": "date"}]}, {"type": "table", "key": "reviews", "title": "Discipline Review", "columns": [{"key": "discipline", "label": "Discipline"}, {"key": "contractorInitial", "label": "Contractor's Initial"}, {"key": "date1", "label": "Date"}, {"key": "consultantInitial", "label": "Consultant Initial"}, {"key": "date2", "label": "Date"}, {"key": "remarks", "label": "Consultant Remarks"}], "minRows": 4, "addable": true}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "consultant", "label": "Consultant / PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF004", "rev": "R1", "name": "Material Submittal Form", "short": "Material Submittal", "category": "Submittals", "numberField": "submittalNo", "fields": [{"type": "check", "key": "trade", "label": "Trade", "options": ["Arch", "Civil", "Mech", "Elect", "Landscape", "Others"]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "subject", "label": "Subject", "kind": "text"}]}, {"type": "grid", "cols": 4, "fields": [{"key": "specCode", "label": "Specs. Code & Ref.", "kind": "text"}, {"key": "boqCode", "label": "B.O.Q. Code Ref.", "kind": "text"}, {"key": "drawingNo", "label": "Drawing No.", "kind": "text"}, {"key": "submittalNo", "label": "Submittal No.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "dateReceived", "label": "Date Received", "kind": "date"}, {"key": "dateReturned", "label": "Date Returned", "kind": "date"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "subContractorName", "label": "Sub-Contractor Name", "kind": "text"}, {"key": "subContractorAddress", "label": "Sub-Contractor Address", "kind": "text"}, {"key": "subContractorPhone", "label": "Phone", "kind": "text"}, {"key": "subContractorTelex", "label": "Telex", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "manufacturerName", "label": "Manufacturer Name", "kind": "text"}, {"key": "supplierName", "label": "Supplier / Agent Name", "kind": "text"}, {"key": "manufacturerAddress", "label": "Manufacturer Address", "kind": "text"}, {"key": "supplierAddress", "label": "Supplier Address", "kind": "text"}, {"key": "manufacturerPhone", "label": "Manufacturer Phone", "kind": "text"}, {"key": "supplierPhone", "label": "Supplier Phone", "kind": "text"}]}, {"type": "check", "key": "infoSubmitted", "label": "Information Submitted & Attached", "options": ["Certificates", "Operation & Maintenance Manual", "Technical Brochure", "Spare Parts List", "Manufacturer's Data & Specs.", "Warranty", "Samples", "Others"]}, {"type": "grid", "cols": 1, "fields": [{"key": "comments", "label": "Contractor's Comments", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC / Engineer"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF005", "rev": "R1", "name": "Documents Submittal Form", "short": "Document Submittal", "category": "Submittals", "numberField": "submittalRef", "fields": [{"type": "check", "key": "trade", "label": "Trade", "options": ["Arch", "Civil", "Mech", "Elect", "Landscape", "Others"]}, {"type": "check", "key": "submittalType", "label": "Submittal Type", "options": ["Shop Drawing", "As Built Drawing", "Method Statement", "Time Schedule", "Takeoff Sheets", "Others"]}, {"type": "grid", "cols": 4, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "submittalRef", "label": "Submittal Ref", "kind": "text"}, {"key": "rev", "label": "Rev", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "table", "key": "documents", "title": "Documents Listed", "columns": [{"key": "itemNo", "label": "Item No."}, {"key": "title", "label": "Document Title"}, {"key": "docRef", "label": "Document Ref"}, {"key": "revision", "label": "Revision"}, {"key": "contractRef", "label": "Contract Document Ref."}, {"key": "actionCode", "label": "Action Code"}, {"key": "reviewedBy", "label": "Reviewed By"}], "minRows": 5, "addable": true}, {"type": "legend", "title": "Action Codes Legend", "items": [{"code": "1", "label": "Approved - No Exceptions Taken"}, {"code": "2", "label": "Approved As Noted (Make Corrections Noted)"}, {"code": "3", "label": "Revise and Resubmit"}, {"code": "4", "label": "Rejected - See Comments"}]}, {"type": "note", "text": "This is to certify that all items submitted herewith have been checked by the Contractor and are in conformance with the contract documents, and are approved by the Contractor for the works, except as noted below. Installation shall proceed only when the action code is 1 or 2. Review does not relieve the Contractor of responsibility for compliance with the contract documents."}, {"type": "grid", "cols": 1, "fields": [{"key": "comments", "label": "Review Comments", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Authorized Representative of Contractor"}, {"key": "projectManager", "label": "Project Manager"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF006", "rev": "R1", "name": "Request For Inspection (RFI)", "short": "Request for Inspection", "category": "Inspections & QA/QC", "numberField": "rfiNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectName", "label": "Project", "kind": "text"}, {"key": "projectNo", "label": "Project No.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "subject", "label": "Subject / Work Requested for Inspection", "kind": "textarea"}, {"key": "location", "label": "Location", "kind": "text"}]}, {"type": "grid", "cols": 4, "fields": [{"key": "rfiNo", "label": "RFI No.", "kind": "text"}, {"key": "revision", "label": "Revision", "kind": "text"}, {"key": "dateIn", "label": "Date In", "kind": "date"}, {"key": "dateOut", "label": "Date Out", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "drawingRef", "label": "Approved Drawing Ref.", "kind": "text"}, {"key": "pmcRemarks", "label": "PMC Remarks", "kind": "textarea"}]}, {"type": "legend", "title": "Inspection Results", "items": [{"code": "A", "label": "Work is accepted"}, {"code": "B", "label": "Revise & Submit: Work may be accepted subject to incorporation of changes indicated"}, {"code": "C", "label": "Work not accepted. Rework, adjust, and resubmit"}, {"code": "D", "label": "Not ready. Resubmit when ready"}]}, {"type": "note", "text": "We hereby submit/resubmit for inspection of above subject works and confirm that the works are completed and ready for inspection, in accordance with the specification, drawings, and consultant instruction."}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF007", "rev": "R1", "name": "Request for Pre-Concreting Inspection", "short": "Pre-Concreting Inspection", "category": "Inspections & QA/QC", "numberField": "requestNo", "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "requestNo", "label": "Request No.", "kind": "text"}, {"key": "rev", "label": "Rev", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectTitle", "label": "Project Title", "kind": "text"}, {"key": "projectRef", "label": "Project Ref.", "kind": "text"}, {"key": "contractor", "label": "Contractor", "kind": "text"}, {"key": "dateSubmittal", "label": "Date of Submittal", "kind": "date"}, {"key": "location", "label": "Location", "kind": "text"}, {"key": "building", "label": "Building", "kind": "text"}, {"key": "drawingRef", "label": "Drawing Ref.", "kind": "text"}, {"key": "level", "label": "Level", "kind": "text"}]}, {"type": "legend", "title": "Code", "items": [{"code": "A", "label": "Work to Proceed"}, {"code": "B", "label": "Work can Proceed after Correction of Deficiencies"}, {"code": "C", "label": "Work not to Proceed"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "datePouring", "label": "Date of Pouring", "kind": "date"}, {"key": "timePouring", "label": "Time of Pouring", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "description", "label": "Description", "kind": "textarea"}]}, {"type": "table", "key": "items", "title": "Inspection Checklist", "columns": [{"key": "no", "label": "No."}, {"key": "item", "label": "Subject Activity"}, {"key": "contractorCode", "label": "Contractor Code"}, {"key": "pmcComments", "label": "PMC Comments"}, {"key": "inspectionDate", "label": "Inspection Date"}, {"key": "initials", "label": "Initials"}], "minRows": 8, "addable": true}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF008", "rev": "R1", "name": "Field Record of Concrete Pouring", "short": "Concrete Pouring Record", "category": "Inspections & QA/QC", "numberField": null, "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectRef", "label": "Project Ref.", "kind": "text"}, {"key": "projectTitle", "label": "Project Title", "kind": "text"}, {"key": "contractor", "label": "Contractor", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}, {"key": "location", "label": "Location", "kind": "text"}, {"key": "building", "label": "Building", "kind": "text"}, {"key": "pouredItem", "label": "Poured Item", "kind": "text"}, {"key": "level", "label": "Level", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "concreteSpecs", "label": "Concrete Specs.", "kind": "text"}]}, {"type": "table", "key": "trucks", "title": "Truck Pours", "columns": [{"key": "truckNo", "label": "Truck No"}, {"key": "capacity", "label": "Capacity (m³)"}, {"key": "qty", "label": "Qty (m³)"}, {"key": "loadingStart", "label": "Loading Start"}, {"key": "pouringStart", "label": "Pouring Start"}, {"key": "pouringFinish", "label": "Pouring Finish"}, {"key": "slump", "label": "Slump (mm)"}, {"key": "temp", "label": "Concrete Temp"}, {"key": "cubes", "label": "No. of Cubes"}, {"key": "remarks", "label": "Remarks"}], "minRows": 6, "addable": true}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF009", "rev": "R1", "name": "Concrete Compressive Strength Test Results", "short": "Concrete Test Results", "category": "Inspections & QA/QC", "numberField": null, "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "laboratory", "label": "Laboratory", "kind": "text"}]}, {"type": "table", "key": "samples", "title": "Sample Results (N/mm²)", "columns": [{"key": "date", "label": "Date"}, {"key": "sampleNo", "label": "Sample No."}, {"key": "location", "label": "Location"}, {"key": "slump", "label": "Slump (mm)"}, {"key": "temp", "label": "Temp °C"}, {"key": "d3", "label": "3 Days"}, {"key": "d7", "label": "7 Days"}, {"key": "d28", "label": "28 Days"}, {"key": "fieldResult", "label": "Field 7 Days"}], "minRows": 6, "addable": true}, {"type": "sign", "key": "parties", "parties": [{"key": "laboratory", "label": "Laboratory"}, {"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF010", "rev": "R2", "name": "Materials Inspection Request (MIR)", "short": "Materials Inspection Request", "category": "Inspections & QA/QC", "numberField": "mirNo", "fields": [{"type": "check", "key": "trade", "label": "Trade", "options": ["Arch", "Civil", "Mech", "Elect", "Landscape", "Others"]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectRef", "label": "Project Ref", "kind": "text"}, {"key": "mirNo", "label": "MIR No.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 3, "fields": [{"key": "quantity", "label": "Quantity", "kind": "text"}, {"key": "unit", "label": "Unit", "kind": "text"}, {"key": "dateOfDelivery", "label": "Date of Delivery", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "specification", "label": "Specification", "kind": "textarea"}, {"key": "references", "label": "References", "kind": "textarea"}]}, {"type": "legend", "title": "Inspection Results", "items": [{"code": "A", "label": "Accepted"}, {"code": "B", "label": "Accepted as Noted"}, {"code": "C", "label": "Rejected"}, {"code": "D", "label": "Not Ready for Inspection"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF011", "rev": "R2", "name": "Daily Construction Report (DCR)", "short": "Daily Construction Report", "category": "Site Reporting", "numberField": "dcrNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectRef", "label": "Project Ref", "kind": "text"}, {"key": "projectName", "label": "Project Name", "kind": "text"}]}, {"type": "grid", "cols": 3, "fields": [{"key": "dcrNo", "label": "DCR No.", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}, {"key": "day", "label": "Day", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "toMs", "label": "To: M/s.", "kind": "text"}, {"key": "ccMs", "label": "CC: M/s.", "kind": "text"}]}, {"type": "row", "blocks": [{"type": "check", "key": "tempRange", "label": "Temp. °C", "options": ["0-30", "30-40", "40-50", "50 up"]}, {"type": "check", "key": "weather", "label": "Weather", "options": ["Bright Sun", "Clear", "Overcast", "Rain", "Dust"]}]}, {"type": "row", "blocks": [{"type": "check", "key": "sea", "label": "Sea", "options": ["Still", "Moderate", "High"]}, {"type": "check", "key": "humidity", "label": "Humidity", "options": ["Dry", "Moderate", "Humid"]}, {"type": "check", "key": "wind", "label": "Wind", "options": ["Still", "Moderate", "High"]}]}, {"type": "table", "key": "equipment", "title": "Machinery & Equipment Used", "columns": [{"key": "no", "label": "No"}, {"key": "description", "label": "Description"}, {"key": "size", "label": "Size"}, {"key": "area", "label": "Area"}, {"key": "onSite", "label": "No. On Site"}, {"key": "downTime", "label": "Down Time"}, {"key": "totalHours", "label": "Total Working Hrs"}, {"key": "remarks", "label": "Remarks"}], "minRows": 4, "addable": true}, {"type": "table", "key": "materials", "title": "Material Delivered to Site", "columns": [{"key": "time", "label": "Time"}, {"key": "description", "label": "Description"}, {"key": "ticketNo", "label": "Ticket No"}, {"key": "boqNo", "label": "BOQ No (Page/Item)"}, {"key": "qty", "label": "Quantity"}, {"key": "units", "label": "Units"}, {"key": "area", "label": "Area"}, {"key": "origin", "label": "Origin / Manufacturer"}, {"key": "remarks", "label": "Remarks"}], "minRows": 4, "addable": true}, {"type": "fixedTable", "key": "staff", "title": "Manpower — Staff", "rowLabelHeader": "Occupation", "rows": [{"key": "pm", "label": "Project Manager"}, {"key": "cm", "label": "Construction Manager"}, {"key": "planning", "label": "Planning Engineer"}, {"key": "mep", "label": "MEP Coordinator"}, {"key": "sector", "label": "Sector Engineer"}, {"key": "qaqc", "label": "QA / QC"}, {"key": "qs", "label": "Q / S"}, {"key": "siteEng", "label": "Site Engineer"}, {"key": "genForeman", "label": "General Foreman"}, {"key": "carpForeman", "label": "Carp. Foreman"}, {"key": "sfForeman", "label": "S/Fixer Foreman"}, {"key": "safety", "label": "Safety Officer"}, {"key": "secretary", "label": "Secretary"}, {"key": "surveyor", "label": "Surveyors"}, {"key": "asstSurveyor", "label": "Assistant Surveyor"}, {"key": "draftsman", "label": "Draftsman"}], "columns": [{"key": "contract", "label": "Contract"}, {"key": "actual", "label": "Actual"}], "totals": true}, {"type": "fixedTable", "key": "labor", "title": "Manpower — Labor", "rowLabelHeader": "Occupation", "rows": [{"key": "carpenter", "label": "Carpenter"}, {"key": "steelFixer", "label": "Steel Fixer"}, {"key": "masons", "label": "Masons"}, {"key": "concreteFinishers", "label": "Concrete Finishers"}, {"key": "plasterer", "label": "Plasterer"}, {"key": "painter", "label": "Painter"}, {"key": "labors", "label": "Labors"}, {"key": "scaffoldLabors", "label": "Labors for Scaffolding"}, {"key": "genLabors", "label": "General Labors"}, {"key": "mechanic", "label": "Mechanic"}, {"key": "electrician", "label": "Electrician"}, {"key": "plumber", "label": "Plumber"}, {"key": "operators", "label": "Operators"}, {"key": "driver", "label": "Driver"}, {"key": "storekeeper", "label": "Storekeeper"}, {"key": "timeKeeper", "label": "Time Keeper"}, {"key": "officeBoy", "label": "Office Boy / Watchman"}], "columns": [{"key": "skilled", "label": "Skilled"}, {"key": "unskilled", "label": "Unskilled"}], "totals": true}, {"type": "table", "key": "activitiesProgress", "title": "A. Activities in Progress", "columns": [{"key": "activityNo", "label": "Activity #"}, {"key": "description", "label": "Description"}, {"key": "area", "label": "Area"}, {"key": "started", "label": "Date Started"}, {"key": "completed", "label": "Date Completed"}, {"key": "pctComplete", "label": "% Comp."}, {"key": "remarks", "label": "Remarks"}], "minRows": 3, "addable": true}, {"type": "table", "key": "activitiesPlanned", "title": "B. Activities Planned for the Next Day", "columns": [{"key": "activityNo", "label": "Activity #"}, {"key": "description", "label": "Description"}, {"key": "area", "label": "Area"}, {"key": "remarks", "label": "Remarks"}], "minRows": 3, "addable": true}, {"type": "table", "key": "visitors", "title": "Site Visitors", "columns": [{"key": "time", "label": "Time"}, {"key": "company", "label": "Company"}, {"key": "visitorName", "label": "Visitor's Name"}, {"key": "companyRepresented", "label": "Company Represented"}, {"key": "reason", "label": "Reason for Visit"}, {"key": "remarks", "label": "Remarks"}], "minRows": 3, "addable": true}, {"type": "grid", "cols": 1, "fields": [{"key": "pmcComments", "label": "PMC Comments", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "submittedBy", "label": "Submitted By"}, {"key": "pmc", "label": "PMC"}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF013", "rev": "R2", "name": "Inquiry Sheet", "short": "Inquiry Sheet", "category": "Submittals", "numberField": "ishNo", "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "projectRef", "label": "Project Ref.", "kind": "text"}, {"key": "ishNo", "label": "ISH No.", "kind": "text"}, {"key": "rev", "label": "Rev.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "package", "label": "Package", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "from", "label": "From", "kind": "text"}, {"key": "to", "label": "To", "kind": "text"}, {"key": "attn", "label": "Attn", "kind": "text"}]}, {"type": "check", "key": "discipline", "label": "Discipline", "options": ["Arch", "Mech", "Civil", "Electrical", "HVAC", "Others"]}, {"type": "grid", "cols": 1, "fields": [{"key": "clarification", "label": "Clarification Pertaining To", "kind": "textarea"}, {"key": "location", "label": "Location / Areas", "kind": "text"}, {"key": "drawingRef", "label": "Drawing Ref", "kind": "text"}, {"key": "specsRef", "label": "Specs Ref.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "inquiry", "label": "Inquiry", "kind": "textarea"}, {"key": "response", "label": "Response", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "requestedBy", "label": "Requested By"}, {"key": "answeredBy", "label": "Answered By"}], "fields": ["Name", "Position", "Signature", "Date"]}]}, {"code": "PD.SF014", "rev": "R0", "name": "Transmittal", "short": "Transmittal", "category": "Submittals", "numberField": "no", "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "no", "label": "No", "kind": "text"}, {"key": "office", "label": "Office", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "projectInfo", "label": "Project Name / No / Description", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "toAddress", "label": "To / Address", "kind": "text"}, {"key": "attention", "label": "Attention", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "via", "label": "We are sending via", "kind": "text"}]}, {"type": "table", "key": "items", "title": "Items Detailed Below", "columns": [{"key": "itemNo", "label": "Item No"}, {"key": "description", "label": "Description"}, {"key": "date", "label": "Date"}], "minRows": 5, "addable": true}, {"type": "grid", "cols": 1, "fields": [{"key": "purpose", "label": "Purpose of Transmittal", "kind": "text"}, {"key": "remarks", "label": "Remarks", "kind": "textarea"}]}, {"type": "note", "text": "If the enclosures received are not listed above, please notify us at once at the office indicated above. Please sign and return the duplicate copy of this form and retain the original for your records."}, {"type": "sign", "key": "parties", "parties": [{"key": "issuedBy", "label": "Issued By"}, {"key": "receivedBy", "label": "Received By"}], "fields": ["Name", "Signature", "Date"]}, {"type": "grid", "cols": 2, "fields": [{"key": "jobFile", "label": "Job File", "kind": "text"}, {"key": "copyTo", "label": "Copy To", "kind": "text"}]}]}, {"code": "PD.SF015", "rev": "R3", "name": "Payment Certificate Form", "short": "Payment Certificate", "category": "Commercial & Change Management", "numberField": "certNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "projectNo", "label": "Project No.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "contractRef", "label": "Contract / PO Ref.", "kind": "text"}, {"key": "contractName", "label": "Contract Name", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "contractorName", "label": "Contractor Name", "kind": "text"}]}, {"type": "grid", "cols": 3, "fields": [{"key": "certNo", "label": "Certificate No", "kind": "text"}, {"key": "certType", "label": "Certificate Type", "kind": "select", "options": ["Interim", "Final"]}, {"key": "periodEnding", "label": "For the Period Ending", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "submittalDate", "label": "Submittal Date", "kind": "date"}]}, {"type": "finance", "key": "pc"}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Submitted by Contractor"}, {"key": "cm", "label": "Approved by Construction Manager"}, {"key": "pm", "label": "Approved by Project Manager"}, {"key": "pd", "label": "Approved by Manager, Projects Dept."}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF016", "rev": "R1", "name": "Change Request", "short": "Change Request", "category": "Commercial & Change Management", "numberField": "no", "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "no", "label": "No.", "kind": "text"}, {"key": "rev", "label": "Rev", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "contractRef", "label": "Contract / PO Ref.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "projectNo", "label": "Project No.", "kind": "text"}]}, {"type": "check", "key": "requestedBy", "label": "Change Requested By", "options": ["Owner", "PMC", "Contractor", "Others"]}, {"type": "grid", "cols": 1, "fields": [{"key": "proposedChange", "label": "Details of the Proposed Change", "kind": "textarea"}, {"key": "relatedDocs", "label": "Related Documents", "kind": "text"}, {"key": "drawingRef", "label": "Drawing Ref", "kind": "text"}, {"key": "specRef", "label": "Specification Ref", "kind": "text"}, {"key": "others", "label": "Others", "kind": "text"}, {"key": "justification", "label": "Justification", "kind": "textarea"}, {"key": "costScheduleImpact", "label": "Estimated Cost / Schedule Impact", "kind": "textarea"}]}, {"type": "row", "blocks": [{"type": "check", "key": "costImpact", "label": "Cost Impact", "options": ["Yes", "No"]}, {"type": "check", "key": "timeImpact", "label": "Time Impact", "options": ["Yes", "No"]}]}, {"type": "grid", "cols": 2, "fields": [{"key": "amount", "label": "Amount (SAR)", "kind": "text"}, {"key": "duration", "label": "Duration (days)", "kind": "text"}]}, {"type": "note", "text": "CM Recommendation:"}, {"type": "row", "blocks": [{"type": "check", "key": "cmRecommend", "label": "CM Decision", "options": ["Recommended", "Not Recommended"]}]}, {"type": "sign", "key": "cmSign", "parties": [{"key": "cm", "label": "Construction Manager"}], "fields": ["Name", "Signature", "Date"]}, {"type": "row", "blocks": [{"type": "check", "key": "pmRecommend", "label": "PM Decision", "options": ["Recommended/Approved", "Rejected"]}]}, {"type": "sign", "key": "pmSign", "parties": [{"key": "pm", "label": "Project Manager"}], "fields": ["Name", "Signature", "Date"]}, {"type": "row", "blocks": [{"type": "check", "key": "pdRecommend", "label": "Manager, Projects Dept. Decision", "options": ["Recommended/Approved", "Rejected"]}]}, {"type": "sign", "key": "pdSign", "parties": [{"key": "pd", "label": "Manager, Projects Dept."}], "fields": ["Name", "Signature", "Date"]}, {"type": "row", "blocks": [{"type": "check", "key": "ownerDecision", "label": "Owner Decision", "options": ["Approved (Proceed with VO if any)", "Rejected (Cancel CR)"]}]}, {"type": "sign", "key": "ownerSign", "parties": [{"key": "owner", "label": "Owner Representative"}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF017", "rev": "R2", "name": "Variation Order", "short": "Variation Order", "category": "Commercial & Change Management", "numberField": "voNo", "fields": [{"type": "check", "key": "initiatedBy", "label": "Initiated By", "options": ["Owner", "PMC", "Contractor", "Others"]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "projectName", "label": "Project Name", "kind": "text"}, {"key": "voNo", "label": "Variation Order Number", "kind": "text"}, {"key": "contractRef", "label": "Contract Ref", "kind": "text"}, {"key": "jobNo", "label": "Job No", "kind": "text"}, {"key": "contractDate", "label": "Contract Date", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "changesDescription", "label": "You are directed to make the following changes in this contract", "kind": "textarea"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "originalContractPrice", "label": "Original Contract Price (SR)", "kind": "text"}, {"key": "netChangePrevious", "label": "Net Change by Previous Variation Orders (SR)", "kind": "text"}, {"key": "priceBeforeVariation", "label": "Contract Price Prior to this Variation (SR)", "kind": "text"}, {"key": "priceChangeAmount", "label": "Change by this Variation Order (SR, +/-)", "kind": "text"}, {"key": "newContractPrice", "label": "New Contract Price Including this VO (SR)", "kind": "text"}, {"key": "timeChangeDays", "label": "Contract Time Change (days, +/-)", "kind": "text"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "pmc", "label": "PMC"}, {"key": "contractor", "label": "Contractor"}, {"key": "owner", "label": "Owner"}], "fields": ["Address", "Signature", "Name", "Date"]}]}, {"code": "PD.SF018", "rev": "R0", "name": "List of Deficiencies", "short": "List of Deficiencies", "category": "Inspections & QA/QC", "numberField": "listNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "projectNo", "label": "Project No.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "contract", "label": "Contract", "kind": "text"}, {"key": "listNo", "label": "List No.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "to", "label": "To", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "inspectionDate", "label": "Inspection Date", "kind": "date"}, {"key": "rating", "label": "Rating", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "trade", "label": "Trade", "kind": "text"}, {"key": "level", "label": "Level", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "build", "label": "Build", "kind": "text"}, {"key": "room", "label": "Room", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "sectionPart", "label": "Section / Part", "kind": "text"}]}, {"type": "legend", "title": "Rating", "items": [{"code": "A", "label": "Works Satisfactory"}, {"code": "B", "label": "Works not Satisfactory"}, {"code": "C", "label": "Works Not Specified"}, {"code": "D", "label": "Works Rejected"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "inspectorSignature", "label": "Inspector's Signature", "kind": "text"}]}, {"type": "table", "key": "items", "title": "Deficiencies", "columns": [{"key": "no", "label": "Sl. No."}, {"key": "location", "label": "Location"}, {"key": "subject", "label": "Subject"}, {"key": "deficiency", "label": "Deficiency To Be Corrected"}, {"key": "remarks", "label": "Remarks / Rating"}], "minRows": 6, "addable": true}]}, {"code": "PD.SF019", "rev": "R2", "name": "Non-Conformance Report (NCR)", "short": "Non-Conformance Report", "category": "Inspections & QA/QC", "numberField": "ncrNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "ncrNo", "label": "NCR No.", "kind": "text"}]}, {"type": "note", "text": "Part 1 — For Completion by PMC Engineer"}, {"type": "grid", "cols": 2, "fields": [{"key": "contractor", "label": "Contractor", "kind": "text"}, {"key": "drawingNo", "label": "Drawing No.", "kind": "text"}, {"key": "location", "label": "Location", "kind": "text"}, {"key": "specNo", "label": "Spec. No.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "nonConformity", "label": "Description of Non-Conformity / Action Required", "kind": "textarea"}]}, {"type": "sign", "key": "part1Sign", "parties": [{"key": "pmc", "label": "Signed by PMC Engineer"}, {"key": "contractor", "label": "Signed by Contractor"}], "fields": ["Name", "Signature", "Date"]}, {"type": "note", "text": "Part 2 — Contractor Response"}, {"type": "grid", "cols": 1, "fields": [{"key": "proposedDate", "label": "Proposed Date of Corrective Action", "kind": "date"}]}, {"type": "sign", "key": "part2Sign", "parties": [{"key": "contractor", "label": "Signed by Contractor"}, {"key": "pmc", "label": "Signed by PMC"}], "fields": ["Name", "Signature", "Date"]}, {"type": "row", "blocks": [{"type": "check", "key": "actionTaken", "label": "Action Taken", "options": ["Accept", "Reject"]}]}, {"type": "grid", "cols": 1, "fields": [{"key": "actionCompleted", "label": "Action Completed", "kind": "date"}]}]}, {"code": "PD.SF020", "rev": "R2", "name": "Accident Report", "short": "Accident Report", "category": "Safety", "numberField": "no", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "no", "label": "No.", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "project", "label": "Project", "kind": "text"}, {"key": "projectRef", "label": "Project Ref.", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "from", "label": "From", "kind": "text"}, {"key": "to", "label": "To", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "reporterName", "label": "Name of Reporter", "kind": "text"}, {"key": "company", "label": "Company", "kind": "text"}, {"key": "position", "label": "Position", "kind": "text"}, {"key": "dateOfIncident", "label": "Date", "kind": "date"}, {"key": "timeOfIncident", "label": "Time", "kind": "text"}, {"key": "location", "label": "Location", "kind": "text"}]}, {"type": "note", "text": "Details of Injured Person"}, {"type": "grid", "cols": 2, "fields": [{"key": "personInjured", "label": "Person Injured", "kind": "text"}, {"key": "age", "label": "Age", "kind": "text"}, {"key": "civilId", "label": "Civil ID No.", "kind": "text"}, {"key": "homeTel", "label": "Home Tel. No.", "kind": "text"}, {"key": "homeAddress", "label": "Home Address", "kind": "text"}, {"key": "natureOfInjury", "label": "Nature of Injury", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "incidentDetails", "label": "Brief Details of Injury / Damage / Incident (and Sketch if Appropriate)", "kind": "textarea"}]}, {"type": "row", "blocks": [{"type": "check", "key": "witness", "label": "Was there a witness?", "options": ["Yes", "No"]}, {"type": "check", "key": "methodStatementSubmitted", "label": "Method Statement Submitted?", "options": ["Yes", "No"]}]}, {"type": "row", "blocks": [{"type": "check", "key": "methodStatementAdequate", "label": "Method Statement Adequate?", "options": ["Yes", "No"]}, {"type": "check", "key": "methodStatementImplemented", "label": "Method Statement Properly Implemented?", "options": ["Yes", "No"]}]}, {"type": "note", "text": "Property"}, {"type": "grid", "cols": 2, "fields": [{"key": "propertyDescription", "label": "Property Description", "kind": "text"}, {"key": "propertyOwner", "label": "Property Owner", "kind": "text"}, {"key": "propertyAddress", "label": "Address", "kind": "text"}, {"key": "natureOfDamage", "label": "Nature of Damage", "kind": "text"}, {"key": "extentOfDamage", "label": "Extent of Damage", "kind": "text"}]}, {"type": "row", "blocks": [{"type": "check", "key": "personAbsent", "label": "Person Absent Following Day?", "options": ["Yes", "No"]}]}, {"type": "grid", "cols": 1, "fields": [{"key": "siteManagerRemarks", "label": "Contractor's Site Manager Remarks", "kind": "textarea"}, {"key": "preventionAction", "label": "Action Taken to Prevent Reoccurrence", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "reporter", "label": "Reporter"}, {"key": "receivedBy", "label": "Received By"}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF021", "rev": "R2", "name": "Safety Violation Report", "short": "Safety Violation Report", "category": "Safety", "numberField": null, "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectRef", "label": "Project Ref.", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "projectName", "label": "Project Name", "kind": "text"}, {"key": "time", "label": "Time", "kind": "text"}]}, {"type": "check", "key": "discrepancy", "label": "Safety Discrepancies Noted", "options": ["Construction Fencing", "Excavation / Earthwork", "Demolition", "Scaffolding / Formworks", "Access Facilities", "Lifting / Hoisting / Gears", "Equipment / Machinery", "Electrical", "Protective Apparel", "Fire Protection / Prevention", "Compressed Gas / Cylinder", "Hand / Power Tools", "Health / Welfare / Sanitation", "First Aid / Medical", "Site Condition", "Equipment Certification", "Safety Equipment", "Motor Vehicles", "Unsafe Conditions / Acts", "Hot Work / Welding / Burning", "Others"]}, {"type": "grid", "cols": 1, "fields": [{"key": "details", "label": "Details of Violation", "kind": "textarea"}, {"key": "correctiveAction", "label": "Corrective Action Required", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "safetyOfficer", "label": "Safety Officer"}, {"key": "contractor", "label": "Contractor Representative"}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF023", "rev": "R0", "name": "Site Safety Inspection", "short": "Site Safety Inspection", "category": "Safety", "numberField": "ssiRef", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "ssiRef", "label": "SSI Ref.", "kind": "text"}, {"key": "contractName", "label": "Contract Name", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "date", "label": "Date", "kind": "date"}, {"key": "contractor", "label": "Contractor", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "inspectionTeam", "label": "Inspection Team", "kind": "text"}]}, {"type": "table", "key": "team", "title": "Inspection Team Members", "columns": [{"key": "name", "label": "Name"}, {"key": "company", "label": "Company"}, {"key": "position", "label": "Position"}], "minRows": 3, "addable": true}, {"type": "rating", "key": "ssi", "categories": [{"title": "1.0 Safety Administration", "items": [{"key": "c0_i0", "label": "Management Communications (Bulletins/Memos)", "possible": 10}, {"key": "c0_i1", "label": "Toolbox Talks", "possible": 20}, {"key": "c0_i2", "label": "Management Inspection", "possible": 20}, {"key": "c0_i3", "label": "Task Talks", "possible": 10}, {"key": "c0_i4", "label": "Specialised Training", "possible": 10}, {"key": "c0_i5", "label": "Notice Boards & Publicity", "possible": 10}, {"key": "c0_i6", "label": "Supervisory Roles (Defined)", "possible": 20}, {"key": "c0_i7", "label": "Follow Up / Remedial Actions", "possible": 10}, {"key": "c0_i8", "label": "Communication of Rules / Regs", "possible": 10}]}, {"title": "2.0 Health & Welfare", "items": [{"key": "c1_i0", "label": "Drinking Water & Cups", "possible": 20}, {"key": "c1_i1", "label": "Toilet Facilities", "possible": 15}, {"key": "c1_i2", "label": "Washing Facilities", "possible": 15}, {"key": "c1_i3", "label": "First Aid & Medical Facilities", "possible": 20}]}, {"title": "3.0 Emergency Procedure", "items": [{"key": "c2_i0", "label": "Rescue Equipment", "possible": 10}, {"key": "c2_i1", "label": "Emergency Transportation", "possible": 20}, {"key": "c2_i2", "label": "Emergency Communication", "possible": 20}, {"key": "c2_i3", "label": "Muster Points", "possible": 15}, {"key": "c2_i4", "label": "Alarms / Wind Socks", "possible": 15}, {"key": "c2_i5", "label": "Fire Equipment", "possible": 20}]}, {"title": "4.0 Access & Egress Working Places", "items": [{"key": "c3_i0", "label": "Ladders Inspected", "possible": 10}, {"key": "c3_i1", "label": "Ladders Used", "possible": 20}, {"key": "c3_i2", "label": "Ramps / General Access", "possible": 15}, {"key": "c3_i3", "label": "Stairways Properly Built", "possible": 15}, {"key": "c3_i4", "label": "Scaffolds Erection", "possible": 20}, {"key": "c3_i5", "label": "Guard-Rails / Kick Plates", "possible": 20}, {"key": "c3_i6", "label": "House Keeping", "possible": 20}]}, {"title": "5.0 Personal Protective Equipment", "items": [{"key": "c4_i0", "label": "Head Protection", "possible": 20}, {"key": "c4_i1", "label": "Eye Protection", "possible": 20}, {"key": "c4_i2", "label": "Foot Protection", "possible": 20}, {"key": "c4_i3", "label": "Hearing Protection", "possible": 20}, {"key": "c4_i4", "label": "Respiratory Protection", "possible": 20}, {"key": "c4_i5", "label": "Hand Protection", "possible": 20}, {"key": "c4_i6", "label": "Safety Harnesses", "possible": 20}, {"key": "c4_i7", "label": "Specialist Protection", "possible": 20}]}, {"title": "6.0 Excavations", "items": [{"key": "c5_i0", "label": "Sloped / Benched / Shored", "possible": 15}, {"key": "c5_i1", "label": "Barriers / Warnings", "possible": 15}, {"key": "c5_i2", "label": "Spoil Clearance", "possible": 10}, {"key": "c5_i3", "label": "Access / Egress", "possible": 15}, {"key": "c5_i4", "label": "Man / Machine Interface", "possible": 15}, {"key": "c5_i5", "label": "Adjacent Structures", "possible": 15}, {"key": "c5_i6", "label": "UG Utilities Protected", "possible": 15}]}, {"title": "7.0 Lifting, Plant & Equipment", "items": [{"key": "c6_i0", "label": "Cranes General Condition", "possible": 20}, {"key": "c6_i1", "label": "Hoists / Winches", "possible": 20}, {"key": "c6_i2", "label": "Excavators", "possible": 10}, {"key": "c6_i3", "label": "Condition of Wire Ropes", "possible": 10}, {"key": "c6_i4", "label": "Certified Equipment", "possible": 20}, {"key": "c6_i5", "label": "Condition of Shackles / Hooks", "possible": 10}, {"key": "c6_i6", "label": "Storage of Lifting Equipment", "possible": 10}, {"key": "c6_i7", "label": "Vehicle Condition", "possible": 10}, {"key": "c6_i8", "label": "Back Up Alarms", "possible": 10}, {"key": "c6_i9", "label": "Tyres, Brakes & Lights", "possible": 10}, {"key": "c6_i10", "label": "Competent & Approved Operators", "possible": 20}]}, {"title": "8.0 Electrical Systems", "items": [{"key": "c7_i0", "label": "Temporary Electrics", "possible": 20}, {"key": "c7_i1", "label": "Residual Current Devices / Earth Leakage Breakers", "possible": 20}, {"key": "c7_i2", "label": "Warning Signs Posted", "possible": 10}, {"key": "c7_i3", "label": "Cable Management", "possible": 10}, {"key": "c7_i4", "label": "Fittings & Connections", "possible": 20}]}, {"title": "9.0 Compressed Gases", "items": [{"key": "c8_i0", "label": "Proper Storage (Separation)", "possible": 10}, {"key": "c8_i1", "label": "Condition of Cylinders", "possible": 10}, {"key": "c8_i2", "label": "Colour Coding", "possible": 10}, {"key": "c8_i3", "label": "Warning Signs", "possible": 10}, {"key": "c8_i4", "label": "Flashback Arrestors", "possible": 10}, {"key": "c8_i5", "label": "Fire Extinguisher", "possible": 10}, {"key": "c8_i6", "label": "Cylinders Secured (Chained / Trolley)", "possible": 10}, {"key": "c8_i7", "label": "Hose Condition", "possible": 10}, {"key": "c8_i8", "label": "Sparks Containment", "possible": 10}]}, {"title": "10.0 Hand & Power Tools", "items": [{"key": "c9_i0", "label": "Correct Tools Provided / Used", "possible": 10}, {"key": "c9_i1", "label": "Storage", "possible": 10}, {"key": "c9_i2", "label": "Cartridge Operated Tools", "possible": 10}, {"key": "c9_i3", "label": "Trained Operators", "possible": 10}, {"key": "c9_i4", "label": "Correct Voltage", "possible": 10}, {"key": "c9_i5", "label": "Maintenance", "possible": 10}, {"key": "c9_i6", "label": "Cable / Hose Condition", "possible": 10}]}, {"title": "11.0 Working at Height", "items": [{"key": "c10_i0", "label": "Erection Properly Supervised", "possible": 20}, {"key": "c10_i1", "label": "Lines / Anchor Points Provided", "possible": 10}, {"key": "c10_i2", "label": "PPE / Harnesses Used", "possible": 10}, {"key": "c10_i3", "label": "Safe Access", "possible": 10}, {"key": "c10_i4", "label": "Weather Limitations", "possible": 10}, {"key": "c10_i5", "label": "Tag Lines Used", "possible": 10}]}, {"title": "12.0 Environmental Conditions", "items": [{"key": "c11_i0", "label": "Noise Control", "possible": 15}, {"key": "c11_i1", "label": "Road Maintenance", "possible": 15}, {"key": "c11_i2", "label": "Pollution Controls", "possible": 15}, {"key": "c11_i3", "label": "Dust Suppression", "possible": 15}, {"key": "c11_i4", "label": "Heat Exhaustion", "possible": 20}, {"key": "c11_i5", "label": "Environmental Protection", "possible": 20}]}, {"title": "13.0 Painting / Grit Blasting", "items": [{"key": "c12_i0", "label": "Ventilation", "possible": 15}, {"key": "c12_i1", "label": "Containment / Screening", "possible": 15}, {"key": "c12_i2", "label": "Earthing", "possible": 10}, {"key": "c12_i3", "label": "Communications", "possible": 15}, {"key": "c12_i4", "label": "Flammable Materials", "possible": 10}, {"key": "c12_i5", "label": "PPE", "possible": 15}]}, {"title": "14.0 Housekeeping", "items": [{"key": "c13_i0", "label": "Good Site Layout", "possible": 20}, {"key": "c13_i1", "label": "Materials Stacked", "possible": 15}, {"key": "c13_i2", "label": "Laydown Areas / Material Storage", "possible": 20}, {"key": "c13_i3", "label": "Timber Denailed", "possible": 15}, {"key": "c13_i4", "label": "Walkways / Working Platforms Kept Clear", "possible": 20}, {"key": "c13_i5", "label": "Housekeeping Arrangements Effective", "possible": 20}]}, {"title": "15.0 Specialist Activities", "items": [{"key": "c14_i0", "label": "Pressure Testing (Barriers/Signs etc.)", "possible": 20}, {"key": "c14_i1", "label": "Radiography", "possible": 20}, {"key": "c14_i2", "label": "Heavy Lifts", "possible": 20}, {"key": "c14_i3", "label": "Hazardous Substances", "possible": 20}]}, {"title": "16.0 Line Management", "items": [{"key": "c15_i0", "label": "Adequate Supervision", "possible": 20}, {"key": "c15_i1", "label": "Commitment", "possible": 20}, {"key": "c15_i2", "label": "Near Miss Reporting", "possible": 15}, {"key": "c15_i3", "label": "Incident Follow Up", "possible": 15}, {"key": "c15_i4", "label": "Safety Awareness", "possible": 20}, {"key": "c15_i5", "label": "Toolbox Talks", "possible": 20}]}]}]}, {"code": "PD.SF024", "rev": "R0", "name": "Snag List", "short": "Snag List", "category": "Inspections & QA/QC", "numberField": "listNo", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "projectName", "label": "Project Name", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "contract", "label": "Contract", "kind": "text"}, {"key": "listNo", "label": "List No.", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "to", "label": "To", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "inspectionDate", "label": "Inspection Date", "kind": "date"}, {"key": "rating", "label": "Rating", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "trade", "label": "Trade", "kind": "text"}, {"key": "level", "label": "Level", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "build", "label": "Build", "kind": "text"}, {"key": "room", "label": "Room", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "sectionPart", "label": "Section / Part", "kind": "text"}]}, {"type": "legend", "title": "Rating", "items": [{"code": "A", "label": "Works Satisfactory"}, {"code": "B", "label": "Works not Satisfactory"}, {"code": "C", "label": "Works Not Specified"}, {"code": "D", "label": "Works Rejected"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "inspectorSignature", "label": "Inspector's Signature", "kind": "text"}]}, {"type": "table", "key": "items", "title": "Snags", "columns": [{"key": "itemNo", "label": "Item No."}, {"key": "roomNo", "label": "Room No."}, {"key": "subject", "label": "Subject"}, {"key": "deficiency", "label": "Deficiency To Be Corrected"}, {"key": "remarks", "label": "Remarks / Rating"}], "minRows": 8, "addable": true}]}, {"code": "PD.SF025", "rev": "R0", "name": "Quantity Takeoff Sheet", "short": "Quantity Takeoff Sheet", "category": "Inspections & QA/QC", "numberField": null, "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectNo", "label": "Project #", "kind": "text"}, {"key": "projectName", "label": "Project Name", "kind": "text"}]}, {"type": "grid", "cols": 3, "fields": [{"key": "boqSection", "label": "BOQ Section", "kind": "text"}, {"key": "boqPage", "label": "BOQ Page", "kind": "text"}, {"key": "boqItem", "label": "BOQ Item", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "subItem", "label": "Sub Item", "kind": "text"}, {"key": "unit", "label": "Unit", "kind": "text"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "itemDescription", "label": "Item Description", "kind": "textarea"}]}, {"type": "table", "key": "rows", "title": "Takeoff Rows", "columns": [{"key": "sign", "label": "+/-"}, {"key": "floor", "label": "Floor"}, {"key": "location", "label": "Location / Description"}, {"key": "noOfPcs", "label": "No. of Pcs"}, {"key": "length", "label": "Length"}, {"key": "width", "label": "Width"}, {"key": "height", "label": "Height"}, {"key": "addition", "label": "Addition"}, {"key": "deduction", "label": "Deduction"}, {"key": "total", "label": "Total"}, {"key": "remarks", "label": "Remarks"}], "minRows": 8, "addable": true}, {"type": "sign", "key": "parties", "parties": [{"key": "preparedBy", "label": "Prepared By"}, {"key": "checkedBy", "label": "Checked By"}], "fields": ["Name", "Signature", "Date"]}]}, {"code": "PD.SF026", "rev": "R1", "name": "Certificate of Preliminary Handover", "short": "Preliminary Handover", "category": "Handover & Closeout", "numberField": "projectRef", "fields": [{"type": "grid", "cols": 2, "fields": [{"key": "projectRef", "label": "Project Ref.", "kind": "text"}, {"key": "projectTitle", "label": "Project Title", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "owner", "label": "Owner", "kind": "text"}, {"key": "contractor", "label": "Contractor", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "contractFor", "label": "Contract For", "kind": "text"}, {"key": "contractDate", "label": "Contract Date", "kind": "date"}]}, {"type": "grid", "cols": 1, "fields": [{"key": "substantialCompletionDate", "label": "Date of Substantial Completion", "kind": "date"}]}, {"type": "note", "text": "The work performed under this contract has been inspected by the authorized representatives of the Owner, Contractor, and Engineer/Architect, and the project (or specified part, as indicated above) is hereby declared substantially completed as of the above date. The Contractor has supplied all contract documents (As-Built, Warranties, etc.) and completed and tested all works, including remedy of any defects."}, {"type": "sign", "key": "parties", "parties": [{"key": "contractor", "label": "Contractor"}, {"key": "pmc", "label": "PMC"}, {"key": "owner", "label": "Owner"}], "fields": ["Name of Authorized Representative", "Title", "Date"]}, {"type": "grid", "cols": 1, "fields": [{"key": "remarks", "label": "Remarks (security, insurance, utilities, maintenance period, etc.)", "kind": "textarea"}]}]}, {"code": "KHO.001", "rev": "R0", "name": "Key Handing-Over Proceedings", "short": "Key Handover Register", "category": "Handover & Closeout", "numberField": "refNo", "fields": [{"type": "grid", "cols": 3, "fields": [{"key": "refNo", "label": "Ref. No.", "kind": "text"}, {"key": "date", "label": "Date", "kind": "date"}, {"key": "projectName", "label": "Project Name", "kind": "text"}]}, {"type": "grid", "cols": 2, "fields": [{"key": "handedOverBy", "label": "Handed Over By", "kind": "text"}, {"key": "receivedBy", "label": "Received By", "kind": "text"}]}, {"type": "table", "key": "keys", "title": "Keys Register", "columns": [{"key": "keyNo", "label": "Key No."}, {"key": "area", "label": "Area / Room"}, {"key": "qty", "label": "Quantity"}, {"key": "issuedTo", "label": "Issued To"}, {"key": "receivedByName", "label": "Received By"}, {"key": "date", "label": "Date"}, {"key": "signature", "label": "Signature"}], "minRows": 8, "addable": true}, {"type": "grid", "cols": 1, "fields": [{"key": "remarks", "label": "Remarks", "kind": "textarea"}]}, {"type": "sign", "key": "parties", "parties": [{"key": "handover", "label": "Handed Over By"}, {"key": "receiver", "label": "Received By"}], "fields": ["Name", "Signature", "Date"]}]}];
+const CATEGORY_ORDER = ["Site Establishment", "Submittals", "Inspections & QA/QC", "Site Reporting", "Safety", "Commercial & Change Management", "Handover & Closeout"];
+const LS_PREFIX = "copperline_forms_v1_";
+const LS_COMPANY = "copperline_forms_company_v1";
+const LS_COUNTERS = "copperline_forms_counters_v1";
+
+let currentCode = null;
+let currentData = {};
+let company = loadCompany();
+
+function loadCompany(){
+  try{
+    const raw = localStorage.getItem(LS_COMPANY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { logo:"", name:"", address:"", projectName:"", projectNo:"" };
+}
+function saveCompany(){ localStorage.setItem(LS_COMPANY, JSON.stringify(company)); }
+
+function loadCounters(){
+  try{ const raw = localStorage.getItem(LS_COUNTERS); if(raw) return JSON.parse(raw); }catch(e){}
+  return {};
+}
+function saveCounters(c){ localStorage.setItem(LS_COUNTERS, JSON.stringify(c)); }
+function nextCounter(code){
+  const c = loadCounters();
+  c[code] = (c[code]||0) + 1;
+  saveCounters(c);
+  return c[code];
+}
+
+function findForm(code){ return FORMS.find(x=>x.code===code); }
+
+function defaultDataForForm(form){
+  const data = {};
+  function walk(blocks){
+    blocks.forEach(b=>{
+      if(b.type==="grid"){ b.fields.forEach(fl=>{ data[fl.key] = ""; }); }
+      else if(b.type==="row"){ walk(b.blocks); }
+      else if(b.type==="check"){ data[b.key] = []; }
+      else if(b.type==="table"){
+        const rows=[]; for(let i=0;i<b.minRows;i++){ rows.push(emptyRow(b.columns)); }
+        data[b.key]=rows;
+      }
+      else if(b.type==="fixedTable"){
+        const rows={}; b.rows.forEach(r=>{ rows[r.key]={}; b.columns.forEach(c=>rows[r.key][c.key]=""); });
+        data[b.key]=rows;
+      }
+      else if(b.type==="sign"){
+        const sd={}; b.parties.forEach(p=>{ sd[p.key]={}; b.fields.forEach(fn=>sd[p.key][fn]=""); });
+        data[b.key]=sd;
+      }
+      else if(b.type==="finance"){ data[b.key]={}; }
+      else if(b.type==="rating"){
+        const rd={ marks:{} }; data[b.key]=rd;
+      }
+    });
+  }
+  walk(form.fields);
+  // prefill from company
+  if("projectName" in data && !data.projectName) data.projectName = company.projectName||"";
+  if("project" in data && !data.project) data.project = company.projectName||"";
+  if("projectNo" in data && !data.projectNo) data.projectNo = company.projectNo||"";
+  if("projectRef" in data && !data.projectRef) data.projectRef = company.projectNo||"";
+  return data;
+}
+function emptyRow(columns){ const r={}; columns.forEach(c=>r[c.key]=""); return r; }
+
+function loadFormData(code){
+  const form = findForm(code);
+  try{
+    const raw = localStorage.getItem(LS_PREFIX+code);
+    if(raw){ return Object.assign(defaultDataForForm(form), JSON.parse(raw)); }
+  }catch(e){}
+  return defaultDataForForm(form);
+}
+let saveTimer=null;
+function saveCurrent(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    localStorage.setItem(LS_PREFIX+currentCode, JSON.stringify(currentData));
+  }, 300);
+}
+
+/* ---------------- NAV ---------------- */
+function renderNav(){
+  const q = (document.getElementById("searchBox").value||"").toLowerCase();
+  const nav = document.getElementById("nav");
+  nav.innerHTML="";
+  CATEGORY_ORDER.forEach(cat=>{
+    const items = FORMS.filter(f=> f.category===cat && (
+      f.name.toLowerCase().includes(q) || f.code.toLowerCase().includes(q) || f.short.toLowerCase().includes(q)
+    ));
+    if(items.length===0) return;
+    const h = document.createElement("div");
+    h.className="nav-cat"; h.textContent=cat;
+    nav.appendChild(h);
+    items.forEach(it=>{
+      const d = document.createElement("div");
+      d.className="nav-item"+(it.code===currentCode?" active":"");
+      d.innerHTML = '<span class="code">'+it.code+'</span><span class="nm">'+it.short+'</span>';
+      d.onclick=()=>selectForm(it.code);
+      nav.appendChild(d);
+    });
+  });
+}
+
+function selectForm(code){
+  currentCode = code;
+  currentData = loadFormData(code);
+  renderNav();
+  renderWorkspace();
+}
+
+/* ---------------- TOPBAR / COMPANY ---------------- */
+function renderCompanyChip(){
+  const el = document.getElementById("companyChip");
+  const logo = company.logo ? '<img src="'+company.logo+'">' : '<div class="logo-ph">LOGO</div>';
+  el.innerHTML = logo + '<div><div class="cname">'+esc(company.name||"Your Company Name")+'</div><div class="cproj">'+esc(company.projectName||"No project set")+'</div></div>';
+}
+
+function openSettings(){
+  const root = document.getElementById("modalRoot");
+  root.innerHTML = `
+  <div class="modal-backdrop" onclick="if(event.target===this) closeModal()">
+    <div class="modal">
+      <h3>Company &amp; Project</h3>
+      <div class="field">
+        <label>Company Logo</label>
+        <div class="logo-row">
+          <div class="logo-preview" id="logoPrev">${company.logo?('<img src="'+company.logo+'">'):'No logo'}</div>
+          <input type="file" accept="image/*" onchange="onLogoPick(event)">
+        </div>
+      </div>
+      <div class="field"><label>Company Name</label><input type="text" id="stCompanyName" value="${escAttr(company.name)}"></div>
+      <div class="field"><label>Company Address</label><input type="text" id="stCompanyAddr" value="${escAttr(company.address)}"></div>
+      <div class="field"><label>Default Project Name</label><input type="text" id="stProjectName" value="${escAttr(company.projectName)}"></div>
+      <div class="field"><label>Default Project No.</label><input type="text" id="stProjectNo" value="${escAttr(company.projectNo)}"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" onclick="saveSettings()">Save</button>
+      </div>
+    </div>
+  </div>`;
+}
+function closeModal(){ document.getElementById("modalRoot").innerHTML=""; }
+function onLogoPick(ev){
+  const file = ev.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    company._tmpLogo = reader.result;
+    document.getElementById("logoPrev").innerHTML = '<img src="'+reader.result+'">';
+  };
+  reader.readAsDataURL(file);
+}
+function saveSettings(){
+  company.name = document.getElementById("stCompanyName").value;
+  company.address = document.getElementById("stCompanyAddr").value;
+  company.projectName = document.getElementById("stProjectName").value;
+  company.projectNo = document.getElementById("stProjectNo").value;
+  if(company._tmpLogo){ company.logo = company._tmpLogo; delete company._tmpLogo; }
+  saveCompany();
+  renderCompanyChip();
+  if(currentCode) renderWorkspace();
+  closeModal();
+  showToast("Company details saved");
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* ---------------- helpers ---------------- */
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function escAttr(s){ return esc(s); }
+function getPath(obj, key){ return obj[key]; }
+
+/* ---------------- WORKSPACE / SHEET RENDER ---------------- */
+function renderWorkspace(){
+  const ws = document.getElementById("workspace");
+  if(!currentCode){
+    ws.innerHTML = '<div class="empty-state"><h2>Select a form to begin</h2><p>Choose any of the 24 standard site document-control forms from the left. Every field is editable, your entries are saved automatically in this browser, and each form can be printed or saved as PDF with your company logo on the letterhead.</p></div>';
+    return;
+  }
+  const form = findForm(currentCode);
+  let html = '<div style="width:100%;max-width:900px;">';
+  html += '<div class="sheet-actions">';
+  html += '<button class="btn small" onclick="newDraft()">+ New / Renumber</button>';
+  html += '<button class="btn small danger" onclick="resetDraft()">Clear form</button>';
+  html += '<div class="spacer"></div>';
+  html += '<button class="btn small primary" onclick="window.print()">Print / Save PDF</button>';
+  html += '</div>';
+  html += '<div class="sheet" id="sheetEl">';
+  html += renderLetterhead(form);
+  html += '<div class="sheet-body">';
+  form.fields.forEach((block,idx)=>{ html += renderBlock(block, idx); });
+  html += '</div>';
+  html += renderFooter(form);
+  html += '</div></div>';
+  ws.innerHTML = html;
+  attachEvents();
+  recalcAll();
+}
+
+function renderLetterhead(form){
+  const logo = company.logo ? '<img src="'+company.logo+'">' : '';
+  let h = '<div class="letterhead">';
+  h += '<div class="lh-left">'+logo+'<div><div class="lh-co">'+esc(company.name||"Company Name")+'</div><div class="lh-co-addr">'+esc(company.address||"")+'</div></div></div>';
+  h += '<div class="lh-right"><div class="lh-code">'+form.code+' &middot; '+form.rev+'</div><div>Printed '+ new Date().toLocaleDateString() +'</div></div>';
+  h += '</div>';
+  h += '<div class="form-title-bar"><h1>'+esc(form.name)+'</h1><div class="form-sub">'+esc(form.category)+'</div></div>';
+  return h;
+}
+function renderFooter(form){
+  return '<div class="sheet-footer"><span>'+form.code+' &nbsp;Rev.'+form.rev+'</span><span>Copperline Site Document Control</span></div>';
+}
+
+function renderBlock(block, idx){
+  switch(block.type){
+    case "grid": return renderGrid(block, idx);
+    case "row": return '<div class="block row-flex">'+block.blocks.map(b=>'<div>'+renderBlock(b, idx)+'</div>').join('')+'</div>';
+    case "check": return renderCheck(block, idx);
+    case "table": return renderTableBlock(block, idx);
+    case "fixedTable": return renderFixedTable(block, idx);
+    case "sign": return renderSign(block, idx);
+    case "note": return '<div class="block"><div class="note-block">'+esc(block.text)+'</div></div>';
+    case "legend": return renderLegend(block, idx);
+    case "finance": return renderFinance(block, idx);
+    case "rating": return renderRating(block, idx);
+    default: return "";
+  }
+}
+
+function renderGrid(block, idx){
+  let h = '<div class="block"><div class="fgrid c'+block.cols+'">';
+  block.fields.forEach(fl=>{
+    const val = currentData[fl.key]!=null?currentData[fl.key]:"";
+    const wide = fl.kind==="textarea" ? ' span2' : '';
+    h += '<div class="field'+wide+'"><label>'+esc(fl.label)+'</label>';
+    if(fl.kind==="textarea"){
+      h += '<textarea data-key="'+fl.key+'">'+esc(val)+'</textarea>';
+    } else if(fl.kind==="select"){
+      h += '<select data-key="'+fl.key+'">';
+      (fl.options||[]).forEach(o=>{ h += '<option value="'+esc(o)+'" '+(val===o?'selected':'')+'>'+esc(o)+'</option>'; });
+      h += '</select>';
+    } else {
+      const type = fl.kind==="date"?"date":(fl.kind==="number"?"number":"text");
+      h += '<input type="'+type+'" data-key="'+fl.key+'" value="'+escAttr(val)+'">';
+    }
+    h += '</div>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function renderCheck(block, idx){
+  const sel = currentData[block.key]||[];
+  let h = '<div class="block"><div class="block-title">'+esc(block.label)+'</div><div class="check-group">';
+  block.options.forEach(opt=>{
+    const checked = sel.includes(opt) ? "checked" : "";
+    h += '<label class="check-item"><input type="checkbox" data-checkkey="'+block.key+'" data-val="'+escAttr(opt)+'" '+checked+'> '+esc(opt)+'</label>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function renderLegend(block, idx){
+  let h = '<div class="block legend-block"><div class="legend-title">'+esc(block.title)+'</div><div class="legend-list">';
+  block.items.forEach(it=>{
+    h += '<div class="legend-row"><span class="lc">'+esc(it.code)+'</span><span>'+esc(it.label)+'</span></div>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function renderTableBlock(block, idx){
+  return '<div class="block" id="blockwrap-'+block.key+'">'+
+    '<div class="block-title">'+esc(block.title)+'</div>'+
+    renderTableInner(block)+
+    '</div>';
+}
+function renderTableInner(block){
+  const rows = currentData[block.key]||[];
+  let h = '<div class="table-wrap"><table class="tbl"><thead><tr>';
+  block.columns.forEach(c=>{ h += '<th>'+esc(c.label)+'</th>'; });
+  if(block.addable) h += '<th style="width:26px;"></th>';
+  h += '</tr></thead><tbody>';
+  rows.forEach((r, ri)=>{
+    h += '<tr>';
+    block.columns.forEach(c=>{
+      const v = r[c.key]||"";
+      h += '<td><input type="text" data-table="'+block.key+'" data-row="'+ri+'" data-col="'+c.key+'" value="'+escAttr(v)+'"></td>';
+    });
+    if(block.addable) h += '<td><button class="rowdel" data-deltable="'+block.key+'" data-delrow="'+ri+'">\u2715</button></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  if(block.addable) h += '<button class="add-row-btn" data-addtable="'+block.key+'">+ Add row</button>';
+  return h;
+}
+
+function renderFixedTable(block, idx){
+  const data = currentData[block.key]||{};
+  let h = '<div class="block"><div class="block-title">'+esc(block.title)+'</div><div class="table-wrap"><table class="tbl"><thead><tr>';
+  h += '<th>'+esc(block.rowLabelHeader)+'</th>';
+  block.columns.forEach(c=>{ h += '<th>'+esc(c.label)+'</th>'; });
+  h += '</tr></thead><tbody>';
+  block.rows.forEach(r=>{
+    h += '<tr><td style="padding:5px 8px;">'+esc(r.label)+'</td>';
+    block.columns.forEach(c=>{
+      const v = (data[r.key]&&data[r.key][c.key])||"";
+      h += '<td><input type="text" data-fixed="'+block.key+'" data-frow="'+r.key+'" data-fcol="'+c.key+'" value="'+escAttr(v)+'"></td>';
+    });
+    h += '</tr>';
+  });
+  if(block.totals){
+    h += '<tr class="total-row"><td>Total</td>';
+    block.columns.forEach(c=>{ h += '<td id="fixedtotal-'+block.key+'-'+c.key+'"></td>'; });
+    h += '</tr>';
+  }
+  h += '</tbody></table></div></div>';
+  return h;
+}
+
+function renderSign(block, idx){
+  const data = currentData[block.key]||{};
+  let h = '<div class="block"><div class="sign-grid">';
+  block.parties.forEach(p=>{
+    h += '<div class="sign-party"><div class="party-label">'+esc(p.label)+'</div>';
+    block.fields.forEach(fn=>{
+      const v = (data[p.key]&&data[p.key][fn])||"";
+      h += '<div class="sfield"><label>'+esc(fn)+'</label><input type="text" data-sign="'+block.key+'" data-party="'+p.key+'" data-field="'+esc(fn)+'" value="'+escAttr(v)+'"></div>';
+    });
+    h += '</div>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+/* ---------- Finance block (Payment Certificate) ---------- */
+const FINANCE_ROWS = [
+  {key:"originalContractValue", label:"Original Contract Value", kind:"input"},
+  {key:"approvedVariations", label:"Approved Variations", kind:"input"},
+  {key:"revisedContractValue", label:"Revised Contract Value", kind:"computed", fn:d=>num(d.originalContractValue)+num(d.approvedVariations)},
+  {key:"sep1", label:"", kind:"sep"},
+  {key:"valueOriginal", label:"A) Value of Work Done \u2014 as per Original Contract", kind:"input"},
+  {key:"valueVariations", label:"B) Value of Work Done \u2014 as per Approved Variations", kind:"input"},
+  {key:"materialOnSite", label:"C) Material on Site (if applicable)", kind:"input"},
+  {key:"totalValueOfWorks", label:"D) Total Value of Works", kind:"computed", highlight:true, fn:d=>num(d.valueOriginal)+num(d.valueVariations)+num(d.materialOnSite)},
+  {key:"advancePct", label:"Less: Recovery of Advance Payment (%)", kind:"pct"},
+  {key:"advanceAmount", label:"E) Advance Payment Recovery", kind:"computed", fn:d=>num(d.advancePct)/100*(num(d.valueOriginal)+num(d.materialOnSite))},
+  {key:"retentionPct", label:"Retention (%)", kind:"pct"},
+  {key:"retentionAmount", label:"F) Retention Amount", kind:"computed", fn:d=>num(d.retentionPct)/100*(num(d.valueOriginal)+num(d.valueVariations)+num(d.materialOnSite))},
+  {key:"otherDeductions", label:"G) Other Deductions", kind:"input"},
+  {key:"totalDeductions", label:"H) Total Deductions", kind:"computed", fn:d=>num(d.advanceAmount)+num(d.retentionAmount)+num(d.otherDeductions)},
+  {key:"totalCertified", label:"I) Total Amount Certified (D \u2212 H)", kind:"computed", highlight:true, fn:d=>(num(d.valueOriginal)+num(d.valueVariations)+num(d.materialOnSite))-(num(d.advanceAmount)+num(d.retentionAmount)+num(d.otherDeductions))},
+  {key:"previouslyCertified", label:"J) Less Amount Previously Certified", kind:"input"},
+  {key:"netAmountDue", label:"Net Amount Due", kind:"computed", highlight:true, fn:d=>{
+      const D = num(d.valueOriginal)+num(d.valueVariations)+num(d.materialOnSite);
+      const H = num(d.advanceAmount)+num(d.retentionAmount)+num(d.otherDeductions);
+      return (D-H)-num(d.previouslyCertified);
+    }},
+];
+function num(v){ const n = parseFloat(v); return isNaN(n)?0:n; }
+function renderFinance(block, idx){
+  const data = currentData[block.key]||{};
+  let h = '<div class="block"><div class="block-title">Payment Details (SAR)</div><table class="finance-tbl" id="financetbl-'+block.key+'"><tbody>';
+  FINANCE_ROWS.forEach(r=>{
+    if(r.kind==="sep"){ h+='<tr><td colspan="3" style="border:none;height:6px;"></td></tr>'; return; }
+    h += '<tr'+(r.highlight?' class="highlight"':'')+'><td class="flabel">'+esc(r.label)+'</td><td class="fval">';
+    if(r.kind==="input" || r.kind==="pct"){
+      const v = data[r.key]||"";
+      h += '<input type="number" step="0.01" data-fin="'+block.key+'" data-fkey="'+r.key+'" value="'+escAttr(v)+'">';
+    } else {
+      h += '<span class="computed" id="fin-'+block.key+'-'+r.key+'">0.00</span>';
+    }
+    h += '</td><td class="funit">'+(r.kind==="pct"?"%":(r.kind==="sep"?"":"SAR"))+'</td></tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+function recalcFinance(){
+  document.querySelectorAll('[data-fin]').forEach(()=>{});
+  const financeBlocks = collectBlocksOfType("finance");
+  financeBlocks.forEach(block=>{
+    const data = currentData[block.key]||{};
+    FINANCE_ROWS.forEach(r=>{
+      if(r.kind==="computed"){
+        const v = r.fn(data);
+        data[r.key]=v;
+        const el = document.getElementById('fin-'+block.key+'-'+r.key);
+        if(el) el.textContent = v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+      }
+    });
+    currentData[block.key]=data;
+  });
+}
+
+/* ---------- Rating block (Safety Inspection) ---------- */
+function renderRating(block, idx){
+  const marks = (currentData[block.key]&&currentData[block.key].marks)||{};
+  let h = '<div class="block" id="ratingblock-'+block.key+'">';
+  block.categories.forEach(cat=>{
+    h += '<div class="rating-cat"><div class="rating-cat-title">'+esc(cat.title)+'</div>';
+    h += '<table class="rating-tbl"><thead><tr><th style="width:46%;">Item</th><th>Score (1\u20135)</th><th style="width:80px;">Possible</th><th style="width:80px;">Actual</th></tr></thead><tbody>';
+    cat.items.forEach(it=>{
+      const m = marks[it.key]||0;
+      h += '<tr><td>'+esc(it.label)+'</td><td><div class="rating-btns">';
+      for(let s=1;s<=5;s++){
+        h += '<button type="button" class="rating-btn'+(m===s?' active':'')+'" data-ratekey="'+block.key+'" data-rateitem="'+it.key+'" data-ratescore="'+s+'">'+s+'</button>';
+      }
+      h += '</div></td><td class="rating-score">'+it.possible+'</td><td class="rating-score" id="ractual-'+block.key+'-'+it.key+'">0</td></tr>';
+    });
+    h += '</tbody><tfoot><tr class="rating-total-row"><td colspan="2">'+esc(cat.title)+' \u2014 Assessment</td><td id="rposs-'+block.key+'-'+cat.title.replace(/[^a-zA-Z0-9]/g,"_")+'"></td><td id="rcattotal-'+block.key+'-'+cat.title.replace(/[^a-zA-Z0-9]/g,"_")+'"></td></tr></tfoot></table></div>';
+  });
+  h += '<div class="rating-grand"><div>Overall Site Safety Score</div><div class="gscore" id="rgrand-'+block.key+'">0 / 0 (0%)</div></div>';
+  h += '</div>';
+  return h;
+}
+function recalcRating(){
+  const ratingBlocks = collectBlocksOfType("rating");
+  ratingBlocks.forEach(block=>{
+    if(!currentData[block.key]) currentData[block.key]={marks:{}};
+    const marks = currentData[block.key].marks||{};
+    let grandActual=0, grandPossible=0;
+    block.categories.forEach(cat=>{
+      let catActual=0, catPossible=0;
+      cat.items.forEach(it=>{
+        const m = marks[it.key]||0;
+        const actual = Math.round(it.possible*(m/5));
+        catActual+=actual; catPossible+=it.possible;
+        const elA = document.getElementById('ractual-'+block.key+'-'+it.key);
+        if(elA) elA.textContent = m>0?actual:"\u2014";
+      });
+      const safeTitle = cat.title.replace(/[^a-zA-Z0-9]/g,"_");
+      const elP = document.getElementById('rposs-'+block.key+'-'+safeTitle);
+      const elC = document.getElementById('rcattotal-'+block.key+'-'+safeTitle);
+      if(elP) elP.textContent = catPossible;
+      if(elC) elC.textContent = catActual;
+      grandActual+=catActual; grandPossible+=catPossible;
+    });
+    const pct = grandPossible? Math.round(grandActual/grandPossible*100):0;
+    const elG = document.getElementById('rgrand-'+block.key);
+    if(elG) elG.textContent = grandActual+' / '+grandPossible+' ('+pct+'%)';
+  });
+}
+
+function collectBlocksOfType(type){
+  const form = findForm(currentCode);
+  const out=[];
+  function walk(blocks){ blocks.forEach(b=>{ if(b.type===type) out.push(b); if(b.type==="row") walk(b.blocks); }); }
+  walk(form.fields);
+  return out;
+}
+
+function recalcFixedTotals(){
+  const fts = collectBlocksOfType("fixedTable");
+  fts.forEach(block=>{
+    const data = currentData[block.key]||{};
+    block.columns.forEach(c=>{
+      let sum=0;
+      block.rows.forEach(r=>{ sum += num(data[r.key] && data[r.key][c.key]); });
+      const el = document.getElementById('fixedtotal-'+block.key+'-'+c.key);
+      if(el) el.textContent = sum || "";
+    });
+  });
+}
+
+function recalcAll(){
+  recalcFinance();
+  recalcRating();
+  recalcFixedTotals();
+}
+
+/* ---------------- EVENTS ---------------- */
+function attachEvents(){
+  const sheet = document.getElementById("sheetEl");
+  if(!sheet) return;
+
+  sheet.addEventListener("input", (e)=>{
+    const t = e.target;
+    if(t.dataset.key){
+      currentData[t.dataset.key] = t.value;
+    } else if(t.dataset.table!=null){
+      const k=t.dataset.table, ri=t.dataset.row, col=t.dataset.col;
+      if(!currentData[k]) currentData[k]=[];
+      if(!currentData[k][ri]) currentData[k][ri]={};
+      currentData[k][ri][col]=t.value;
+    } else if(t.dataset.fixed!=null){
+      const k=t.dataset.fixed, rk=t.dataset.frow, ck=t.dataset.fcol;
+      if(!currentData[k]) currentData[k]={};
+      if(!currentData[k][rk]) currentData[k][rk]={};
+      currentData[k][rk][ck]=t.value;
+      recalcFixedTotals();
+    } else if(t.dataset.sign!=null){
+      const k=t.dataset.sign, pk=t.dataset.party, fn=t.dataset.field;
+      if(!currentData[k]) currentData[k]={};
+      if(!currentData[k][pk]) currentData[k][pk]={};
+      currentData[k][pk][fn]=t.value;
+    } else if(t.dataset.fin!=null){
+      const k=t.dataset.fin, fk=t.dataset.fkey;
+      if(!currentData[k]) currentData[k]={};
+      currentData[k][fk]=t.value;
+      recalcFinance();
+    }
+    saveCurrent();
+  });
+
+  sheet.addEventListener("change", (e)=>{
+    const t = e.target;
+    if(t.dataset.checkkey){
+      const k=t.dataset.checkkey, v=t.dataset.val;
+      if(!currentData[k]) currentData[k]=[];
+      const arr = currentData[k];
+      const i = arr.indexOf(v);
+      if(t.checked && i===-1) arr.push(v);
+      if(!t.checked && i!==-1) arr.splice(i,1);
+      saveCurrent();
+    }
+  });
+
+  sheet.addEventListener("click", (e)=>{
+    const add = e.target.closest("[data-addtable]");
+    if(add){
+      const k = add.dataset.addtable;
+      const block = findTableBlock(k);
+      if(!currentData[k]) currentData[k]=[];
+      currentData[k].push(emptyRow(block.columns));
+      document.getElementById("blockwrap-"+k).querySelector(".table-wrap, .add-row-btn");
+      rerenderTable(k, block);
+      saveCurrent();
+      return;
+    }
+    const del = e.target.closest("[data-deltable]");
+    if(del){
+      const k = del.dataset.deltable, ri = parseInt(del.dataset.delrow,10);
+      const block = findTableBlock(k);
+      currentData[k].splice(ri,1);
+      rerenderTable(k, block);
+      saveCurrent();
+      return;
+    }
+    const rateBtn = e.target.closest("[data-ratekey]");
+    if(rateBtn){
+      const k=rateBtn.dataset.ratekey, itemKey=rateBtn.dataset.rateitem, score=parseInt(rateBtn.dataset.ratescore,10);
+      if(!currentData[k]) currentData[k]={marks:{}};
+      if(!currentData[k].marks) currentData[k].marks={};
+      currentData[k].marks[itemKey] = currentData[k].marks[itemKey]===score ? 0 : score;
+      renderRatingBlockInPlace(k);
+      saveCurrent();
+      return;
+    }
+  });
+}
+
+function findTableBlock(key){
+  const form = findForm(currentCode);
+  let found=null;
+  function walk(blocks){ blocks.forEach(b=>{ if(b.type==="table" && b.key===key) found=b; if(b.type==="row") walk(b.blocks); }); }
+  walk(form.fields);
+  return found;
+}
+function rerenderTable(key, block){
+  const wrap = document.getElementById("blockwrap-"+key);
+  if(!wrap) return;
+  wrap.innerHTML = '<div class="block-title">'+esc(block.title)+'</div>'+renderTableInner(block);
+}
+function renderRatingBlockInPlace(key){
+  const block = collectBlocksOfType("rating").find(b=>b.key===key);
+  const el = document.getElementById("ratingblock-"+key);
+  if(!el || !block) return;
+  el.outerHTML = renderRating(block);
+  recalcRating();
+}
+
+/* ---------------- ACTIONS ---------------- */
+function newDraft(){
+  const form = findForm(currentCode);
+  const n = nextCounter(form.code);
+  currentData = defaultDataForForm(form);
+  if(form.numberField){
+    currentData[form.numberField] = String(n).padStart(3,"0");
+  }
+  const todayKey = Object.keys(currentData).find(k=>k==="date");
+  if(todayKey) currentData.date = new Date().toISOString().slice(0,10);
+  saveCurrent();
+  renderWorkspace();
+  showToast("New "+form.short+" started"+(form.numberField?" (No. "+String(n).padStart(3,"0")+")":""));
+}
+function resetDraft(){
+  if(!confirm("Clear all entries on this form? This cannot be undone.")) return;
+  const form = findForm(currentCode);
+  currentData = defaultDataForForm(form);
+  saveCurrent();
+  renderWorkspace();
+}
+
+function exportAllJSON(){
+  const out = { company, forms:{} };
+  FORMS.forEach(f=>{
+    const raw = localStorage.getItem(LS_PREFIX+f.code);
+    if(raw) out.forms[f.code]=JSON.parse(raw);
+  });
+  const blob = new Blob([JSON.stringify(out,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download="copperline-site-forms-data.json"; a.click();
+  URL.revokeObjectURL(url);
+}
+function importJSON(ev){
+  const file = ev.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      if(obj.company){ company = obj.company; saveCompany(); renderCompanyChip(); }
+      if(obj.forms){
+        Object.keys(obj.forms).forEach(code=>{
+          localStorage.setItem(LS_PREFIX+code, JSON.stringify(obj.forms[code]));
+        });
+      }
+      if(currentCode) selectForm(currentCode);
+      showToast("Data imported");
+    }catch(e){ alert("Could not read that file."); }
+  };
+  reader.readAsText(file);
+  ev.target.value="";
+}
+
+/* ---------------- INIT ---------------- */
+renderCompanyChip();
+renderNav();
+renderWorkspace();
+</script>
+</body>
+</html>

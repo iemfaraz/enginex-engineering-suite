@@ -1,0 +1,1824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EngineX Scheduler — CPM Project Controls</title>
+<style>
+:root{
+  --bg:#0e1420; --chrome:#151d2c; --panel:#18212f; --panel2:#1d2736; --border:#2b3a52; --grid:#22304a;
+  --text:#e3ebf5; --muted:#8095b3; --dim:#5a6b87;
+  --blue:#3d8bfd; --green:#3fb950; --amber:#e3b341; --red:#f85149; --cyan:#39c5cf; --violet:#a371f7;
+  --crit:#f85149; --bar:#4a9eff; --barc:#f85149; --base:#6b7a92; --done:#3fb950;
+  --row:32px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:12.5px/1.4 "Segoe UI",Inter,system-ui,sans-serif;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#33445f;border-radius:6px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:#44597a}
+:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+
+/* ---------- app frame ---------- */
+#app{display:flex;flex-direction:column;height:100vh}
+.titlebar{height:42px;flex:none;background:var(--chrome);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 12px}
+.brand{font-weight:800;letter-spacing:.3px;color:var(--blue);font-size:14px;white-space:nowrap}
+.brand span{color:var(--text);font-weight:600}
+.projmeta{color:var(--muted);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.projmeta b{color:var(--text);font-weight:600}
+.spacer{margin-left:auto}
+.ddbadge{background:#2a1a1a;border:1px solid #6d2b2b;color:#ff8a80;padding:3px 9px;border-radius:3px;font-size:11px;white-space:nowrap}
+.ddbadge b{color:#fff}
+
+.tabs{flex:none;display:flex;gap:2px;background:var(--chrome);border-bottom:1px solid var(--border);padding:0 8px;overflow-x:auto}
+.tab{padding:8px 14px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:0;border-left:0;border-right:0;font-size:12.5px}
+.tab:hover{color:var(--text);background:#1b2434}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--panel)}
+
+.toolbar{flex:none;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--panel);border-bottom:1px solid var(--border);padding:6px 10px;min-height:40px}
+.tsep{width:1px;height:20px;background:var(--border);margin:0 3px}
+.btn{background:#24344c;border:1px solid #33455f;border-radius:3px;padding:5px 10px;font-size:11.5px;white-space:nowrap}
+.btn:hover{background:#2d4160;border-color:#456188}
+.btn.pri{background:#1f6feb;border-color:#2f7ff0}.btn.pri:hover{background:#2b7cf5}
+.btn.ok{background:#238636;border-color:#2ea043}.btn.ok:hover{background:#2ea043}
+.btn.dan{background:#8b2a25;border-color:#b3392f}.btn.dan:hover{background:#b3392f}
+.btn.on{background:#14406f;border-color:var(--blue);color:#9fd0ff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.tlabel{color:var(--dim);font-size:10.5px;margin-right:2px}
+.tsel{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:4px 6px;font-size:11.5px}
+.tin{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:4px 6px;font-size:11.5px;width:150px}
+
+.kpibar{flex:none;display:flex;overflow-x:auto;background:var(--chrome);border-bottom:1px solid var(--border)}
+.kpi{padding:6px 14px;border-right:1px solid var(--border);min-width:118px;flex:none}
+.kpi label{display:block;font-size:9.5px;color:var(--dim);letter-spacing:.4px}
+.kpi b{font-size:16px;display:block;margin-top:1px;font-variant-numeric:tabular-nums}
+.kpi small{color:var(--muted);font-size:10px}
+
+.body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.scroll{flex:1;min-height:0;overflow:auto;padding:10px}
+.statusbar{flex:none;height:26px;background:var(--chrome);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 12px;color:var(--dim);font-size:10.5px;overflow-x:auto;white-space:nowrap}
+.statusbar b{color:var(--muted);font-weight:600}
+
+/* ---------- panels ---------- */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;margin-bottom:10px}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:var(--chrome);border-bottom:1px solid var(--border);border-radius:4px 4px 0 0}
+.ptitle{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.3px}
+.pbody{padding:12px}
+.note{padding:9px 12px;color:var(--muted);font-size:11.5px;border-bottom:1px solid var(--border)}
+.note b{color:var(--text)}
+.empty{padding:34px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--text);margin-bottom:5px;font-size:13px}
+
+/* ---------- grids ---------- */
+.gridwrap{overflow:auto}
+table.grid{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.grid th{position:sticky;top:0;z-index:3;background:#1b2536;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.3px;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--grid);white-space:nowrap;cursor:pointer;user-select:none}
+table.grid th:hover{background:#22304a}
+table.grid th.sorted{color:var(--blue)}
+table.grid td{padding:0 8px;height:var(--row);border-bottom:1px solid #1e2a3c;border-right:1px solid #1a2436;white-space:nowrap;font-size:12px}
+table.grid tbody tr:hover{background:#1e2938}
+table.grid tr.sel{background:#173252!important}
+table.grid tr.wbsrow{background:#1b2740;font-weight:700}
+table.grid tr.wbsrow td{color:#b9cbe4;border-bottom:1px solid var(--border)}
+table.grid tr.crit td:nth-child(2){color:#ff8f88}
+.r{text-align:right}.c{text-align:center}
+.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:11.5px}
+.cellin{background:transparent;border:1px solid transparent;border-radius:2px;padding:3px 4px;width:100%;font-size:12px}
+.cellin:hover{border-color:var(--border);background:var(--bg)}
+.cellin:focus{border-color:var(--blue);background:var(--bg);outline:none}
+.cellin.num{text-align:right}
+.w60{width:60px}.w80{width:80px}.w110{width:110px}
+.tw{display:flex;align-items:center;gap:6px}
+.twig{color:var(--dim);cursor:pointer;width:12px;flex:none;text-align:center;user-select:none}
+.mstone{color:var(--violet)}
+.pbar{height:7px;width:64px;background:#26334a;border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle}
+.pbar i{display:block;height:100%;background:var(--blue)}
+.pbar i.full{background:var(--green)}
+.pill{padding:1px 7px;border:1px solid;border-radius:9px;font-size:10px;font-weight:700;display:inline-block}
+.p-ok{color:var(--green);border-color:#2b6e36;background:#0f2814}
+.p-inf{color:var(--blue);border-color:#1f5ba8;background:#0f1f36}
+.p-warn{color:var(--amber);border-color:#8a6a1f;background:#2b2209}
+.p-bad{color:var(--red);border-color:#8b332c;background:#2d1315}
+.p-off{color:var(--dim);border-color:#2b3a52;background:#1a2331}
+.neg{color:var(--red)}.pos{color:var(--green)}.zero{color:var(--muted)}
+
+/* ---------- split / detail ---------- */
+.split{flex:1;min-height:0;display:flex;flex-direction:column}
+.splittop{flex:1;min-height:120px;overflow:hidden;border-bottom:1px solid var(--border);display:flex}
+.splittop .gridwrap{flex:1;height:100%;overflow:auto}
+.detail{flex:none;height:224px;background:var(--panel2);border-top:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.detail.hid{height:30px}
+.dtabs{flex:none;display:flex;gap:1px;background:var(--chrome);border-bottom:1px solid var(--border);padding:0 6px;align-items:center}
+.dtab{padding:6px 11px;font-size:11px;color:var(--muted);border:0;background:none;border-bottom:2px solid transparent}
+.dtab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.dbody{flex:1;overflow:auto;padding:10px 12px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px 14px}
+.field label{display:block;color:var(--dim);font-size:10px;margin-bottom:3px;letter-spacing:.3px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:5px 7px;font-size:12px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);outline:none}
+.field.ro input{color:var(--muted);background:#141c29}
+
+/* ---------- gantt ---------- */
+.gantt{display:flex;height:100%;min-height:0;flex:1}
+.gtable{flex:none;overflow:hidden;border-right:2px solid var(--border);background:var(--panel)}
+.gtscroll{overflow:hidden;height:100%}
+.gchart{flex:1;min-width:0;overflow:auto;position:relative;background:var(--bg)}
+.ghead{height:44px;flex:none}
+.gsplit{width:5px;flex:none;background:var(--border);cursor:col-resize}
+.gsplit:hover{background:var(--blue)}
+.grow{display:flex;align-items:center;height:var(--row);border-bottom:1px solid #1e2a3c;padding:0 8px;gap:6px;font-size:12px;white-space:nowrap;overflow:hidden}
+.grow.sel{background:#173252}
+.grow.wbs{background:#1b2740;font-weight:700;color:#b9cbe4}
+.gname{overflow:hidden;text-overflow:ellipsis;flex:1}
+.gid{color:var(--dim);font-size:10.5px;flex:none}
+.legend{display:flex;gap:14px;color:var(--muted);font-size:10.5px;flex-wrap:wrap;align-items:center}
+.legend span{display:flex;align-items:center;gap:5px}
+.sw{width:18px;height:9px;border-radius:2px;display:inline-block}
+
+/* ---------- charts ---------- */
+.chartbox{padding:12px;overflow:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:var(--border)}
+.card{background:var(--panel);padding:11px 13px}
+.card label{color:var(--dim);font-size:9.5px;letter-spacing:.4px}
+.card b{display:block;font-size:19px;margin:3px 0;font-variant-numeric:tabular-nums}
+.card code{font-size:9.5px;color:var(--dim);font-family:"Cascadia Mono",Consolas,monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal.show{display:flex}
+.box{background:var(--panel);border:1px solid var(--border);border-radius:6px;width:620px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 18px 50px #000a}
+.box.wide{width:900px}
+.bhead{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.bbody{padding:16px;overflow:auto}
+.bfoot{padding:11px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.x{background:none;border:0;color:var(--muted);font-size:17px;line-height:1;padding:2px 6px}
+.x:hover{color:var(--red)}
+.toast{position:fixed;bottom:38px;right:14px;background:#1f2f45;border:1px solid var(--blue);border-left:3px solid var(--blue);border-radius:4px;padding:9px 14px;font-size:12px;z-index:200;box-shadow:0 8px 24px #0008;opacity:0;transform:translateY(8px);transition:.18s}
+.toast.show{opacity:1;transform:none}
+.toast.err{border-color:var(--red);border-left-color:var(--red)}
+
+/* ---------- misc ---------- */
+.logline{font-family:"Cascadia Mono",Consolas,monospace;font-size:11.5px;padding:2px 0;color:var(--muted);white-space:pre-wrap}
+.logline.h{color:var(--blue);font-weight:700;margin-top:8px}
+.logline.w{color:var(--amber)}
+.logline.e{color:var(--red)}
+.chk{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.chk input{accent-color:var(--blue)}
+.matrix{border-collapse:collapse}
+.matrix td,.matrix th{border:1px solid var(--border);padding:8px;text-align:center;font-size:11px}
+.hist{display:flex;align-items:flex-end;gap:2px;height:150px}
+.hist div{flex:1;background:var(--blue);border-radius:2px 2px 0 0;min-height:1px;position:relative}
+.hist div.over{background:var(--red)}
+@media print{
+  body{background:#fff;color:#000;overflow:visible;height:auto}
+  .titlebar,.tabs,.toolbar,.statusbar,.detail,.gsplit,.x,.btn{display:none!important}
+  #app,.body,.scroll{display:block;height:auto;overflow:visible}
+  .panel,.card{background:#fff;border-color:#bbb;break-inside:avoid}
+  table.grid th{background:#eee;color:#000}
+  table.grid td,table.grid th{border-color:#ccc}
+  .kpibar{background:#fff}.kpi b{color:#000!important}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr}.projmeta{display:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" class="modal"><div class="box" id="modalBox"></div></div>
+<div id="toast" class="toast"></div>
+<script>
+"use strict";
+/* ============================================================
+   EngineX Scheduler — data model
+   ============================================================ */
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const REL_TYPES=["FS","SS","FF","SF"];
+const ACT_TYPES=[["TD","Task Dependent"],["SM","Start Milestone"],["FM","Finish Milestone"],["LOE","Level of Effort"],["WS","WBS Summary"]];
+const CSTR=[["","(none)"],["SNET","Start On or After"],["SNLT","Start On or Before"],["FNET","Finish On or After"],["FNLT","Finish On or Before"],["MSO","Mandatory Start"],["MFO","Mandatory Finish"],["ALAP","As Late As Possible"]];
+const PCT_TYPES=["Duration","Physical","Units"];
+
+
+/* Progress snapshot at the data date — actual dates are the as-planned CPM
+   dates so the sample stays internally consistent with its own calendars. */
+const STATUS=[
+    ["A1000",1,"2026-01-03","2026-01-03",100,0],
+    ["A1010",1,"2026-01-04","2026-02-01",100,0],
+    ["A1020",1,"2026-02-02","2026-02-24",100,0],
+    ["A1030",1,"2026-02-25","2026-03-17",100,0],
+    ["A1040",1,"2026-02-25","2026-03-10",100,0],
+    ["A2000",1,"2026-02-25","2026-03-08",100,0],
+    ["A2030",1,"2026-03-07","2026-06-09",100,0],
+    ["A3000",1,"2026-02-24","2026-05-07",100,0],
+    ["A3010",1,"2026-03-23","2026-05-13",100,0],
+    ["A3020",1,"2026-05-14","2026-06-11",100,0],
+    ["A4000",1,"2026-06-13","2026-06-13",100,0],
+    ["A2010",0,"2026-03-09","",93,8],
+    ["A2020",0,"2026-03-09","",97,4],
+    ["A2040",0,"2026-04-06","",91,6],
+    ["A4010",0,"2026-07-18","",70,6],
+    ["A4030",0,"2026-06-10","",45,10],
+    ["A5000",0,"2026-06-15","",55,14],
+    ["A5020",0,"2026-07-01","",38,16]
+  ];
+function applyStatus(P){
+  const m=new Map(STATUS.map(s=>[s[0],s]));
+  P.activities.forEach(a=>{
+    const s=m.get(a.id); if(!s){a.as="";a.af="";a.pct=0;a.rd=a.od;return;}
+    a.as=s[2]; a.af=s[3]; a.pct=s[4]; a.rd=s[5];
+  });
+  return P;
+}
+function seed(){
+  const A=(id,wbs,name,od,o={})=>Object.assign({
+    id,wbs,name,type:"TD",cal:"C1",od,rd:od,pctType:"Duration",
+    as:"",cstr:"",cstrDate:"",budget:0,ac:0,res:[],notes:"",
+    resp:"",phase:"",loc:""
+  },o);
+  const R=(p,s,t="FS",lag=0)=>({id:p+"|"+s+"|"+t,pred:p,succ:s,type:t,lag});
+  return applyStatus({
+    project:{
+      name:"Commercial Tower Substation",client:"Saudi Electricity Company",
+      contractNo:"SEC-2026-0847",pm:"Faraz",
+      start:"2026-01-03",dataDate:"2026-09-14",mustFinish:"2026-12-31",
+      currency:"SAR",critTF:0,retainedLogic:true,autoSched:true,
+      defaultCal:"C1",baselineName:"BL01 — Contract Baseline"
+    },
+    calendars:[
+      {id:"C1",name:"KSA 6-Day (Sat–Thu)",week:[true,true,true,true,true,false,true],hpd:8,
+       holidays:["2026-03-19","2026-03-20","2026-03-21","2026-03-22","2026-05-26","2026-05-27","2026-05-28","2026-09-23"]},
+      {id:"C2",name:"5-Day (Sun–Thu)",week:[true,true,true,true,true,false,false],hpd:8,
+       holidays:["2026-03-19","2026-03-20","2026-03-21","2026-03-22","2026-09-23"]},
+      {id:"C3",name:"7-Day Continuous",week:[true,true,true,true,true,true,true],hpd:8,holidays:[]}
+    ],
+    wbs:[
+      {id:"ST",parent:"",name:"Commercial Tower Substation"},
+      {id:"ST.1",parent:"ST",name:"Engineering & Approvals"},
+      {id:"ST.2",parent:"ST",name:"Procurement"},
+      {id:"ST.3",parent:"ST",name:"Containment & Cable Trays"},
+      {id:"ST.4",parent:"ST",name:"MV / LV Installation"},
+      {id:"ST.5",parent:"ST",name:"Cabling & Termination"},
+      {id:"ST.6",parent:"ST",name:"Testing & Commissioning"}
+    ],
+    activities:[
+      A("A1000","ST.1","Notice to Proceed",0,{type:"SM"}),
+      A("A1010","ST.1","Load Schedule & SLD Design",25,{budget:180000,resp:"Design",phase:"Engineering",res:[{id:"R6",units:1}]}),
+      A("A1020","ST.1","Consultant Review & Approval — SLD",20,{budget:25000,resp:"Technical Office",phase:"Engineering",res:[{id:"R6",units:1}]}),
+      A("A1030","ST.1","Shop Drawings — MV Room Layout",18,{budget:120000,resp:"Design",phase:"Engineering",res:[{id:"R6",units:1}]}),
+      A("A1040","ST.1","Dialux & Lighting Calculations",12,{budget:60000,resp:"Design",phase:"Engineering",res:[{id:"R6",units:1}]}),
+
+      A("A2000","ST.2","MV Switchgear 11kV — PO Placement",10,{budget:40000,resp:"Procurement",phase:"Procurement",res:[{id:"R6",units:1}]}),
+      A("A2010","ST.2","MV Switchgear 11kV — Manufacturing & Delivery",120,{budget:3200000,cal:"C3",resp:"Procurement",phase:"Procurement",res:[{id:"R6",units:1}]}),
+      A("A2020","ST.2","Power Transformer 2×2500kVA — Delivery",130,{budget:2400000,cal:"C3",resp:"Procurement",phase:"Procurement",res:[{id:"R6",units:1}]}),
+      A("A2030","ST.2","LV Switchboard & MCCs — Delivery",95,{budget:1100000,cal:"C3",resp:"Procurement",phase:"Procurement",res:[{id:"R6",units:1}]}),
+      A("A2040","ST.2","MV/LV Cables & Accessories — Delivery",70,{budget:1450000,cal:"C3",resp:"Procurement",phase:"Procurement",res:[{id:"R6",units:1}]}),
+
+      A("A3000","ST.3","Main Cable Tray — GF to Roof",60,{budget:420000,resp:"Site",phase:"Construction",res:[{id:"R2",units:6},{id:"R6",units:1}]}),
+      A("A3010","ST.3","Conduit & Trunking — Basement",45,{budget:260000,resp:"Site",phase:"Construction",res:[{id:"R2",units:5}]}),
+      A("A3020","ST.3","Earthing Grid & Bonding — Substation",22,{budget:190000,resp:"Site",phase:"Construction",res:[{id:"R2",units:4}]}),
+
+      A("A4000","ST.4","MV Room Civil Handover",0,{type:"FM",phase:"Construction"}),
+      A("A4010","ST.4","Transformer Mounting & Alignment",20,{budget:340000,resp:"Site",phase:"Construction",res:[{id:"R1",units:4},{id:"R5",units:1},{id:"R6",units:1}]}),
+      A("A4020","ST.4","MV Switchgear Installation & Alignment",25,{budget:480000,resp:"Site",phase:"Construction",res:[{id:"R1",units:5},{id:"R5",units:1},{id:"R6",units:1}]}),
+      A("A4030","ST.4","LV Switchboard Installation",18,{budget:260000,resp:"Site",phase:"Construction",res:[{id:"R2",units:6},{id:"R6",units:1}]}),
+      A("A4040","ST.4","MV Busduct / Interconnection",12,{budget:210000,resp:"Site",phase:"Construction",res:[{id:"R1",units:3},{id:"R2",units:3}]}),
+
+      A("A5000","ST.5","HV Cable Pulling — B1 to Substation",30,{budget:620000,resp:"Site",phase:"Construction",res:[{id:"R3",units:4},{id:"R2",units:6},{id:"R6",units:1}]}),
+      A("A5010","ST.5","MV Cable Termination & Jointing",20,{budget:380000,resp:"Site",phase:"Construction",res:[{id:"R3",units:4},{id:"R1",units:2}]}),
+      A("A5020","ST.5","LV Feeder Cable Laying",26,{budget:340000,resp:"Site",phase:"Construction",res:[{id:"R2",units:8},{id:"R6",units:1}]}),
+      A("A5030","ST.5","LV Feeder Termination & Glanding",18,{budget:180000,resp:"Site",phase:"Construction",res:[{id:"R2",units:6},{id:"R3",units:2}]}),
+      A("A5040","ST.5","Cable Megger & Continuity Tests",10,{budget:70000,resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:1},{id:"R2",units:2}]}),
+
+      A("A6000","ST.6","Factory Acceptance Test — MV Panels",6,{budget:90000,cal:"C2",resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:2}]}),
+      A("A6010","ST.6","Transformer Pre-Commissioning Tests",8,{budget:120000,resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:2},{id:"R1",units:2}]}),
+      A("A6020","ST.6","Site Acceptance Test — MV/LV",12,{budget:220000,resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:3},{id:"R1",units:2}]}),
+      A("A6030","ST.6","Protection Relay & CT/VT Testing",14,{budget:260000,resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:3}]}),
+      A("A6040","ST.6","SCADA Integration & Point-to-Point",15,{budget:310000,resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:3},{id:"R1",units:2}]}),
+      A("A6050","ST.6","SEC Witness Test & Energisation",6,{budget:140000,cstr:"FNLT",cstrDate:"2026-12-24",resp:"QA/QC",phase:"Testing",res:[{id:"R4",units:3},{id:"R6",units:1}]}),
+      A("A6060","ST.6","Substation Energised — Handover",0,{type:"FM",phase:"Testing"})
+    ],
+    rels:[
+      R("A1000","A1010"),R("A1010","A1020"),R("A1020","A1030"),R("A1020","A1040"),
+      R("A1020","A2000"),R("A2000","A2010"),R("A2000","A2020"),R("A2000","A2030",'SS',10),R("A2000","A2040",'SS',40),
+      R("A1000","A3000",'SS',45),R("A3000","A3010",'SS',20),R("A3010","A3020"),
+      R("A3020","A4000"),
+      R("A4000","A4010"),R("A2020","A4010"),
+      R("A4000","A4020"),R("A2010","A4020"),
+      R("A4010","A4020",'SS',5),
+      R("A2030","A4030"),R("A3010","A4030"),
+      R("A4010","A4040"),R("A4020","A4040"),
+      R("A2040","A5000"),R("A3000","A5000"),
+      R("A5000","A5010"),R("A4020","A5010"),
+      R("A4030","A5020"),R("A2040","A5020"),
+      R("A5020","A5030"),R("A5010","A5040"),R("A5030","A5040"),
+      R("A2010","A6000",'FF',0),
+      R("A4010","A6010"),R("A5010","A6010"),
+      R("A6000","A6020"),R("A4020","A6020"),R("A5040","A6020"),
+      R("A6010","A6030"),R("A6020","A6030"),
+      R("A6030","A6040"),R("A4040","A6040"),
+      R("A6040","A6050"),R("A6030","A6050"),
+      R("A6050","A6060")
+    ],
+    resources:[
+      {id:"R1",name:"MV Technician",type:"Labor",rate:95,max:6,cal:"C1"},
+      {id:"R2",name:"LV Electrician",type:"Labor",rate:70,max:12,cal:"C1"},
+      {id:"R3",name:"Cable Jointer",type:"Labor",rate:120,max:4,cal:"C1"},
+      {id:"R4",name:"Commissioning Engineer",type:"Labor",rate:180,max:3,cal:"C1"},
+      {id:"R5",name:"Crane 50T",type:"Nonlabor",rate:1400,max:1,cal:"C1"},
+      {id:"R6",name:"Site Supervisor",type:"Labor",rate:110,max:3,cal:"C1"}
+    ],
+    risks:[
+      {id:1,act:"A2010",title:"MV switchgear held at customs",desc:"11kV panels delayed at port. NCR-02 raised.",prob:"High",impact:"High",owner:"Procurement",status:"Open",action:"Expedite clearance; escalate to PM.",days:15},
+      {id:2,act:"A5000",title:"HV pulling crew understaffed",desc:"Crew at 60% of planned strength.",prob:"High",impact:"Medium",owner:"Site Engineer",status:"Open",action:"Subcontract extra crew.",days:8},
+      {id:3,act:"A6040",title:"SCADA IEC 61850 scope change",desc:"Client requested extra protocol support.",prob:"Low",impact:"Medium",owner:"Technical Office",status:"Open",action:"Raise change order.",days:5},
+      {id:4,act:"A6050",title:"SEC witness slot availability",desc:"Utility witness booking needs 4 weeks notice.",prob:"Medium",impact:"High",owner:"Project Manager",status:"Open",action:"Book slot by Nov-01.",days:10}
+    ],
+    baselines:[],
+    activeBaseline:null,
+    codes:{resp:["Design","Procurement","Site","QA/QC","Technical Office"],phase:["Engineering","Procurement","Construction","Testing"],loc:["Basement","Ground Floor","Substation Room","Roof"]}
+  });
+}
+
+/* ---------- state ---------- */
+let data, calc={}, log=[], undoStack=[], redoStack=[];
+let ui={
+  tab:"Activities", sel:null, detTab:"General", detHid:false,
+  group:"WBS", sort:{k:"id",dir:1}, filter:{text:"",crit:false,inc:false,notStarted:false,resp:"",phase:""},
+  zoom:"Month", showRel:true, showBase:true, showFloat:false, showCritOnly:false,
+  collapsed:{}, gw:430, curveMode:"Cost", histRes:"R1", dirty:false
+};
+const KEY="enginex_p6_v2";
+
+function loadData(){
+  try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(d&&d.activities) return d;}}catch(e){}
+  return seed();
+}
+function persist(){ try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){toast("Storage full — export to file",true);} }
+function snapshot(){ undoStack.push(JSON.stringify(data)); if(undoStack.length>40)undoStack.shift(); redoStack.length=0; }
+function undo(){ if(!undoStack.length)return toast("Nothing to undo",true); redoStack.push(JSON.stringify(data)); data=JSON.parse(undoStack.pop()); runSchedule(); render(); toast("Undo"); }
+function redo(){ if(!redoStack.length)return toast("Nothing to redo",true); undoStack.push(JSON.stringify(data)); data=JSON.parse(redoStack.pop()); runSchedule(); render(); toast("Redo"); }
+
+/* ---------- small helpers ---------- */
+const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const num=v=>{const n=Number(v);return isFinite(n)?n:0;};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function money(v){const a=Math.abs(v);const s=v<0?"-":"";if(a>=1e6)return s+(a/1e6).toFixed(2)+"M";if(a>=1e3)return s+(a/1e3).toFixed(0)+"k";return s+a.toFixed(0);}
+function cur(v){return data.project.currency+" "+money(v);}
+function toast(msg,err){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(err?" err":"");clearTimeout(t._t);t._t=setTimeout(()=>t.className="toast",2200);}
+function D(s){ if(!s)return null; const p=String(s).slice(0,10).split("-"); const d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2])); return isNaN(d)?null:d; }
+function ISO(d){ return d? new Date(d).toISOString().slice(0,10):""; }
+function fmtDate(s){ if(!s)return ""; const d=D(s); if(!d)return ""; return String(d.getUTCDate()).padStart(2,"0")+"-"+MON[d.getUTCMonth()]+"-"+String(d.getUTCFullYear()).slice(2); }
+function addDays(d,n){ const x=new Date(d); x.setUTCDate(x.getUTCDate()+n); return x; }
+function calDays(a,b){ return Math.round((D(b)-D(a))/864e5); }
+/* ============================================================
+   Calendar engine — working-day index per calendar
+   ============================================================ */
+const CAL={};
+function buildCalendars(){
+  const ps=D(data.project.start)||D("2026-01-01");
+  const from=addDays(ps,-400), to=addDays(ps,365*8);
+  data.calendars.forEach(c=>{
+    const hol=new Set((c.holidays||[]).map(h=>String(h).slice(0,10)));
+    const days=[],idx=new Map();
+    for(let d=new Date(from); d<=to; d=addDays(d,1)){
+      const iso=ISO(d);
+      if(c.week[d.getUTCDay()] && !hol.has(iso)){ idx.set(iso,days.length); days.push(iso); }
+    }
+    // nearest-working lookup for any date in range
+    const fwd=new Map(), bwd=new Map();
+    let last=-1;
+    for(let d=new Date(from); d<=to; d=addDays(d,1)){
+      const iso=ISO(d);
+      if(idx.has(iso)) last=idx.get(iso);
+      bwd.set(iso,last);
+    }
+    let next=days.length;
+    const all=[]; for(let d=new Date(to); d>=from; d=addDays(d,-1)) all.push(ISO(d));
+    all.forEach(iso=>{ if(idx.has(iso)) next=idx.get(iso); fwd.set(iso,next); });
+    CAL[c.id]={def:c,days,idx,fwd,bwd};
+  });
+}
+function calOf(a){ return CAL[a&&a.cal] || CAL[data.project.defaultCal] || CAL[data.calendars[0].id]; }
+/** index of date snapped FORWARD to next working day */
+function iF(c,iso){ const v=c.fwd.get(iso); return v===undefined? 0 : Math.min(v,c.days.length-1); }
+/** index of date snapped BACKWARD to previous working day */
+function iB(c,iso){ const v=c.bwd.get(iso); return v===undefined||v<0? 0 : v; }
+function dAt(c,i){ return c.days[clamp(i,0,c.days.length-1)]; }
+/** working days between two ISO dates on calendar c (signed, b - a) */
+function wdiff(c,a,b){ return iF(c,b)-iF(c,a); }
+
+/* ============================================================
+   CPM scheduler — forward pass, backward pass, float
+   ============================================================ */
+function durOf(a){
+  if(a.type==="SM"||a.type==="FM") return 0;
+  return Math.max(0,num(a.od));
+}
+function remOf(a){
+  if(a.type==="SM"||a.type==="FM") return 0;
+  if(a.af) return 0;
+  if(a.as) return Math.max(0,num(a.rd));
+  return Math.max(0,num(a.od));
+}
+function isDone(a){ return !!a.af || num(a.pct)>=100; }
+function isStarted(a){ return !!a.as && !a.af; }
+
+function runSchedule(){
+  log=[];
+  buildCalendars();
+  const P=data.project, DD=P.dataDate||P.start;
+  const acts=data.activities, byId=new Map(acts.map(a=>[a.id,a]));
+  const succ=new Map(), pred=new Map();
+  acts.forEach(a=>{succ.set(a.id,[]);pred.set(a.id,[]);});
+  const bad=[];
+  data.rels.forEach(r=>{
+    if(!byId.has(r.pred)||!byId.has(r.succ)){bad.push(r);return;}
+    if(r.pred===r.succ){bad.push(r);return;}
+    succ.get(r.pred).push(r); pred.get(r.succ).push(r);
+  });
+  if(bad.length) log.push({t:"w",m:bad.length+" relationship(s) ignored — missing or self-referencing activity."});
+
+  /* topological order (Kahn) */
+  const indeg=new Map(acts.map(a=>[a.id,pred.get(a.id).length]));
+  const q=acts.filter(a=>!indeg.get(a.id)).map(a=>a.id);
+  const order=[];
+  while(q.length){ const id=q.shift(); order.push(id);
+    succ.get(id).forEach(r=>{ const n=indeg.get(r.succ)-1; indeg.set(r.succ,n); if(n===0)q.push(r.succ); }); }
+  const inOrder=new Set(order);
+  const loops=acts.filter(a=>!inOrder.has(a.id));
+  if(loops.length){
+    log.push({t:"e",m:"CIRCULAR LOGIC detected in "+loops.length+" activit"+(loops.length>1?"ies":"y")+": "+loops.map(a=>a.id).join(", ")});
+    log.push({t:"e",m:"These activities were scheduled without their looping predecessors. Open Relationships and break the loop."});
+    loops.forEach(a=>order.push(a.id));
+  }
+
+  calc={};
+  const C=id=>calc[id];
+  const ddIdxOn=c=>iF(c,DD);
+
+  /* ---------------- forward pass ---------------- */
+  order.forEach(id=>{
+    const a=byId.get(id), c=calOf(a), k={};
+    const dur=durOf(a), rem=remOf(a);
+
+    if(isDone(a)){
+      const s=a.as||a.af, f=a.af||a.as;
+      k.es=iF(c,s); k.ef=iB(c,f); if(k.ef<k.es)k.ef=k.es;
+      k.start=s; k.finish=f; k.done=true;
+    }else{
+      // earliest index from logic
+      let e = a.as ? ddIdxOn(c) : Math.max(iF(c,P.start), P.retainedLogic? ddIdxOn(c) : iF(c,P.start));
+      if(!a.as && !P.retainedLogic) e=iF(c,P.start);
+      let driver=null;
+      pred.get(id).forEach(r=>{
+        const p=byId.get(r.pred), pk=C(r.pred); if(!pk)return;
+        const pc=calOf(p), lag=num(r.lag);
+        let req;
+        if(r.type==="FS") req=iF(c,dAt(pc,pk.ef))+1+lag;
+        else if(r.type==="SS") req=iF(c,dAt(pc,pk.es))+lag;
+        else if(r.type==="FF"){ const efReq=iF(c,dAt(pc,pk.ef))+lag; req=efReq-Math.max(0,rem-1); }
+        else { const efReq=iF(c,dAt(pc,pk.es))+lag; req=efReq-Math.max(0,rem-1); }
+        if(req>e){ e=req; driver=r.pred+" "+r.type+(lag?(lag>0?"+":"")+lag:""); }
+      });
+      // constraints
+      if(a.cstr==="SNET"||a.cstr==="MSO"){ const ci=iF(c,a.cstrDate); if(ci>e){e=ci;driver="Constraint "+a.cstr;} }
+      if(a.cstr==="MSO"){ const ci=iF(c,a.cstrDate); e=ci; }
+      if(a.cstr==="FNET"){ const ci=iF(c,a.cstrDate)-Math.max(0,rem-1); if(ci>e){e=ci;driver="Constraint FNET";} }
+      if(a.cstr==="MFO"){ e=iB(c,a.cstrDate)-Math.max(0,rem-1); }
+      e=clamp(e,0,c.days.length-1);
+      k.es=e; k.ef= rem>0 ? e+rem-1 : e;
+      k.driver=driver;
+      k.start = a.as ? a.as : dAt(c,k.es);
+      k.finish = dAt(c,k.ef);
+      k.done=false;
+    }
+    k.cal=c; k.dur=dur; k.rem=rem;
+    calc[id]=k;
+  });
+
+  /* project finish */
+  let projFinIso=P.start;
+  acts.forEach(a=>{ const k=C(a.id); const f=k.finish; if(D(f)>D(projFinIso)) projFinIso=f; });
+  const mustFin=P.mustFinish? P.mustFinish : projFinIso;
+
+  /* ---------------- backward pass ---------------- */
+  [...order].reverse().forEach(id=>{
+    const a=byId.get(id), c=calOf(a), k=C(id);
+    const rem=k.rem;
+    let lf=iB(c,mustFin);
+    let any=false;
+    succ.get(id).forEach(r=>{
+      const s=byId.get(r.succ), sk=C(r.succ); if(!sk)return;
+      const sc=calOf(s), lag=num(r.lag);
+      let req;
+      if(r.type==="FS") req=iB(c,dAt(sc,sk.ls))-1-lag;
+      else if(r.type==="SS"){ const lsReq=iB(c,dAt(sc,sk.ls))-lag; req=lsReq+Math.max(0,rem-1); }
+      else if(r.type==="FF") req=iB(c,dAt(sc,sk.lf))-lag;
+      else { const lsReq=iB(c,dAt(sc,sk.lf))-lag; req=lsReq+Math.max(0,rem-1); }
+      if(!any||req<lf){lf=req;any=true;}
+    });
+    if(a.cstr==="FNLT"||a.cstr==="MFO"){ const ci=iB(c,a.cstrDate); if(ci<lf||!any)lf=Math.min(lf,ci); }
+    if(a.cstr==="SNLT"){ const ci=iB(c,a.cstrDate)+Math.max(0,rem-1); if(ci<lf)lf=ci; }
+    if(a.cstr==="MSO"){ lf=iF(c,a.cstrDate)+Math.max(0,rem-1); }
+    if(a.cstr==="ALAP"&&!any) lf=iB(c,mustFin);
+    k.lf=lf; k.ls= rem>0? lf-rem+1 : lf;
+    k.tf = k.done? 0 : k.lf-k.ef;
+    k.crit = !k.done && k.tf<=num(P.critTF);
+  });
+
+  /* free float */
+  acts.forEach(a=>{
+    const k=C(a.id), c=calOf(a); let ff=null;
+    succ.get(a.id).forEach(r=>{
+      const sk=C(r.succ); if(!sk)return; const sc=calOf(byId.get(r.succ)), lag=num(r.lag);
+      let sl;
+      if(r.type==="FS") sl=iF(c,dAt(sc,sk.es))-k.ef-1-lag;
+      else if(r.type==="SS") sl=iF(c,dAt(sc,sk.es))-k.es-lag;
+      else if(r.type==="FF") sl=iF(c,dAt(sc,sk.ef))-k.ef-lag;
+      else sl=iF(c,dAt(sc,sk.ef))-k.es-lag;
+      ff = ff===null? sl : Math.min(ff,sl);
+    });
+    k.ff = ff===null? k.tf : Math.max(0,ff);
+    k.nPred=pred.get(a.id).length; k.nSucc=succ.get(a.id).length;
+    k.ldate=dAt(calOf(a),k.ls); k.lfdate=dAt(calOf(a),k.lf);
+  });
+
+  /* LOE / WBS-summary spans */
+  acts.filter(a=>a.type==="LOE").forEach(a=>{
+    const ps=pred.get(a.id).map(r=>C(r.pred)).filter(Boolean);
+    const ss=succ.get(a.id).map(r=>C(r.succ)).filter(Boolean);
+    if(ps.length&&ss.length){
+      const k=C(a.id), c=calOf(a);
+      k.start=ps.map(x=>x.start).sort()[0];
+      k.finish=ss.map(x=>x.finish).sort().slice(-1)[0];
+      k.es=iF(c,k.start); k.ef=iB(c,k.finish); k.crit=false; k.tf=0;
+    }
+  });
+
+  data._finish=projFinIso;
+  data._dur=acts.length? Math.max(1,calDays(P.start,projFinIso)+1):0;
+  log.unshift({t:"h",m:"Schedule run — "+new Date().toLocaleString()});
+  log.push({t:"",m:"Data date: "+DD+"   |   Activities: "+acts.length+"   |   Relationships: "+data.rels.length});
+  log.push({t:"",m:"Project finish: "+projFinIso+"   |   Critical activities: "+acts.filter(a=>C(a.id).crit).length});
+  log.push({t:"",m:"Scheduling: "+(P.retainedLogic?"Retained Logic":"Progress Override")+"   |   Critical if Total Float ≤ "+P.critTF+"d"});
+  if(P.mustFinish) log.push({t:"",m:"Must-finish-by "+P.mustFinish+" applied to backward pass."});
+  const neg=acts.filter(a=>C(a.id).tf<0);
+  if(neg.length) log.push({t:"w",m:neg.length+" activit"+(neg.length>1?"ies have":"y has")+" negative float — finish date is at risk."});
+  return calc;
+}
+
+/* ---------- rollups ---------- */
+function wbsChildren(id){ return data.wbs.filter(w=>w.parent===id); }
+function wbsActs(id){
+  const ids=new Set(), walk=w=>{ids.add(w);wbsChildren(w).forEach(c=>walk(c.id));}; walk(id);
+  return data.activities.filter(a=>ids.has(a.wbs));
+}
+function rollup(acts){
+  let bud=0,ev=0,ac=0,s=null,f=null,crit=false;
+  acts.forEach(a=>{const k=calc[a.id];if(!k)return;
+    const b=num(a.budget); bud+=b; ev+=b*num(a.pct)/100; ac+=num(a.ac);
+    if(!s||D(k.start)<D(s))s=k.start; if(!f||D(k.finish)>D(f))f=k.finish;
+    if(k.crit)crit=true;});
+  return {bud,ev,ac,start:s,finish:f,crit,pct:bud?ev/bud*100:(acts.length?acts.reduce((t,a)=>t+num(a.pct),0)/acts.length:0),n:acts.length};
+}
+function wbsLevel(id){ let n=0,w=data.wbs.find(x=>x.id===id); while(w&&w.parent){n++;w=data.wbs.find(x=>x.id===w.parent);} return n; }
+/* ============================================================
+   Baselines
+   ============================================================ */
+function baseOf(id){
+  const b=data.baselines.find(x=>x.id===data.activeBaseline);
+  return b? b.acts[id] : null;
+}
+function saveBaseline(){
+  const nm=prompt("Baseline name:", "BL"+String(data.baselines.length+1).padStart(2,"0")+" — "+new Date().toISOString().slice(0,10));
+  if(!nm)return;
+  snapshot();
+  const acts={};
+  data.activities.forEach(a=>{const k=calc[a.id];acts[a.id]={start:k.start,finish:k.finish,od:num(a.od),budget:num(a.budget)};});
+  const b={id:"B"+Date.now(),name:nm,at:new Date().toISOString(),finish:data._finish,acts};
+  data.baselines.push(b); data.activeBaseline=b.id; data.project.baselineName=nm;
+  persist(); render(); toast("Baseline saved and set as active");
+}
+
+/* ============================================================
+   Cost / EVM spreading + S-curve
+   ============================================================ */
+function monthKeys(){
+  const s=D(data.project.start), e=D(data._finish||data.project.start);
+  const out=[]; let d=new Date(Date.UTC(s.getUTCFullYear(),s.getUTCMonth(),1));
+  while(d<=e){ out.push(ISO(d).slice(0,7)); d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1)); }
+  return out;
+}
+/** spread a value linearly across working days of a calendar between two dates */
+function spread(c,fromIso,toIso,total,bucket){
+  const i0=iF(c,fromIso), i1=iB(c,toIso); const n=Math.max(1,i1-i0+1);
+  const per=total/n;
+  for(let i=i0;i<=i1;i++){ const m=c.days[clamp(i,0,c.days.length-1)].slice(0,7); bucket[m]=(bucket[m]||0)+per; }
+}
+function curves(){
+  const mk=monthKeys(), pv={},ev={},ac={},early={},late={};
+  const useCost = ui.curveMode==="Cost";
+  data.activities.forEach(a=>{
+    const k=calc[a.id]; if(!k)return;
+    const c=calOf(a);
+    const w = useCost? num(a.budget) : Math.max(0,num(a.od));
+    if(!w) return;
+    const b=baseOf(a.id);
+    if(b) spread(c,b.start,b.finish,w,pv); else spread(c,k.start,k.finish,w,pv);
+    spread(c,k.start,k.finish,w,early);
+    spread(c,dAt(c,k.ls),dAt(c,k.lf),w,late);
+    const earned=w*num(a.pct)/100;
+    if(earned>0){ const end=a.af||data.project.dataDate; spread(c,a.as||k.start,end,earned,ev); }
+    const actual=useCost? num(a.ac) : 0;
+    if(actual>0){ const end=a.af||data.project.dataDate; spread(c,a.as||k.start,end,actual,ac); }
+  });
+  const tot=mk.reduce((t,m)=>t+(pv[m]||0),0)||1;
+  let cp=0,ce=0,ca=0,cE=0,cL=0;
+  return mk.map(m=>{
+    cp+=pv[m]||0; ce+=ev[m]||0; ca+=ac[m]||0; cE+=early[m]||0; cL+=late[m]||0;
+    const past = m<=data.project.dataDate.slice(0,7);
+    return {m,pv:cp/tot*100,ev:past?ce/tot*100:null,ac:past&&ca?ca/tot*100:null,early:cE/tot*100,late:cL/tot*100,
+            pvAbs:cp,evAbs:ce,acAbs:ca};
+  });
+}
+function evm(){
+  const DD=data.project.dataDate;
+  let BAC=0,PV=0,EV=0,AC=0;
+  data.activities.forEach(a=>{
+    const k=calc[a.id]; if(!k)return;
+    const b=num(a.budget); BAC+=b;
+    const bl=baseOf(a.id);
+    const s=bl?bl.start:k.start, f=bl?bl.finish:k.finish;
+    const c=calOf(a);
+    let p=0;
+    if(D(DD)>=D(f)) p=1; else if(D(DD)<=D(s)) p=0;
+    else { const tot=Math.max(1,iB(c,f)-iF(c,s)+1); p=clamp((iF(c,DD)-iF(c,s))/tot,0,1); }
+    PV+=b*p; EV+=b*num(a.pct)/100; AC+=num(a.ac);
+  });
+  if(!AC) AC=EV*1.03; // no cost actuals entered — indicative only
+  const SPI=PV?EV/PV:1, CPI=AC?EV/AC:1;
+  const EAC=CPI?BAC/CPI:BAC;
+  return {BAC,PV,EV,AC,SV:EV-PV,CV:EV-AC,SPI,CPI,EAC,ETC:EAC-AC,VAC:BAC-EAC,
+          TCPI:(BAC-AC)?(BAC-EV)/(BAC-AC):1, pct:BAC?EV/BAC*100:0, plan:BAC?PV/BAC*100:0};
+}
+
+/* ============================================================
+   Progress tools
+   ============================================================ */
+function applyProgress(){
+  const nd=prompt("Advance data date to (YYYY-MM-DD) and auto-apply progress as planned:", data.project.dataDate);
+  if(!nd||!D(nd))return;
+  snapshot();
+  data.activities.forEach(a=>{
+    const k=calc[a.id]; if(!k||isDone(a))return;
+    const c=calOf(a);
+    if(D(k.start)<=D(nd)){
+      if(!a.as) a.as=k.start;
+      if(D(k.finish)<=D(nd)){ a.af=k.finish; a.pct=100; a.rd=0; }
+      else{
+        const tot=Math.max(1,iB(c,k.finish)-iF(c,k.start)+1);
+        const done=clamp(iF(c,nd)-iF(c,k.start),0,tot);
+        a.pct=Math.round(done/tot*1000)/10;
+        a.rd=Math.max(0,tot-done);
+      }
+    }
+  });
+  data.project.dataDate=nd;
+  runSchedule(); persist(); render(); toast("Progress applied to "+nd);
+}
+function syncRD(a){
+  if(a.pctType==="Duration"){ a.rd=Math.round(num(a.od)*(1-num(a.pct)/100)); }
+  if(num(a.pct)>=100){ a.pct=100; a.rd=0; if(!a.af) a.af=calc[a.id]?calc[a.id].finish:data.project.dataDate; }
+  if(num(a.pct)>0 && !a.as) a.as=calc[a.id]?calc[a.id].start:data.project.dataDate;
+  if(num(a.pct)<100) a.af="";
+}
+
+/* ============================================================
+   DCMA 14-point schedule quality check
+   ============================================================ */
+function dcma(){
+  const A=data.activities.filter(a=>a.type!=="LOE"&&a.type!=="WS");
+  const n=A.length||1, R=data.rels, DD=data.project.dataDate;
+  const incomplete=A.filter(a=>!isDone(a));
+  const ni=incomplete.length||1;
+  const preds=new Set(R.map(r=>r.succ)), succs=new Set(R.map(r=>r.pred));
+  const noLogic=A.filter(a=>(!preds.has(a.id)&&a.id!==A[0].id)||(!succs.has(a.id)&&a.type!=="FM"));
+  const leads=R.filter(r=>num(r.lag)<0);
+  const lags=R.filter(r=>num(r.lag)>0);
+  const fs=R.filter(r=>r.type==="FS");
+  const hard=A.filter(a=>["MSO","MFO","SNLT","FNLT"].includes(a.cstr));
+  const hiFloat=incomplete.filter(a=>calc[a.id]&&calc[a.id].tf>44);
+  const negFloat=incomplete.filter(a=>calc[a.id]&&calc[a.id].tf<0);
+  const hiDur=incomplete.filter(a=>num(a.rd)>44);
+  const invalid=A.filter(a=>(a.as&&D(a.as)>D(DD))||(a.af&&D(a.af)>D(DD))||(!a.af&&calc[a.id]&&D(calc[a.id].finish)<D(DD)));
+  const noRes=A.filter(a=>!num(a.budget)&&!(a.res||[]).length&&a.type==="TD");
+  const bl=data.activeBaseline;
+  let missed=0,blCount=0;
+  A.forEach(a=>{const b=baseOf(a.id);if(!b)return;blCount++;
+    if(a.af? D(a.af)>D(b.finish) : (calc[a.id]&&D(calc[a.id].finish)>D(b.finish))) missed++;});
+  const critPath=A.filter(a=>calc[a.id]&&calc[a.id].crit).length;
+  const tfProj=calc[A.length?A[A.length-1].id:""]?0:0;
+  const projTF = data.project.mustFinish? wdiff(CAL[data.project.defaultCal],data._finish,data.project.mustFinish):0;
+  const totalDur=Math.max(1,calDays(data.project.start,data._finish));
+  const CPLI=(totalDur+projTF)/totalDur;
+  let bei=1;
+  if(blCount){ const due=A.filter(a=>{const b=baseOf(a.id);return b&&D(b.finish)<=D(DD);}).length||1;
+    const done=A.filter(a=>a.af&&D(a.af)<=D(DD)).length; bei=done/due; }
+  const P=(v,t)=>({v,pass:t});
+  return [
+    {n:1,name:"Logic",val:noLogic.length+" of "+n+" ("+(noLogic.length/n*100).toFixed(1)+"%)",thr:"≤ 5% missing pred/succ",pass:noLogic.length/n<=0.05,items:noLogic.map(a=>a.id)},
+    {n:2,name:"Leads (negative lag)",val:leads.length+" relationships",thr:"0 allowed",pass:leads.length===0,items:leads.map(r=>r.pred+"→"+r.succ)},
+    {n:3,name:"Lags",val:lags.length+" of "+R.length+" ("+(lags.length/(R.length||1)*100).toFixed(1)+"%)",thr:"≤ 5%",pass:lags.length/(R.length||1)<=0.05,items:lags.map(r=>r.pred+"→"+r.succ+" +"+r.lag)},
+    {n:4,name:"Relationship types",val:(fs.length/(R.length||1)*100).toFixed(1)+"% Finish-to-Start",thr:"≥ 90% FS",pass:fs.length/(R.length||1)>=0.90,items:R.filter(r=>r.type!=="FS").map(r=>r.pred+" "+r.type+" "+r.succ)},
+    {n:5,name:"Hard constraints",val:hard.length+" of "+n+" ("+(hard.length/n*100).toFixed(1)+"%)",thr:"≤ 5%",pass:hard.length/n<=0.05,items:hard.map(a=>a.id+" "+a.cstr)},
+    {n:6,name:"High float",val:hiFloat.length+" of "+ni+" ("+(hiFloat.length/ni*100).toFixed(1)+"%)",thr:"≤ 5% over 44d",pass:hiFloat.length/ni<=0.05,items:hiFloat.map(a=>a.id+" TF="+calc[a.id].tf)},
+    {n:7,name:"Negative float",val:negFloat.length+" activities",thr:"0 allowed",pass:negFloat.length===0,items:negFloat.map(a=>a.id+" TF="+calc[a.id].tf)},
+    {n:8,name:"High duration",val:hiDur.length+" of "+ni+" ("+(hiDur.length/ni*100).toFixed(1)+"%)",thr:"≤ 5% over 44d",pass:hiDur.length/ni<=0.05,items:hiDur.map(a=>a.id+" RD="+a.rd)},
+    {n:9,name:"Invalid dates",val:invalid.length+" activities",thr:"0 allowed",pass:invalid.length===0,items:invalid.map(a=>a.id)},
+    {n:10,name:"Resources / cost loaded",val:(n-noRes.length)+" of "+n+" loaded",thr:"all task activities",pass:noRes.length===0,items:noRes.map(a=>a.id)},
+    {n:11,name:"Missed tasks",val:blCount? missed+" of "+blCount+" ("+(missed/blCount*100).toFixed(1)+"%)":"no baseline",thr:"≤ 5%",pass:blCount? missed/blCount<=0.05:false,items:[]},
+    {n:12,name:"Critical path test",val:critPath+" critical activities",thr:"contiguous path exists",pass:critPath>0,items:[]},
+    {n:13,name:"Critical Path Length Index",val:CPLI.toFixed(2),thr:"≥ 0.95",pass:CPLI>=0.95,items:[]},
+    {n:14,name:"Baseline Execution Index",val:blCount? bei.toFixed(2):"no baseline",thr:"≥ 0.95",pass:blCount? bei>=0.95:false,items:[]}
+  ];
+}
+
+/* ============================================================
+   Import / export
+   ============================================================ */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(data,null,1)],{type:"application/json"});
+  dl(blob,(data.project.name||"schedule").replace(/\W+/g,"_")+"_"+data.project.dataDate+".json");
+  toast("Project exported");
+}
+function dl(blob,name){
+  const u=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);
+}
+function importJSON(){
+  const i=document.createElement("input");i.type="file";i.accept=".json";
+  i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result);
+      if(!d.activities)throw 0; snapshot(); data=d; runSchedule(); persist(); render(); toast("Project imported");
+    }catch(e){toast("That file isn't a valid EngineX project",true);}};
+    r.readAsText(f);};
+  i.click();
+}
+function exportCSV(){
+  const H=["Activity ID","Activity Name","WBS","Type","Calendar","Original Duration","Remaining Duration","% Complete","Start","Finish","Late Start","Late Finish","Total Float","Free Float","Critical","Predecessors","Budget","Actual Cost","Constraint","Constraint Date","Responsible","Phase"];
+  const rows=data.activities.map(a=>{const k=calc[a.id];
+    const pr=data.rels.filter(r=>r.succ===a.id).map(r=>r.pred+(r.type!=="FS"||r.lag?":"+r.type+(r.lag?(r.lag>0?"+":"")+r.lag:""):"")).join(" ");
+    return [a.id,a.name,a.wbs,a.type,a.cal,a.od,a.rd,a.pct,k.start,k.finish,k.ldate,k.lfdate,k.tf,k.ff,k.crit?"Yes":"No",pr,a.budget,a.ac,a.cstr,a.cstrDate,a.resp,a.phase];});
+  const csv=[H,...rows].map(r=>r.map(v=>{const s=String(v??"");return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(",")).join("\n");
+  dl(new Blob(["\ufeff"+csv],{type:"text/csv"}),"activities_"+data.project.dataDate+".csv");
+  toast("Activity table exported");
+}
+function importCSV(){
+  const i=document.createElement("input");i.type="file";i.accept=".csv";
+  i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const lines=String(r.result).replace(/^\ufeff/,"").split(/\r?\n/).filter(Boolean);
+        const H=splitCSV(lines[0]).map(h=>h.trim().toLowerCase());
+        const col=n=>H.indexOf(n);
+        const idc=col("activity id"),nc=col("activity name"),dc=col("original duration"),wc=col("wbs"),pc=col("predecessors"),pctc=col("% complete"),bc=col("budget");
+        if(idc<0||nc<0)throw 0;
+        snapshot();
+        let added=0,upd=0;
+        lines.slice(1).forEach(L=>{
+          const c=splitCSV(L); const id=c[idc]; if(!id)return;
+          let a=data.activities.find(x=>x.id===id);
+          if(!a){a={id,wbs:wc>=0&&c[wc]?c[wc]:data.wbs[0].id,name:c[nc],type:"TD",cal:data.project.defaultCal,od:10,rd:10,pct:0,pctType:"Duration",as:"",af:"",cstr:"",cstrDate:"",budget:0,ac:0,res:[],notes:"",resp:"",phase:"",loc:""};data.activities.push(a);added++;}
+          else upd++;
+          a.name=c[nc]||a.name;
+          if(dc>=0&&c[dc]!==""){a.od=num(c[dc]);a.rd=num(c[dc]);}
+          if(wc>=0&&c[wc])a.wbs=c[wc];
+          if(pctc>=0&&c[pctc]!==""){a.pct=num(c[pctc]);syncRD(a);}
+          if(bc>=0&&c[bc]!=="")a.budget=num(c[bc]);
+          if(pc>=0&&c[pc]){
+            data.rels=data.rels.filter(x=>x.succ!==id);
+            c[pc].split(/[ ,;]+/).filter(Boolean).forEach(tok=>{
+              const m=tok.match(/^([^:]+)(?::(FS|SS|FF|SF))?([+-]\d+)?$/i); if(!m)return;
+              data.rels.push({id:m[1]+"|"+id+"|"+(m[2]||"FS"),pred:m[1],succ:id,type:(m[2]||"FS").toUpperCase(),lag:num(m[3])});
+            });
+          }
+        });
+        data.wbs.forEach(()=>{});
+        data.activities.forEach(a=>{if(!data.wbs.find(w=>w.id===a.wbs))data.wbs.push({id:a.wbs,parent:data.wbs[0].id,name:a.wbs});});
+        runSchedule();persist();render();
+        toast("Imported — "+added+" added, "+upd+" updated");
+      }catch(e){toast("Couldn't read that CSV. Needs Activity ID and Activity Name columns.",true);}
+    };
+    r.readAsText(f);};
+  i.click();
+}
+function splitCSV(line){
+  const out=[];let cur="",q=false;
+  for(let i=0;i<line.length;i++){const ch=line[i];
+    if(q){ if(ch==='"'){ if(line[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+    else if(ch==='"')q=true; else if(ch===","){out.push(cur);cur="";} else cur+=ch;}
+  out.push(cur);return out;
+}
+function printReport(){ window.print(); }
+/* ============================================================
+   Shared row assembly (grouping / filter / sort)
+   ============================================================ */
+function visibleActs(){
+  const f=ui.filter, t=f.text.trim().toLowerCase();
+  return data.activities.filter(a=>{
+    const k=calc[a.id]; if(!k)return false;
+    if(t && !(a.id.toLowerCase().includes(t)||a.name.toLowerCase().includes(t)))return false;
+    if(f.crit && !k.crit)return false;
+    if(f.inc && isDone(a))return false;
+    if(f.notStarted && (a.as||a.af))return false;
+    if(f.resp && a.resp!==f.resp)return false;
+    if(f.phase && a.phase!==f.phase)return false;
+    return true;
+  });
+}
+function sortActs(list){
+  const {k,dir}=ui.sort;
+  const val=a=>{
+    const c=calc[a.id];
+    switch(k){
+      case "id":return a.id; case "name":return a.name;
+      case "od":return num(a.od); case "rd":return num(a.rd); case "pct":return num(a.pct);
+      case "start":return c.start; case "finish":return c.finish;
+      case "ls":return c.ldate; case "lf":return c.lfdate;
+      case "tf":return c.tf; case "ff":return c.ff;
+      case "budget":return num(a.budget);
+      default:return a.id;
+    }};
+  return [...list].sort((x,y)=>{const a=val(x),b=val(y);return (a>b?1:a<b?-1:0)*dir;});
+}
+/** returns flat display rows: {kind:'wbs'|'act', ...} honouring grouping + collapse */
+function rows(){
+  const list=sortActs(visibleActs());
+  if(ui.group==="None") return list.map(a=>({kind:"act",a}));
+  if(ui.group==="WBS"){
+    const out=[];
+    const walk=(w,lvl)=>{
+      const mine=list.filter(a=>a.wbs===w.id);
+      const kids=wbsChildren(w.id);
+      const all=wbsActs(w.id).filter(a=>list.includes(a));
+      if(!all.length)return;
+      out.push({kind:"wbs",w,lvl,roll:rollup(all)});
+      if(ui.collapsed[w.id])return;
+      kids.forEach(c=>walk(c,lvl+1));
+      mine.forEach(a=>out.push({kind:"act",a,lvl:lvl+1}));
+    };
+    data.wbs.filter(w=>!w.parent).forEach(w=>walk(w,0));
+    const orphan=list.filter(a=>!data.wbs.find(w=>w.id===a.wbs));
+    orphan.forEach(a=>out.push({kind:"act",a,lvl:0}));
+    return out;
+  }
+  // group by a code field
+  const key=ui.group==="Responsible"?"resp":ui.group==="Phase"?"phase":"cal";
+  const groups={};
+  list.forEach(a=>{const g=a[key]||"(none)";(groups[g]=groups[g]||[]).push(a);});
+  const out=[];
+  Object.keys(groups).sort().forEach(g=>{
+    out.push({kind:"wbs",w:{id:"G:"+g,name:g},lvl:0,roll:rollup(groups[g])});
+    if(ui.collapsed["G:"+g])return;
+    groups[g].forEach(a=>out.push({kind:"act",a,lvl:1}));
+  });
+  return out;
+}
+function tfCls(v){ return v<0?"neg":v===0?"zero":"pos"; }
+function pctCell(a){
+  const p=num(a.pct);
+  return `<span class="pbar"><i class="${p>=100?'full':''}" style="width:${clamp(p,0,100)}%"></i></span> <span class="mono">${p.toFixed(0)}%</span>`;
+}
+
+/* ============================================================
+   Activities view
+   ============================================================ */
+const COLS=[
+  ["id","Activity ID",""],["name","Activity Name",""],["type","Type","c"],
+  ["od","OD","r"],["rd","RD","r"],["pct","% Cmp","c"],
+  ["start","Start",""],["finish","Finish",""],
+  ["ls","Late Start",""],["lf","Late Finish",""],
+  ["tf","TF","r"],["ff","FF","r"],
+  ["bl","BL Finish",""],["var","Var","r"],
+  ["budget","Budget","r"],["cstr","Constraint",""],["resp","Responsible",""]
+];
+function activitiesView(){
+  const R=rows();
+  const head=COLS.map(c=>`<th class="${c[2]} ${ui.sort.k===c[0]?'sorted':''}" onclick="sortBy('${c[0]}')">${c[1]}${ui.sort.k===c[0]?(ui.sort.dir>0?" ▲":" ▼"):""}</th>`).join("");
+  const body=R.map(r=>{
+    if(r.kind==="wbs"){
+      const g=r.roll, col=ui.collapsed[r.w.id]?"▸":"▾";
+      return `<tr class="wbsrow" onclick="toggleCollapse('${esc(r.w.id)}')">
+        <td colspan="3" style="padding-left:${6+r.lvl*14}px"><span class="twig">${col}</span> ${esc(r.w.id.startsWith("G:")?"":r.w.id+"  ")}${esc(r.w.name)}</td>
+        <td class="r mono">${g.n}</td><td></td><td class="c">${g.pct.toFixed(0)}%</td>
+        <td class="mono">${fmtDate(g.start)}</td><td class="mono">${fmtDate(g.finish)}</td>
+        <td colspan="4"></td><td colspan="2"></td>
+        <td class="r mono">${g.bud?money(g.bud):""}</td><td colspan="2"></td></tr>`;
+    }
+    const a=r.a,k=calc[a.id],b=baseOf(a.id);
+    const v=b? wdiff(calOf(a),k.finish,b.finish)*-1 : null;
+    const ms=a.type==="SM"||a.type==="FM";
+    return `<tr class="${ui.sel===a.id?'sel':''} ${k.crit?'crit':''}" onclick="selectAct('${a.id}')">
+      <td class="mono">${ms?'<span class="mstone">◆</span> ':''}${esc(a.id)}</td>
+      <td style="padding-left:${6+(r.lvl||0)*14}px"><input class="cellin" value="${esc(a.name)}" onchange="editA('${a.id}','name',this.value)" onclick="event.stopPropagation()"></td>
+      <td class="c" style="color:var(--dim)">${a.type}</td>
+      <td class="r"><input class="cellin num w60" type="number" min="0" value="${num(a.od)}" onchange="editA('${a.id}','od',this.value)" onclick="event.stopPropagation()"></td>
+      <td class="r"><input class="cellin num w60" type="number" min="0" value="${num(a.rd)}" onchange="editA('${a.id}','rd',this.value)" onclick="event.stopPropagation()"></td>
+      <td class="c"><input class="cellin num w60" type="number" min="0" max="100" step="1" value="${num(a.pct)}" onchange="editA('${a.id}','pct',this.value)" onclick="event.stopPropagation()"></td>
+      <td class="mono" style="color:${a.as?'var(--cyan)':'inherit'}">${fmtDate(k.start)}${a.as?" A":""}</td>
+      <td class="mono" style="color:${a.af?'var(--green)':k.crit?'var(--red)':'inherit'}">${fmtDate(k.finish)}${a.af?" A":""}</td>
+      <td class="mono" style="color:var(--muted)">${fmtDate(k.ldate)}</td>
+      <td class="mono" style="color:var(--muted)">${fmtDate(k.lfdate)}</td>
+      <td class="r mono ${tfCls(k.tf)}">${k.done?"—":k.tf}</td>
+      <td class="r mono" style="color:var(--muted)">${k.done?"—":k.ff}</td>
+      <td class="mono" style="color:var(--dim)">${b?fmtDate(b.finish):"—"}</td>
+      <td class="r mono ${v===null?'':tfCls(v)}">${v===null?"—":(v>0?"+":"")+v}</td>
+      <td class="r mono">${num(a.budget)?money(a.budget):""}</td>
+      <td style="color:var(--amber);font-size:11px">${a.cstr?esc(a.cstr)+" "+fmtDate(a.cstrDate):""}</td>
+      <td style="color:var(--muted);font-size:11px">${esc(a.resp||"")}</td>
+    </tr>`;
+  }).join("");
+  return `<div class="split">
+    <div class="splittop"><div class="gridwrap"><table class="grid" style="min-width:1750px"><thead><tr>${head}</tr></thead><tbody>${body||'<tr><td colspan="17"><div class="empty"><b>No activities match the current filter</b>Clear the filter or add an activity.</div></td></tr>'}</tbody></table></div></div>
+    ${detailPanel()}</div>`;
+}
+
+/* ============================================================
+   Detail panel (P6-style bottom pane)
+   ============================================================ */
+function detailPanel(){
+  const a=data.activities.find(x=>x.id===ui.sel);
+  const tabs=["General","Status","Relationships","Resources","Codes","Notebook"];
+  const head=`<div class="dtabs">${tabs.map(t=>`<button class="dtab ${ui.detTab===t?'active':''}" onclick="ui.detTab='${t}';render()">${t}</button>`).join("")}
+    <span class="spacer"></span>
+    <span style="color:var(--dim);font-size:11px;padding-right:8px">${a?esc(a.id)+" · "+esc(a.name):"no activity selected"}</span>
+    <button class="dtab" onclick="ui.detHid=!ui.detHid;render()">${ui.detHid?"▲":"▼"}</button></div>`;
+  if(ui.detHid) return `<div class="detail hid">${head}</div>`;
+  if(!a) return `<div class="detail">${head}<div class="dbody"><div class="empty"><b>Select an activity</b>Click any row above to edit its dates, logic, resources and codes.</div></div></div>`;
+  const k=calc[a.id];
+  let body="";
+  if(ui.detTab==="General"){
+    body=`<div class="fgrid">
+      ${fld("Activity ID","id",a.id,"text",a.id)}
+      ${fld("Activity Name","name",a.name,"text",a.id)}
+      ${sel("Activity Type","type",ACT_TYPES.map(t=>[t[0],t[1]]),a.type,a.id)}
+      ${sel("WBS","wbs",data.wbs.map(w=>[w.id,"  ".repeat(wbsLevel(w.id))+w.name]),a.wbs,a.id)}
+      ${sel("Calendar","cal",data.calendars.map(c=>[c.id,c.name]),a.cal,a.id)}
+      ${fld("Original Duration","od",num(a.od),"number",a.id)}
+      ${sel("Constraint","cstr",CSTR,a.cstr,a.id)}
+      ${fld("Constraint Date","cstrDate",a.cstrDate,"date",a.id)}
+      ${fld("Budgeted Cost ("+data.project.currency+")","budget",num(a.budget),"number",a.id)}
+      ${fld("Actual Cost","ac",num(a.ac),"number",a.id)}
+    </div>`;
+  }else if(ui.detTab==="Status"){
+    const b=baseOf(a.id);
+    body=`<div class="fgrid">
+      ${sel("% Complete Type","pctType",PCT_TYPES.map(p=>[p,p]),a.pctType,a.id)}
+      ${fld("% Complete","pct",num(a.pct),"number",a.id)}
+      ${fld("Remaining Duration","rd",num(a.rd),"number",a.id)}
+      ${fld("Actual Start","as",a.as,"date",a.id)}
+      ${fld("Actual Finish","af",a.af,"date",a.id)}
+      ${ro("Early Start",fmtDate(dAt(calOf(a),k.es)))}
+      ${ro("Early Finish",fmtDate(dAt(calOf(a),k.ef)))}
+      ${ro("Late Start",fmtDate(k.ldate))}
+      ${ro("Late Finish",fmtDate(k.lfdate))}
+      ${ro("Total Float",k.done?"complete":k.tf+" d")}
+      ${ro("Free Float",k.done?"complete":k.ff+" d")}
+      ${ro("Driving predecessor",k.driver||"— project start —")}
+      ${ro("Baseline Finish",b?fmtDate(b.finish):"no baseline")}
+      ${ro("Finish Variance",b?(wdiff(calOf(a),k.finish,b.finish)*-1)+" d":"—")}
+    </div>`;
+  }else if(ui.detTab==="Relationships"){
+    const pr=data.rels.filter(r=>r.succ===a.id), su=data.rels.filter(r=>r.pred===a.id);
+    const tbl=(list,dir)=>`<table class="grid" style="min-width:420px"><thead><tr><th>${dir==="p"?"Predecessor":"Successor"}</th><th>Name</th><th>Type</th><th class="r">Lag</th><th></th></tr></thead><tbody>
+      ${list.map(r=>{const o=data.activities.find(x=>x.id===(dir==="p"?r.pred:r.succ));
+        return `<tr><td class="mono">${esc(dir==="p"?r.pred:r.succ)}</td><td>${esc(o?o.name:"?")}</td>
+        <td><select class="cellin" onchange="editRel('${esc(r.id)}','type',this.value)">${REL_TYPES.map(t=>`<option ${t===r.type?"selected":""}>${t}</option>`).join("")}</select></td>
+        <td class="r"><input class="cellin num w60" type="number" value="${num(r.lag)}" onchange="editRel('${esc(r.id)}','lag',this.value)"></td>
+        <td class="c"><button class="x" onclick="delRel('${esc(r.id)}')">✕</button></td></tr>`;}).join("")
+        ||`<tr><td colspan="5" style="color:var(--dim)">none</td></tr>`}</tbody></table>`;
+    body=`<div class="grid2">
+      <div><div class="tw" style="margin-bottom:6px"><b style="font-size:11px;color:var(--muted)">PREDECESSORS</b><button class="btn" onclick="addRelDlg('${a.id}','p')">+ Add</button></div>${tbl(pr,"p")}</div>
+      <div><div class="tw" style="margin-bottom:6px"><b style="font-size:11px;color:var(--muted)">SUCCESSORS</b><button class="btn" onclick="addRelDlg('${a.id}','s')">+ Add</button></div>${tbl(su,"s")}</div>
+    </div>`;
+  }else if(ui.detTab==="Resources"){
+    body=`<div class="tw" style="margin-bottom:8px"><b style="font-size:11px;color:var(--muted)">ASSIGNMENTS</b><button class="btn" onclick="addResDlg('${a.id}')">+ Assign resource</button></div>
+      <table class="grid" style="min-width:560px"><thead><tr><th>Resource</th><th>Type</th><th class="r">Units/Day</th><th class="r">Rate</th><th class="r">Budgeted Cost</th><th></th></tr></thead><tbody>
+      ${(a.res||[]).map((x,i)=>{const R=data.resources.find(r=>r.id===x.id)||{name:"?",rate:0,type:""};
+        const dur=Math.max(1,num(a.od));
+        return `<tr><td>${esc(R.name)}</td><td style="color:var(--muted)">${R.type}</td>
+        <td class="r"><input class="cellin num w60" type="number" value="${num(x.units)}" onchange="editRes('${a.id}',${i},this.value)"></td>
+        <td class="r mono">${R.rate}</td><td class="r mono">${money(num(x.units)*R.rate*dur)}</td>
+        <td class="c"><button class="x" onclick="delRes('${a.id}',${i})">✕</button></td></tr>`;}).join("")
+        ||`<tr><td colspan="6" style="color:var(--dim)">No resources assigned</td></tr>`}</tbody></table>`;
+  }else if(ui.detTab==="Codes"){
+    body=`<div class="fgrid">
+      ${sel("Responsible","resp",[["",""],...data.codes.resp.map(x=>[x,x])],a.resp,a.id)}
+      ${sel("Phase","phase",[["",""],...data.codes.phase.map(x=>[x,x])],a.phase,a.id)}
+      ${sel("Location","loc",[["",""],...data.codes.loc.map(x=>[x,x])],a.loc,a.id)}
+    </div>`;
+  }else{
+    body=`<div class="field"><label>Notebook — site notes, assumptions, NCRs</label>
+      <textarea rows="7" onchange="editA('${a.id}','notes',this.value)">${esc(a.notes||"")}</textarea></div>`;
+  }
+  return `<div class="detail">${head}<div class="dbody">${body}</div></div>`;
+}
+function fld(label,key,val,type,id){
+  return `<div class="field"><label>${label}</label><input type="${type}" value="${esc(val)}" onchange="editA('${id}','${key}',this.value)"></div>`;
+}
+function ro(label,val){ return `<div class="field ro"><label>${label}</label><input value="${esc(val)}" readonly></div>`; }
+function sel(label,key,opts,val,id){
+  return `<div class="field"><label>${label}</label><select onchange="editA('${id}','${key}',this.value)">${opts.map(o=>`<option value="${esc(o[0])}" ${o[0]===val?"selected":""}>${esc(o[1])}</option>`).join("")}</select></div>`;
+}
+
+/* ============================================================
+   Relationships tab (full register)
+   ============================================================ */
+function relsView(){
+  const nm=id=>{const a=data.activities.find(x=>x.id===id);return a?a.name:"— missing —";};
+  return `<div class="panel"><div class="phead"><span class="ptitle">Relationship Register — ${data.rels.length} links</span>
+    <div class="tw"><button class="btn ok" onclick="addRelDlg(null,'p')">+ Add relationship</button></div></div>
+    <div class="gridwrap" style="max-height:calc(100vh - 260px)"><table class="grid" style="min-width:1000px">
+    <thead><tr><th>Predecessor</th><th>Predecessor Name</th><th>Successor</th><th>Successor Name</th><th>Type</th><th class="r">Lag</th><th>Driving</th><th></th></tr></thead><tbody>
+    ${data.rels.map(r=>{
+      const sk=calc[r.succ]; const driving=sk&&sk.driver&&sk.driver.startsWith(r.pred+" ");
+      return `<tr><td class="mono">${esc(r.pred)}</td><td>${esc(nm(r.pred))}</td>
+      <td class="mono">${esc(r.succ)}</td><td>${esc(nm(r.succ))}</td>
+      <td><select class="cellin w60" onchange="editRel('${esc(r.id)}','type',this.value)">${REL_TYPES.map(t=>`<option ${t===r.type?"selected":""}>${t}</option>`).join("")}</select></td>
+      <td class="r"><input class="cellin num w60" type="number" value="${num(r.lag)}" onchange="editRel('${esc(r.id)}','lag',this.value)"></td>
+      <td>${driving?'<span class="pill p-bad">Driving</span>':'<span class="pill p-off">—</span>'}</td>
+      <td class="c"><button class="x" onclick="delRel('${esc(r.id)}')">✕</button></td></tr>`;}).join("")}
+    </tbody></table></div></div>`;
+}
+/* ============================================================
+   Gantt
+   ============================================================ */
+const ZOOM={Day:20,Week:5.2,Month:2.0,Quarter:0.85};
+function ganttView(){
+  let R=rows();
+  if(ui.showCritOnly) R=R.filter(r=>r.kind==="wbs"||calc[r.a.id].crit);
+  const px=ZOOM[ui.zoom];
+  let t0=D(data.project.start), t1=D(data._finish||data.project.start);
+  data.activities.forEach(a=>{const b=baseOf(a.id);if(b){if(D(b.start)<t0)t0=D(b.start);if(D(b.finish)>t1)t1=D(b.finish);}});
+  t0=addDays(t0,-20); t1=addDays(t1,25);
+  const span=Math.max(30,calDays(ISO(t0),ISO(t1)));
+  const W=Math.max(600,span*px), H=R.length*32;
+  const X=iso=>calDays(ISO(t0),iso)*px;
+
+  /* header bands */
+  let months="",years="",ticks="";
+  let d=new Date(Date.UTC(t0.getUTCFullYear(),t0.getUTCMonth(),1));
+  let curYear=null;
+  while(d<=t1){
+    const x=X(ISO(d)), nxt=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1));
+    const w=(calDays(ISO(d),ISO(nxt)))*px;
+    if(x+w>0){
+      if(ui.zoom!=="Quarter"||d.getUTCMonth()%3===0)
+        months+=`<div style="position:absolute;left:${x}px;width:${w}px;top:20px;height:22px;border-left:1px solid var(--grid);font-size:10px;color:var(--muted);padding:4px 0 0 4px;overflow:hidden;white-space:nowrap">${MON[d.getUTCMonth()]}</div>`;
+      if(curYear!==d.getUTCFullYear()){
+        years+=`<div style="position:absolute;left:${x}px;top:0;height:20px;border-left:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text);padding:3px 0 0 5px">${d.getUTCFullYear()}</div>`;
+        curYear=d.getUTCFullYear();
+      }
+      ticks+=`<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="#1d2a3e"/>`;
+    }
+    d=nxt;
+  }
+  /* weekend/holiday shading on Day zoom */
+  let shade="";
+  if(ui.zoom==="Day"){
+    const c=CAL[data.project.defaultCal];
+    for(let q=new Date(t0);q<=t1;q=addDays(q,1)){
+      const iso=ISO(q);
+      if(!c.idx.has(iso)) shade+=`<rect x="${X(iso)}" y="0" width="${px}" height="${H}" fill="#16202f"/>`;
+    }
+  }
+
+  /* bars */
+  const pos={};
+  let bars="",labels="";
+  R.forEach((r,i)=>{
+    const y=i*32;
+    if(r.kind==="wbs"){
+      const g=r.roll; if(!g.start)return;
+      const x0=X(g.start),x1=X(g.finish);
+      bars+=`<path d="M${x0} ${y+11} h${Math.max(2,x1-x0+px)} v7 l-5 -4 h-${Math.max(0,x1-x0+px-10)} l-5 4 z" fill="#66809f"/>`;
+      return;
+    }
+    const a=r.a,k=calc[a.id],b=baseOf(a.id);
+    const x0=X(k.start), x1=X(k.finish), w=Math.max(3,x1-x0+px);
+    pos[a.id]={x0,x1:x0+w,y:y+16};
+    if(ui.showBase&&b){
+      const bx=X(b.start),bw=Math.max(3,X(b.finish)-bx+px);
+      bars+=`<rect x="${bx}" y="${y+22}" width="${bw}" height="5" rx="2" fill="#5d6d86" opacity=".8"/>`;
+    }
+    if(ui.showFloat&&!k.done&&k.tf>0){
+      const fx=X(k.lfdate)+px;
+      bars+=`<line x1="${x0+w}" x2="${fx}" y1="${y+16}" y2="${y+16}" stroke="#4d6180" stroke-dasharray="3 3"/>
+             <line x1="${fx}" x2="${fx}" y1="${y+11}" y2="${y+21}" stroke="#4d6180"/>`;
+    }
+    if(a.type==="SM"||a.type==="FM"){
+      const cx=x0+px/2, col=k.done?"#3fb950":k.crit?"#f85149":"#a371f7";
+      bars+=`<path d="M${cx} ${y+9} l8 8 l-8 8 l-8 -8 z" fill="${col}" stroke="#0e1420"/>`;
+      labels+=`<text x="${cx+13}" y="${y+21}" fill="#8095b3" font-size="10.5">${esc(a.name.slice(0,34))}</text>`;
+      return;
+    }
+    const done=k.done, col=done?"#2c6b39":k.crit?"#a02a25":"#28558f";
+    const edge=done?"#3fb950":k.crit?"#f85149":"#4a9eff";
+    bars+=`<rect x="${x0}" y="${y+11}" width="${w}" height="12" rx="2" fill="${col}" stroke="${edge}"/>`;
+    const p=clamp(num(a.pct),0,100);
+    if(p>0) bars+=`<rect x="${x0}" y="${y+14}" width="${w*p/100}" height="6" fill="${done?'#3fb950':'#57d364'}" opacity=".95"/>`;
+    labels+=`<text x="${x0+w+6}" y="${y+21}" fill="#7d90ab" font-size="10.5">${p>0&&p<100?p.toFixed(0)+"% · ":""}${k.done?"":"TF "+k.tf+"d"}</text>`;
+  });
+
+  /* relationship arrows */
+  let arrows="";
+  if(ui.showRel){
+    data.rels.forEach(r=>{
+      const p=pos[r.pred], s=pos[r.succ]; if(!p||!s)return;
+      const crit=calc[r.pred]&&calc[r.succ]&&calc[r.pred].crit&&calc[r.succ].crit;
+      const c2=crit?"#f85149":"#4a6484";
+      let x1,y1,x2,y2;
+      if(r.type==="FS"){x1=p.x1;y1=p.y;x2=s.x0;y2=s.y;}
+      else if(r.type==="SS"){x1=p.x0;y1=p.y;x2=s.x0;y2=s.y;}
+      else if(r.type==="FF"){x1=p.x1;y1=p.y;x2=s.x1;y2=s.y;}
+      else {x1=p.x0;y1=p.y;x2=s.x1;y2=s.y;}
+      const mid=y2>y1? y2-16 : y2+16;
+      const gap=8;
+      const d2=(r.type==="FS"&&x2>=x1)
+        ? `M${x1} ${y1} H${x1+gap} V${mid} H${x2-gap} V${y2} H${x2}`
+        : `M${x1} ${y1} H${x1+gap} V${mid} H${x2-gap} V${y2} H${x2}`;
+      arrows+=`<path d="${d2}" fill="none" stroke="${c2}" stroke-width="${crit?1.4:1}" opacity="${crit?.95:.55}"/>
+               <path d="M${x2} ${y2} l-5 -3.5 l0 7 z" fill="${c2}" opacity="${crit?.95:.6}"/>`;
+    });
+  }
+  const ddx=X(data.project.dataDate);
+  const chart=`<svg width="${W}" height="${H}" style="display:block">
+    ${shade}${ticks}
+    ${R.map((r,i)=>`<line x1="0" x2="${W}" y1="${i*32+32}" y2="${i*32+32}" stroke="#1a2436"/>`).join("")}
+    ${arrows}${bars}${labels}
+    <line x1="${ddx}" x2="${ddx}" y1="0" y2="${H}" stroke="#f85149" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </svg>`;
+
+  const left=R.map((r,i)=>{
+    if(r.kind==="wbs") return `<div class="grow wbs" style="padding-left:${8+r.lvl*12}px" onclick="toggleCollapse('${esc(r.w.id)}')"><span class="twig">${ui.collapsed[r.w.id]?"▸":"▾"}</span><span class="gname">${esc(r.w.name)}</span><span class="gid">${r.roll.n}</span></div>`;
+    const a=r.a,k=calc[a.id];
+    return `<div class="grow ${ui.sel===a.id?'sel':''}" style="padding-left:${8+(r.lvl||0)*12}px" onclick="selectAct('${a.id}')">
+      <span class="gid mono">${esc(a.id)}</span><span class="gname" style="color:${k.crit?'#ff9c96':'inherit'}">${esc(a.name)}</span>
+      <span class="gid mono">${fmtDate(k.start)}</span><span class="gid mono">${fmtDate(k.finish)}</span></div>`;
+  }).join("");
+
+  return `<div class="gantt">
+    <div class="gtable" style="width:${ui.gw}px">
+      <div class="ghead" style="background:var(--chrome);border-bottom:1px solid var(--border);display:flex;align-items:flex-end;padding:0 8px 4px;gap:6px;color:var(--dim);font-size:10px">
+        <span style="flex:none;width:58px">ID</span><span style="flex:1">Activity Name</span><span style="width:62px">Start</span><span style="width:62px">Finish</span></div>
+      <div class="gtscroll" id="gleft" style="height:calc(100% - 44px);overflow:hidden">${left}</div>
+    </div>
+    <div class="gsplit" onmousedown="startResize(event)"></div>
+    <div class="gchart" id="gchart" onscroll="syncGantt()">
+      <div class="ghead" style="position:sticky;top:0;z-index:5;background:var(--chrome);border-bottom:1px solid var(--border);width:${W}px;height:44px">${years}${months}</div>
+      <div style="position:relative;width:${W}px">${chart}
+        <div style="position:absolute;left:${ddx}px;top:-44px;background:#8b2a25;color:#fff;font-size:9px;padding:1px 4px;border-radius:2px;transform:translateX(-50%);white-space:nowrap">DD ${fmtDate(data.project.dataDate)}</div>
+      </div>
+    </div></div>`;
+}
+function syncGantt(){
+  const c=document.getElementById("gchart"), l=document.getElementById("gleft");
+  if(c&&l) l.scrollTop=c.scrollTop;
+}
+function startResize(e){
+  e.preventDefault();
+  const move=ev=>{ui.gw=clamp(ev.clientX-6,240,820);const t=document.querySelector(".gtable");if(t)t.style.width=ui.gw+"px";};
+  const up=()=>{document.removeEventListener("mousemove",move);document.removeEventListener("mouseup",up);};
+  document.addEventListener("mousemove",move);document.addEventListener("mouseup",up);
+}
+/* ============================================================
+   S-Curve
+   ============================================================ */
+function curveView(){
+  const C=curves(); if(!C.length)return `<div class="empty"><b>No data to plot</b>Add activities with durations first.</div>`;
+  const W=1100,H=380,L=52,B=44,T=16,Rp=20;
+  const px=(i)=>L+i*(W-L-Rp)/Math.max(1,C.length-1);
+  const py=(v)=>H-B-(v/100)*(H-B-T);
+  const line=(key,col,dash,wid)=>{
+    const pts=C.map((c,i)=>c[key]==null?null:[px(i),py(c[key])]).filter(Boolean);
+    if(pts.length<2)return "";
+    return `<path d="${pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")}" fill="none" stroke="${col}" stroke-width="${wid||2.4}" ${dash?`stroke-dasharray="${dash}"`:""} stroke-linejoin="round"/>`
+      + pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="${col}"/>`).join("");
+  };
+  const ddIdx=C.findIndex(c=>c.m>data.project.dataDate.slice(0,7));
+  const ddx=px(ddIdx<0?C.length-1:Math.max(0,ddIdx-0.0));
+  const band=C.map((c,i)=>`${px(i).toFixed(1)},${py(c.early).toFixed(1)}`).join(" ")+" "+
+             [...C].reverse().map((c,i)=>`${px(C.length-1-i).toFixed(1)},${py(c.late).toFixed(1)}`).join(" ");
+  const e=evm();
+  return `<div class="panel"><div class="phead"><span class="ptitle">Progress S-Curve — ${ui.curveMode==="Cost"?"cost weighted":"duration weighted"}</span>
+    <div class="legend">
+      <span><i class="sw" style="background:#3d8bfd"></i>Baseline / Planned</span>
+      <span><i class="sw" style="background:#3fb950"></i>Earned (Actual)</span>
+      <span><i class="sw" style="background:#e3b341"></i>Actual Cost</span>
+      <span><i class="sw" style="background:#39c5cf;opacity:.45"></i>Early–Late band</span>
+      <button class="btn" onclick="ui.curveMode=ui.curveMode==='Cost'?'Duration':'Cost';render()">Weight: ${ui.curveMode}</button>
+    </div></div>
+    <div class="chartbox"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:760px;height:${H}px">
+      ${[0,20,40,60,80,100].map(v=>`<line x1="${L}" x2="${W-Rp}" y1="${py(v)}" y2="${py(v)}" stroke="#202d43"/><text x="14" y="${py(v)+4}" fill="#5a6b87" font-size="11">${v}%</text>`).join("")}
+      <polygon points="${band}" fill="#39c5cf" opacity=".10"/>
+      ${line("early","#39c5cf","4 4",1.2)}${line("late","#39c5cf","4 4",1.2)}
+      ${line("pv","#3d8bfd")}${line("ev","#3fb950")}${line("ac","#e3b341","6 4",1.8)}
+      <line x1="${ddx}" x2="${ddx}" y1="${T}" y2="${H-B}" stroke="#f85149" stroke-dasharray="5 4"/>
+      <text x="${ddx+5}" y="${T+11}" fill="#f85149" font-size="10">Data date</text>
+      ${C.map((c,i)=>`<text x="${px(i)}" y="${H-B+18}" fill="#5a6b87" font-size="10" text-anchor="middle">${MON[+c.m.slice(5,7)-1]}</text>`).join("")}
+      ${C.map((c,i)=>i===0||c.m.slice(5,7)==="01"?`<text x="${px(i)}" y="${H-B+32}" fill="#8095b3" font-size="10" text-anchor="middle">${c.m.slice(0,4)}</text>`:"").join("")}
+    </svg></div>
+    <div class="cards">
+      <div class="card"><label>PLANNED TO DATE</label><b style="color:var(--blue)">${e.plan.toFixed(1)}%</b><code>PV ${cur(e.PV)}</code></div>
+      <div class="card"><label>EARNED TO DATE</label><b style="color:${e.EV>=e.PV?'var(--green)':'var(--red)'}">${e.pct.toFixed(1)}%</b><code>EV ${cur(e.EV)}</code></div>
+      <div class="card"><label>SCHEDULE VARIANCE</label><b class="${e.SV>=0?'pos':'neg'}">${(e.SV>=0?"+":"")+money(e.SV)}</b><code>EV − PV</code></div>
+      <div class="card"><label>FORECAST FINISH</label><b>${fmtDate(data._finish)}</b><code>CPM calculated</code></div>
+    </div></div>
+    <div class="panel"><div class="phead"><span class="ptitle">Monthly performance</span></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>Month</th><th class="r">Plan Cum %</th><th class="r">Earned Cum %</th><th class="r">Period Plan</th><th class="r">Period Earned</th><th class="r">Variance</th><th class="r">SPI</th><th>Status</th></tr></thead><tbody>
+    ${C.map((c,i)=>{const p0=i?C[i-1].pv:0,e0=i&&C[i-1].ev!=null?C[i-1].ev:0;
+      const v=c.ev==null?null:c.ev-c.pv, spi=c.ev==null?null:(c.pv?c.ev/c.pv:1);
+      const st=v===null?"Forecast":v>=0?"On/Ahead":v>-5?"Slipping":"Behind";
+      const cl=v===null?"p-off":v>=0?"p-ok":v>-5?"p-warn":"p-bad";
+      return `<tr><td>${MON[+c.m.slice(5,7)-1]}-${c.m.slice(2,4)}</td>
+        <td class="r mono" style="color:var(--blue)">${c.pv.toFixed(1)}</td>
+        <td class="r mono">${c.ev==null?"—":c.ev.toFixed(1)}</td>
+        <td class="r mono">${(c.pv-p0).toFixed(1)}</td>
+        <td class="r mono">${c.ev==null?"—":(c.ev-e0).toFixed(1)}</td>
+        <td class="r mono ${v===null?'':v>=0?'pos':'neg'}">${v===null?"—":(v>=0?"+":"")+v.toFixed(1)}</td>
+        <td class="r mono">${spi===null?"—":spi.toFixed(2)}</td>
+        <td><span class="pill ${cl}">${st}</span></td></tr>`;}).join("")}
+    </tbody></table></div></div>`;
+}
+
+/* ============================================================
+   EVM
+   ============================================================ */
+function evmView(){
+  const e=evm();
+  const cards=[
+    ["BAC",cur(e.BAC),"Budget at completion",""],
+    ["PV",cur(e.PV),"Planned value @ data date",""],
+    ["EV",cur(e.EV),"Earned value = BAC × %",""],
+    ["AC",cur(e.AC),"Actual cost recorded",""],
+    ["SV",(e.SV>=0?"+":"")+cur(e.SV),"EV − PV",e.SV>=0?"pos":"neg"],
+    ["CV",(e.CV>=0?"+":"")+cur(e.CV),"EV − AC",e.CV>=0?"pos":"neg"],
+    ["SPI",e.SPI.toFixed(3),"EV ÷ PV",e.SPI>=1?"pos":e.SPI>=.95?"":"neg"],
+    ["CPI",e.CPI.toFixed(3),"EV ÷ AC",e.CPI>=1?"pos":"neg"],
+    ["EAC",cur(e.EAC),"BAC ÷ CPI",""],
+    ["ETC",cur(e.ETC),"EAC − AC",""],
+    ["VAC",(e.VAC>=0?"+":"")+cur(e.VAC),"BAC − EAC",e.VAC>=0?"pos":"neg"],
+    ["TCPI",e.TCPI.toFixed(3),"(BAC−EV) ÷ (BAC−AC)",e.TCPI<=1.05?"pos":"neg"]
+  ];
+  const byW=data.wbs.filter(w=>w.parent).map(w=>{const g=rollup(wbsActs(w.id));return {w,g};}).filter(x=>x.g.n);
+  return `<div class="panel"><div class="phead"><span class="ptitle">Earned Value Management — data date ${fmtDate(data.project.dataDate)}</span>
+    <span style="color:var(--dim);font-size:11px">${data.activeBaseline?"vs "+esc(data.project.baselineName):"no baseline assigned — PV derived from current dates"}</span></div>
+    <div class="cards">${cards.map(c=>`<div class="card"><label>${c[0]}</label><b class="${c[3]}">${c[1]}</b><code>${c[2]}</code></div>`).join("")}</div></div>
+  <div class="grid3">
+    <div class="panel"><div class="phead"><span class="ptitle">Schedule verdict</span></div><div class="note">
+      <b style="color:${e.SPI>=1?'var(--green)':e.SPI>=.95?'var(--amber)':'var(--red)'}">${e.SPI>=1?"Ahead of plan":e.SPI>=.95?"Marginally behind":"Behind plan"}</b><br>
+      SPI ${e.SPI.toFixed(2)} — earning ${(e.SPI*100).toFixed(0)}% of planned rate.<br>
+      ${e.SPI<1?"To recover by finish, remaining work must run at "+(e.BAC-e.EV?((e.BAC-e.PV)/(e.BAC-e.EV)).toFixed(2):"1.00")+"× planned rate.":"Maintain current rate."}
+    </div></div>
+    <div class="panel"><div class="phead"><span class="ptitle">Cost verdict</span></div><div class="note">
+      <b style="color:${e.CPI>=1?'var(--green)':'var(--red)'}">${e.CPI>=1?"Within budget":"Over budget"}</b><br>
+      Forecast at completion ${cur(e.EAC)}.<br>${e.VAC>=0?"Projected saving ":"Projected overrun "}${cur(Math.abs(e.VAC))}.
+    </div></div>
+    <div class="panel"><div class="phead"><span class="ptitle">Critical path</span></div><div class="note">
+      <b style="color:var(--red)">${data.activities.filter(a=>calc[a.id].crit).length} activities on the critical path</b><br>
+      Project finish ${fmtDate(data._finish)}${data.project.mustFinish?" vs contract "+fmtDate(data.project.mustFinish):""}.<br>
+      ${data.project.mustFinish?(D(data._finish)>D(data.project.mustFinish)?'<span style="color:var(--red)">Forecast is past the contract date.</span>':'<span style="color:var(--green)">Forecast is inside the contract date.</span>'):"Set a must-finish date in Settings to measure contract float."}
+    </div></div></div>
+  <div class="panel"><div class="phead"><span class="ptitle">Cost breakdown by WBS</span></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>WBS</th><th class="r">Activities</th><th class="r">Budget</th><th class="r">Earned</th><th class="r">Actual</th><th class="r">% Complete</th><th>Start</th><th>Finish</th><th>Path</th></tr></thead><tbody>
+    ${byW.map(({w,g})=>`<tr><td style="padding-left:${6+wbsLevel(w.id)*14}px">${esc(w.name)}</td>
+      <td class="r mono">${g.n}</td><td class="r mono">${money(g.bud)}</td><td class="r mono">${money(g.ev)}</td>
+      <td class="r mono">${money(g.ac)}</td><td class="r mono">${g.pct.toFixed(1)}%</td>
+      <td class="mono">${fmtDate(g.start)}</td><td class="mono">${fmtDate(g.finish)}</td>
+      <td>${g.crit?'<span class="pill p-bad">Critical</span>':'<span class="pill p-off">Float</span>'}</td></tr>`).join("")}
+    </tbody></table></div></div>`;
+}
+
+/* ============================================================
+   Resources
+   ============================================================ */
+function resView(){
+  const use={};
+  data.activities.forEach(a=>{
+    const k=calc[a.id]; if(!k||isDone(a))return;
+    const c=calOf(a);
+    (a.res||[]).forEach(x=>{
+      const i0=iF(c,k.start),i1=iB(c,k.finish);
+      for(let i=i0;i<=i1;i++){const d=c.days[i];if(!d)continue;
+        use[x.id]=use[x.id]||{}; use[x.id][d]=(use[x.id][d]||0)+num(x.units);}
+    });
+  });
+  const rid=ui.histRes, R=data.resources.find(r=>r.id===rid)||data.resources[0];
+  const u=use[R?R.id:""]||{};
+  const days=Object.keys(u).sort().slice(0,180);
+  const max=Math.max(R?num(R.max):1,...days.map(d=>u[d]),1);
+  const over=days.filter(d=>u[d]>num(R.max)).length;
+  return `<div class="panel"><div class="phead"><span class="ptitle">Resource Dictionary</span>
+    <button class="btn ok" onclick="addResource()">+ Add resource</button></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>ID</th><th>Resource</th><th>Type</th><th class="r">Rate (${data.project.currency}/unit)</th><th class="r">Max Units/Day</th><th>Calendar</th><th class="r">Assigned to</th><th class="r">Peak Demand</th><th>Status</th><th></th></tr></thead><tbody>
+    ${data.resources.map(r=>{const uu=use[r.id]||{};const peak=Math.max(0,...Object.values(uu));
+      const n=data.activities.filter(a=>(a.res||[]).some(x=>x.id===r.id)).length;
+      return `<tr onclick="ui.histRes='${r.id}';render()" class="${rid===r.id?'sel':''}">
+      <td class="mono">${r.id}</td>
+      <td><input class="cellin" value="${esc(r.name)}" onchange="editResource('${r.id}','name',this.value)" onclick="event.stopPropagation()"></td>
+      <td style="color:var(--muted)">${r.type}</td>
+      <td class="r"><input class="cellin num w80" type="number" value="${num(r.rate)}" onchange="editResource('${r.id}','rate',this.value)" onclick="event.stopPropagation()"></td>
+      <td class="r"><input class="cellin num w60" type="number" value="${num(r.max)}" onchange="editResource('${r.id}','max',this.value)" onclick="event.stopPropagation()"></td>
+      <td style="color:var(--muted)">${(data.calendars.find(c=>c.id===r.cal)||{}).name||""}</td>
+      <td class="r mono">${n}</td><td class="r mono">${peak.toFixed(1)}</td>
+      <td>${peak>num(r.max)?'<span class="pill p-bad">Over-allocated</span>':'<span class="pill p-ok">Within limit</span>'}</td>
+      <td class="c"><button class="x" onclick="event.stopPropagation();delResource('${r.id}')">✕</button></td></tr>`;}).join("")}
+    </tbody></table></div></div>
+  <div class="panel"><div class="phead"><span class="ptitle">Resource histogram — ${esc(R?R.name:"")} (remaining work, first 180 working days)</span>
+    <span style="color:${over?'var(--red)':'var(--muted)'};font-size:11px">${over?over+" days over limit of "+R.max:"No over-allocation"}</span></div>
+    <div class="chartbox">${days.length?`<div class="hist">${days.map(d=>{const v=u[d];return `<div class="${v>num(R.max)?'over':''}" style="height:${v/max*100}%" title="${d}: ${v}"></div>`;}).join("")}</div>
+    <div style="border-top:1px dashed var(--red);margin-top:-${150*num(R.max)/max}px;height:${150*num(R.max)/max}px;pointer-events:none"></div>
+    <div style="color:var(--dim);font-size:10px;margin-top:6px">${days[0]} → ${days[days.length-1]} · dashed line = max ${R.max} units/day</div>`
+    :`<div class="empty"><b>No assignments yet</b>Open an activity, go to Resources, and assign this resource.</div>`}</div></div>`;
+}
+
+/* ============================================================
+   WBS
+   ============================================================ */
+function wbsView(){
+  const out=[];
+  const walk=(w,lvl)=>{
+    const g=rollup(wbsActs(w.id));
+    out.push(`<tr><td style="padding-left:${6+lvl*16}px"><span class="mono" style="color:var(--dim)">${esc(w.id)}</span></td>
+      <td style="padding-left:${lvl*10}px"><input class="cellin" value="${esc(w.name)}" onchange="editWbs('${esc(w.id)}','name',this.value)"></td>
+      <td class="r mono">${g.n}</td><td class="r mono">${money(g.bud)}</td><td class="r mono">${money(g.ev)}</td>
+      <td class="r mono">${g.pct.toFixed(1)}%</td><td class="c">${pctBarOnly(g.pct)}</td>
+      <td class="mono">${fmtDate(g.start)}</td><td class="mono">${fmtDate(g.finish)}</td>
+      <td class="c"><button class="x" onclick="delWbs('${esc(w.id)}')">✕</button></td></tr>`);
+    wbsChildren(w.id).forEach(c=>walk(c,lvl+1));
+  };
+  data.wbs.filter(w=>!w.parent).forEach(w=>walk(w,0));
+  return `<div class="panel"><div class="phead"><span class="ptitle">Work Breakdown Structure</span>
+    <button class="btn ok" onclick="addWbs()">+ Add WBS element</button></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>Code</th><th>Element</th><th class="r">Activities</th><th class="r">Budget</th><th class="r">Earned</th><th class="r">%</th><th>Progress</th><th>Start</th><th>Finish</th><th></th></tr></thead>
+    <tbody>${out.join("")}</tbody></table></div></div>`;
+}
+function pctBarOnly(p){return `<span class="pbar"><i class="${p>=100?'full':''}" style="width:${clamp(p,0,100)}%"></i></span>`;}
+
+/* ============================================================
+   Calendars
+   ============================================================ */
+function calView(){
+  const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  return `<div class="panel"><div class="phead"><span class="ptitle">Calendars</span>
+    <button class="btn ok" onclick="addCal()">+ Add calendar</button></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>ID</th><th>Name</th>${DAYS.map(d=>`<th class="c">${d}</th>`).join("")}<th class="r">Hrs/Day</th><th class="r">Holidays</th><th class="r">Work days/yr</th><th></th></tr></thead><tbody>
+    ${data.calendars.map(c=>`<tr><td class="mono">${c.id}</td>
+      <td><input class="cellin" value="${esc(c.name)}" onchange="editCal('${c.id}','name',this.value)"></td>
+      ${c.week.map((v,i)=>`<td class="c"><input type="checkbox" ${v?"checked":""} onchange="editCalDay('${c.id}',${i},this.checked)"></td>`).join("")}
+      <td class="r"><input class="cellin num w60" type="number" value="${c.hpd}" onchange="editCal('${c.id}','hpd',this.value)"></td>
+      <td class="r mono">${(c.holidays||[]).length}</td>
+      <td class="r mono">${c.week.filter(Boolean).length*52-(c.holidays||[]).length}</td>
+      <td class="c"><button class="btn" onclick="editHolidays('${c.id}')">Holidays</button></td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="note">Durations are counted in <b>working days</b> on each activity's own calendar. Change a calendar and the whole network reschedules.</div></div>`;
+}
+
+/* ============================================================
+   Risks
+   ============================================================ */
+function risksView(){
+  const col={High:"var(--red)",Medium:"var(--amber)",Low:"var(--green)"};
+  const score=r=>({High:3,Medium:2,Low:1}[r.prob]||0)*({High:3,Medium:2,Low:1}[r.impact]||0);
+  const open=data.risks.filter(r=>r.status==="Open");
+  const exp=open.reduce((t,r)=>t+num(r.days)*(({High:.7,Medium:.4,Low:.15})[r.prob]||0),0);
+  const L=["High","Medium","Low"];
+  return `<div class="panel"><div class="phead"><span class="ptitle">Risk Register — ${open.length} open of ${data.risks.length}</span>
+    <div class="tw"><span style="color:var(--amber);font-size:11px">Probability-weighted schedule exposure: ${exp.toFixed(0)} days</span>
+    <button class="btn ok" onclick="addRisk()">+ Log risk</button></div></div>
+    <div class="gridwrap"><table class="grid" style="min-width:1250px"><thead><tr><th>#</th><th>Activity</th><th>Risk</th><th class="c">Prob</th><th class="c">Impact</th><th class="r">Score</th><th class="r">Days</th><th>Owner</th><th>Status</th><th>Response</th><th></th></tr></thead><tbody>
+    ${[...data.risks].sort((a,b)=>score(b)-score(a)).map((r,i)=>`<tr>
+      <td class="mono">${i+1}</td>
+      <td><input class="cellin w80" value="${esc(r.act)}" onchange="editRisk(${r.id},'act',this.value)"></td>
+      <td><input class="cellin" value="${esc(r.title)}" onchange="editRisk(${r.id},'title',this.value)"><br><input class="cellin" style="color:var(--muted);font-size:11px" value="${esc(r.desc)}" onchange="editRisk(${r.id},'desc',this.value)"></td>
+      <td class="c" style="color:${col[r.prob]}"><select class="cellin" onchange="editRisk(${r.id},'prob',this.value)">${L.map(x=>`<option ${x===r.prob?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td class="c" style="color:${col[r.impact]}"><select class="cellin" onchange="editRisk(${r.id},'impact',this.value)">${L.map(x=>`<option ${x===r.impact?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td class="r mono">${score(r)}</td>
+      <td class="r"><input class="cellin num w60" type="number" value="${num(r.days)}" onchange="editRisk(${r.id},'days',this.value)"></td>
+      <td><input class="cellin w110" value="${esc(r.owner)}" onchange="editRisk(${r.id},'owner',this.value)"></td>
+      <td><select class="cellin" onchange="editRisk(${r.id},'status',this.value)">${["Open","Mitigated","Closed"].map(x=>`<option ${x===r.status?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td><input class="cellin" value="${esc(r.action)}" onchange="editRisk(${r.id},'action',this.value)"></td>
+      <td class="c"><button class="x" onclick="delRisk(${r.id})">✕</button></td></tr>`).join("")}
+    </tbody></table></div></div>
+    <div class="panel"><div class="phead"><span class="ptitle">Probability / impact matrix</span></div><div class="chartbox">
+    <table class="matrix" style="width:auto"><tr><th></th>${L.map(i=>`<th>Impact ${i}</th>`).join("")}</tr>
+    ${L.map(p=>`<tr><th>Prob ${p}</th>${L.map(i=>{const hits=data.risks.filter(r=>r.prob===p&&r.impact===i&&r.status==="Open");
+      const s=({High:3,Medium:2,Low:1}[p])*({High:3,Medium:2,Low:1}[i]);
+      const bg=s>=6?"#3a1517":s>=3?"#2b2209":"#0f2814";
+      return `<td style="background:${bg};min-width:110px">${hits.length?hits.map(h=>esc(h.act)).join("<br>"):"—"}</td>`;}).join("")}</tr>`).join("")}
+    </table></div></div>`;
+}
+
+/* ============================================================
+   Reports (schedule log + DCMA)
+   ============================================================ */
+function reportView(){
+  const d=dcma(), pass=d.filter(x=>x.pass).length;
+  const cp=criticalPath();
+  return `<div class="panel"><div class="phead"><span class="ptitle">DCMA 14-Point Schedule Quality Check</span>
+    <span class="pill ${pass>=12?'p-ok':pass>=9?'p-warn':'p-bad'}">${pass} of 14 passed</span></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th class="r">#</th><th>Check</th><th>Result</th><th>Threshold</th><th class="c">Verdict</th><th>Affected</th></tr></thead><tbody>
+    ${d.map(x=>`<tr><td class="r mono">${x.n}</td><td>${x.name}</td><td class="mono">${esc(x.val)}</td>
+      <td style="color:var(--muted)">${esc(x.thr)}</td>
+      <td class="c"><span class="pill ${x.pass?'p-ok':'p-bad'}">${x.pass?"Pass":"Fail"}</span></td>
+      <td style="color:var(--dim);font-size:11px;max-width:380px;overflow:hidden;text-overflow:ellipsis">${esc((x.items||[]).slice(0,6).join(", "))}${(x.items||[]).length>6?" +"+((x.items.length)-6)+" more":""}</td></tr>`).join("")}
+    </tbody></table></div></div>
+  <div class="grid2">
+    <div class="panel"><div class="phead"><span class="ptitle">Longest path — ${cp.length} activities</span></div>
+      <div class="gridwrap" style="max-height:340px"><table class="grid"><thead><tr><th>ID</th><th>Activity</th><th class="r">RD</th><th>Finish</th><th class="r">TF</th></tr></thead><tbody>
+      ${cp.map(a=>{const k=calc[a.id];return `<tr onclick="selectAct('${a.id}');ui.tab='Activities';render()"><td class="mono">${a.id}</td><td>${esc(a.name)}</td><td class="r mono">${a.rd}</td><td class="mono">${fmtDate(k.finish)}</td><td class="r mono ${tfCls(k.tf)}">${k.tf}</td></tr>`;}).join("")||`<tr><td colspan="5" class="empty">No critical path found</td></tr>`}
+      </tbody></table></div></div>
+    <div class="panel"><div class="phead"><span class="ptitle">Scheduling log</span>
+      <button class="btn" onclick="runSchedule();render();toast('Schedule recalculated')">Re-run</button></div>
+      <div class="chartbox" style="max-height:340px">${log.map(l=>`<div class="logline ${l.t}">${esc(l.m)}</div>`).join("")}</div></div>
+  </div>
+  <div class="panel"><div class="phead"><span class="ptitle">Look-ahead — activities starting or finishing in the next 21 days</span>
+    <button class="btn" onclick="exportCSV()">Export CSV</button></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>ID</th><th>Activity</th><th>Responsible</th><th>Start</th><th>Finish</th><th class="r">RD</th><th class="r">TF</th><th>Predecessors outstanding</th></tr></thead><tbody>
+    ${lookahead(21).map(a=>{const k=calc[a.id];
+      const pend=data.rels.filter(r=>r.succ===a.id).map(r=>r.pred).filter(p=>{const pa=data.activities.find(x=>x.id===p);return pa&&!isDone(pa);});
+      return `<tr onclick="selectAct('${a.id}');ui.tab='Activities';render()"><td class="mono">${a.id}</td><td>${esc(a.name)}</td>
+      <td style="color:var(--muted)">${esc(a.resp||"")}</td><td class="mono">${fmtDate(k.start)}</td><td class="mono">${fmtDate(k.finish)}</td>
+      <td class="r mono">${a.rd}</td><td class="r mono ${tfCls(k.tf)}">${k.tf}</td>
+      <td style="color:${pend.length?'var(--amber)':'var(--dim)'};font-size:11px">${pend.join(", ")||"clear to start"}</td></tr>`;}).join("")
+      ||`<tr><td colspan="8" class="empty">Nothing scheduled in the window</td></tr>`}
+    </tbody></table></div></div>`;
+}
+function criticalPath(){
+  return data.activities.filter(a=>calc[a.id]&&calc[a.id].crit)
+    .sort((a,b)=>D(calc[a.id].start)-D(calc[b.id].start));
+}
+function lookahead(days){
+  const DD=D(data.project.dataDate), end=addDays(DD,days);
+  return data.activities.filter(a=>{const k=calc[a.id];if(!k||isDone(a))return false;
+    const s=D(k.start),f=D(k.finish);
+    return (s>=DD&&s<=end)||(f>=DD&&f<=end)||(s<DD&&f>DD);})
+    .sort((a,b)=>D(calc[a.id].start)-D(calc[b.id].start));
+}
+
+/* ============================================================
+   Settings
+   ============================================================ */
+function settingsView(){
+  const P=data.project;
+  const pf=(l,k,t="text")=>`<div class="field"><label>${l}</label><input type="${t}" value="${esc(P[k])}" onchange="editProject('${k}',this.value)"></div>`;
+  return `<div class="panel"><div class="phead"><span class="ptitle">Project</span></div><div class="pbody"><div class="fgrid">
+    ${pf("Project name","name")}${pf("Client","client")}${pf("Contract number","contractNo")}${pf("Project manager","pm")}
+    ${pf("Project start","start","date")}${pf("Data date","dataDate","date")}${pf("Must finish by (contract)","mustFinish","date")}
+    ${pf("Currency","currency")}
+    <div class="field"><label>Default calendar</label><select onchange="editProject('defaultCal',this.value)">${data.calendars.map(c=>`<option value="${c.id}" ${c.id===P.defaultCal?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>Critical if total float ≤</label><input type="number" value="${P.critTF}" onchange="editProject('critTF',this.value)"></div>
+    <div class="field"><label>Progressed activity logic</label><select onchange="editProject('retainedLogic',this.value==='1')">
+      <option value="1" ${P.retainedLogic?"selected":""}>Retained Logic</option><option value="0" ${!P.retainedLogic?"selected":""}>Progress Override</option></select></div>
+  </div></div></div>
+  <div class="panel"><div class="phead"><span class="ptitle">Baselines</span>
+    <button class="btn ok" onclick="saveBaseline()">Save current schedule as baseline</button></div>
+    <div class="gridwrap"><table class="grid"><thead><tr><th>Name</th><th>Saved</th><th>Baseline finish</th><th class="r">Activities</th><th class="c">Active</th><th></th></tr></thead><tbody>
+    ${data.baselines.map(b=>`<tr><td>${esc(b.name)}</td><td class="mono">${b.at.slice(0,10)}</td><td class="mono">${fmtDate(b.finish)}</td>
+      <td class="r mono">${Object.keys(b.acts).length}</td>
+      <td class="c"><input type="radio" name="bl" ${data.activeBaseline===b.id?"checked":""} onchange="setBaseline('${b.id}')"></td>
+      <td class="c"><button class="x" onclick="delBaseline('${b.id}')">✕</button></td></tr>`).join("")
+      ||`<tr><td colspan="6" class="empty"><b>No baseline saved</b>Save one to unlock variance columns, the S-curve plan line and DCMA checks 11 and 14.</td></tr>`}
+    </tbody></table></div></div>
+  <div class="panel"><div class="phead"><span class="ptitle">Data</span></div><div class="pbody">
+    <div class="tw" style="flex-wrap:wrap;gap:8px">
+      <button class="btn" onclick="exportJSON()">Export project (.json)</button>
+      <button class="btn" onclick="importJSON()">Import project (.json)</button>
+      <button class="btn" onclick="exportCSV()">Export activities (.csv)</button>
+      <button class="btn" onclick="importCSV()">Import activities (.csv)</button>
+      <button class="btn dan" onclick="resetAll()">Reset to sample project</button>
+    </div>
+    <div class="note" style="border:0;padding:10px 0 0">Everything is stored in this browser only. Export a .json before clearing site data or moving machines. CSV import matches on Activity ID and accepts a Predecessors column like <b>A1010 A1020:SS+5</b>.</div>
+  </div></div>`;
+}
+/* ============================================================
+   Edit actions
+   ============================================================ */
+function commit(reschedule=true){ if(reschedule)runSchedule(); persist(); render(); }
+function editA(id,k,v){
+  const a=data.activities.find(x=>x.id===id); if(!a)return;
+  snapshot();
+  if(k==="id"){
+    const nv=String(v).trim(); if(!nv||data.activities.some(x=>x.id===nv&&x!==a))return toast("Activity ID already in use",true);
+    data.rels.forEach(r=>{if(r.pred===a.id)r.pred=nv;if(r.succ===a.id)r.succ=nv;});
+    data.risks.forEach(r=>{if(r.act===a.id)r.act=nv;});
+    a.id=nv; ui.sel=nv;
+  }
+  else if(["od","rd","pct","budget","ac"].includes(k)){ a[k]=num(v); if(k==="od"&&!a.as)a.rd=num(v); if(k==="pct")syncRD(a); if(k==="rd"&&!a.as&&num(a.pct)===0)a.od=num(v); }
+  else a[k]=v;
+  if(k==="as"&&v&&!num(a.pct))a.pct=1;
+  if(k==="af"&&v){a.pct=100;a.rd=0;if(!a.as)a.as=v;}
+  if(k==="type"&&(v==="SM"||v==="FM")){a.od=0;a.rd=0;}
+  commit();
+}
+function editProject(k,v){ snapshot(); data.project[k]= (k==="critTF")?num(v):v; commit(); }
+function editRel(id,k,v){ const r=data.rels.find(x=>x.id===id); if(!r)return; snapshot(); r[k]= k==="lag"?num(v):v; commit(); }
+function delRel(id){ snapshot(); data.rels=data.rels.filter(r=>r.id!==id); commit(); toast("Relationship removed"); }
+function editWbs(id,k,v){ const w=data.wbs.find(x=>x.id===id); if(!w)return; snapshot(); w[k]=v; commit(false); }
+function editRisk(id,k,v){ const r=data.risks.find(x=>x.id===id); if(!r)return; snapshot(); r[k]= k==="days"?num(v):v; commit(false); }
+function delRisk(id){ snapshot(); data.risks=data.risks.filter(r=>r.id!==id); commit(false); }
+function editCal(id,k,v){ const c=data.calendars.find(x=>x.id===id); if(!c)return; snapshot(); c[k]= k==="hpd"?num(v):v; commit(); }
+function editCalDay(id,i,on){ const c=data.calendars.find(x=>x.id===id); if(!c)return; snapshot(); c.week[i]=on; commit(); }
+function editResource(id,k,v){ const r=data.resources.find(x=>x.id===id); if(!r)return; snapshot(); r[k]=["rate","max"].includes(k)?num(v):v; commit(false); }
+function delResource(id){ snapshot(); data.resources=data.resources.filter(r=>r.id!==id);
+  data.activities.forEach(a=>a.res=(a.res||[]).filter(x=>x.id!==id)); commit(false); }
+function editRes(aid,i,v){ const a=data.activities.find(x=>x.id===aid); if(!a)return; snapshot(); a.res[i].units=num(v); commit(false); }
+function delRes(aid,i){ const a=data.activities.find(x=>x.id===aid); if(!a)return; snapshot(); a.res.splice(i,1); commit(false); }
+function selectAct(id){ ui.sel=id; render(); }
+function sortBy(k){ if(ui.sort.k===k)ui.sort.dir*=-1; else ui.sort={k,dir:1}; render(); }
+function toggleCollapse(id){ ui.collapsed[id]=!ui.collapsed[id]; render(); }
+function setBaseline(id){ data.activeBaseline=id; const b=data.baselines.find(x=>x.id===id); if(b)data.project.baselineName=b.name; commit(false); toast("Active baseline set"); }
+function delBaseline(id){ snapshot(); data.baselines=data.baselines.filter(b=>b.id!==id); if(data.activeBaseline===id)data.activeBaseline=null; commit(false); }
+function resetAll(){ if(!confirm("Replace everything with the sample substation project? Export first if you want to keep this schedule."))return;
+  snapshot(); data=seed(); commit(); toast("Sample project loaded"); }
+
+/* ---------- add dialogs ---------- */
+function nextId(){
+  const nums=data.activities.map(a=>parseInt(String(a.id).replace(/\D/g,""),10)).filter(n=>!isNaN(n));
+  const n=(Math.max(0,...nums)||1000)+10;
+  return "A"+n;
+}
+function addActivity(){
+  const wbsOpts=data.wbs.map(w=>`<option value="${esc(w.id)}">${"— ".repeat(wbsLevel(w.id))}${esc(w.name)}</option>`).join("");
+  modal("Add activity",`<div class="fgrid">
+    <div class="field"><label>Activity ID</label><input id="n_id" value="${nextId()}"></div>
+    <div class="field"><label>Activity name</label><input id="n_name" placeholder="e.g. Cable tray installation – Level 3"></div>
+    <div class="field"><label>WBS</label><select id="n_wbs">${wbsOpts}</select></div>
+    <div class="field"><label>Type</label><select id="n_type">${ACT_TYPES.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join("")}</select></div>
+    <div class="field"><label>Original duration (working days)</label><input id="n_od" type="number" value="10"></div>
+    <div class="field"><label>Calendar</label><select id="n_cal">${data.calendars.map(c=>`<option value="${c.id}" ${c.id===data.project.defaultCal?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div>
+    <div class="field"><label>Budget (${data.project.currency})</label><input id="n_budget" type="number" value="0"></div>
+    <div class="field"><label>Predecessor (optional)</label><input id="n_pred" placeholder="${ui.sel||"A1010"}" value="${ui.sel||""}"></div>
+  </div>`,"Add activity",()=>{
+    const g=i=>document.getElementById(i).value;
+    const id=g("n_id").trim(); if(!id)return toast("Give the activity an ID",true);
+    if(data.activities.some(a=>a.id===id))return toast("That Activity ID already exists",true);
+    snapshot();
+    const t=g("n_type"), od=(t==="SM"||t==="FM")?0:num(g("n_od"));
+    data.activities.push({id,wbs:g("n_wbs"),name:g("n_name")||"New activity",type:t,cal:g("n_cal"),
+      od,rd:od,pct:0,pctType:"Duration",as:"",af:"",cstr:"",cstrDate:"",budget:num(g("n_budget")),ac:0,res:[],notes:"",resp:"",phase:"",loc:""});
+    const p=g("n_pred").trim();
+    if(p&&data.activities.some(a=>a.id===p)) data.rels.push({id:p+"|"+id+"|FS",pred:p,succ:id,type:"FS",lag:0});
+    ui.sel=id; closeModal(); commit(); toast("Activity added");
+  });
+}
+function delActivity(){
+  if(!ui.sel)return toast("Select an activity first",true);
+  if(!confirm("Delete "+ui.sel+" and its relationships?"))return;
+  snapshot();
+  data.activities=data.activities.filter(a=>a.id!==ui.sel);
+  data.rels=data.rels.filter(r=>r.pred!==ui.sel&&r.succ!==ui.sel);
+  ui.sel=null; commit(); toast("Activity deleted");
+}
+function addRelDlg(actId,dir){
+  const opts=data.activities.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} — ${esc(a.name)}</option>`).join("");
+  modal("Add relationship",`<div class="fgrid">
+    <div class="field"><label>Predecessor</label><select id="r_p">${opts}</select></div>
+    <div class="field"><label>Successor</label><select id="r_s">${opts}</select></div>
+    <div class="field"><label>Type</label><select id="r_t">${REL_TYPES.map(t=>`<option>${t}</option>`).join("")}</select></div>
+    <div class="field"><label>Lag (working days, negative = lead)</label><input id="r_l" type="number" value="0"></div>
+  </div>`,"Add link",()=>{
+    const g=i=>document.getElementById(i).value;
+    const p=g("r_p"),s=g("r_s");
+    if(p===s)return toast("An activity can't link to itself",true);
+    const id=p+"|"+s+"|"+g("r_t");
+    if(data.rels.some(r=>r.id===id))return toast("That link already exists",true);
+    snapshot(); data.rels.push({id,pred:p,succ:s,type:g("r_t"),lag:num(g("r_l"))});
+    closeModal(); commit(); toast("Relationship added");
+  },()=>{
+    if(actId){ const f=dir==="p"?"r_s":"r_p"; const el=document.getElementById(f); if(el)el.value=actId; }
+  });
+}
+function addResDlg(aid){
+  modal("Assign resource",`<div class="fgrid">
+    <div class="field"><label>Resource</label><select id="ar_id">${data.resources.map(r=>`<option value="${r.id}">${esc(r.name)} (${r.type})</option>`).join("")}</select></div>
+    <div class="field"><label>Units per day</label><input id="ar_u" type="number" value="2"></div>
+  </div>`,"Assign",()=>{
+    const a=data.activities.find(x=>x.id===aid); if(!a)return;
+    snapshot(); a.res=a.res||[]; a.res.push({id:document.getElementById("ar_id").value,units:num(document.getElementById("ar_u").value)});
+    closeModal(); commit(false); toast("Resource assigned");
+  });
+}
+function addResource(){
+  modal("Add resource",`<div class="fgrid">
+    <div class="field"><label>Name</label><input id="nr_n" placeholder="e.g. Cable Puller"></div>
+    <div class="field"><label>Type</label><select id="nr_t"><option>Labor</option><option>Nonlabor</option><option>Material</option></select></div>
+    <div class="field"><label>Rate (${data.project.currency})</label><input id="nr_r" type="number" value="100"></div>
+    <div class="field"><label>Max units/day</label><input id="nr_m" type="number" value="4"></div>
+  </div>`,"Add resource",()=>{
+    const g=i=>document.getElementById(i).value;
+    snapshot(); data.resources.push({id:"R"+Date.now().toString().slice(-6),name:g("nr_n")||"New resource",type:g("nr_t"),rate:num(g("nr_r")),max:num(g("nr_m")),cal:data.project.defaultCal});
+    closeModal(); commit(false);
+  });
+}
+function addWbs(){
+  modal("Add WBS element",`<div class="fgrid">
+    <div class="field"><label>Code</label><input id="w_id" placeholder="ST.7"></div>
+    <div class="field"><label>Name</label><input id="w_n" placeholder="Close-out & Documentation"></div>
+    <div class="field"><label>Parent</label><select id="w_p"><option value="">(top level)</option>${data.wbs.map(w=>`<option value="${esc(w.id)}">${esc(w.name)}</option>`).join("")}</select></div>
+  </div>`,"Add",()=>{
+    const g=i=>document.getElementById(i).value;
+    const id=g("w_id").trim(); if(!id)return toast("Give it a code",true);
+    if(data.wbs.some(w=>w.id===id))return toast("Code already used",true);
+    snapshot(); data.wbs.push({id,parent:g("w_p"),name:g("w_n")||id}); closeModal(); commit(false);
+  });
+}
+function delWbs(id){
+  if(wbsActs(id).length)return toast("Move or delete its activities first",true);
+  snapshot(); data.wbs=data.wbs.filter(w=>w.id!==id); commit(false);
+}
+function addCal(){
+  snapshot();
+  data.calendars.push({id:"C"+Date.now().toString().slice(-5),name:"New calendar",week:[true,true,true,true,true,false,true],hpd:8,holidays:[]});
+  commit(false);
+}
+function editHolidays(id){
+  const c=data.calendars.find(x=>x.id===id); if(!c)return;
+  modal("Holidays — "+esc(c.name),`<div class="field"><label>One date per line (YYYY-MM-DD). These are excluded from all duration counts.</label>
+    <textarea id="h_t" rows="12">${esc((c.holidays||[]).join("\n"))}</textarea></div>`,"Save holidays",()=>{
+    snapshot();
+    c.holidays=document.getElementById("h_t").value.split(/\s+/).map(s=>s.trim()).filter(s=>/^\d{4}-\d{2}-\d{2}$/.test(s));
+    closeModal(); commit(); toast(c.holidays.length+" holidays saved");
+  });
+}
+function addRisk(){
+  snapshot();
+  data.risks.push({id:Date.now(),act:ui.sel||"",title:"New risk",desc:"",prob:"Medium",impact:"Medium",owner:"",status:"Open",action:"",days:0});
+  commit(false);
+}
+
+/* ---------- modal plumbing ---------- */
+function modal(title,body,okLabel,onOk,after){
+  document.getElementById("modalBox").innerHTML=
+    `<div class="bhead">${title}<button class="x" onclick="closeModal()">✕</button></div>
+     <div class="bbody">${body}</div>
+     <div class="bfoot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" id="modalOk">${okLabel}</button></div>`;
+  document.getElementById("modal").classList.add("show");
+  document.getElementById("modalOk").onclick=onOk;
+  if(after)after();
+  const first=document.querySelector("#modalBox input,#modalBox select"); if(first)first.focus();
+}
+function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+document.getElementById("modal").onclick=e=>{ if(e.target.id==="modal")closeModal(); };
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeModal();
+  if(e.target.matches("input,select,textarea"))return;
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){e.preventDefault();e.shiftKey?redo():undo();}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){e.preventDefault();persist();toast("Saved");}
+  if(e.key==="F9"){e.preventDefault();runSchedule();render();toast("Schedule recalculated");}
+  if(e.key==="Delete"&&ui.sel&&ui.tab==="Activities")delActivity();
+});
+
+/* ============================================================
+   Chrome / toolbar / KPIs / render
+   ============================================================ */
+const TABS=["Activities","Gantt","Relationships","WBS","S-Curve","EVM","Resources","Calendars","Risks","Reports","Settings"];
+function kpis(){
+  const e=evm(), crit=data.activities.filter(a=>calc[a.id]&&calc[a.id].crit).length;
+  const done=data.activities.filter(isDone).length;
+  const neg=data.activities.filter(a=>calc[a.id]&&calc[a.id].tf<0).length;
+  const slip=data.project.mustFinish? wdiff(CAL[data.project.defaultCal],data._finish,data.project.mustFinish):null;
+  return [
+    ["Progress",e.pct.toFixed(1)+"%",e.pct>=e.plan?"var(--green)":"var(--red)","Plan "+e.plan.toFixed(1)+"%"],
+    ["SPI",e.SPI.toFixed(2),e.SPI>=1?"var(--green)":e.SPI>=.95?"var(--amber)":"var(--red)",e.SPI>=1?"On or ahead":"Behind plan"],
+    ["CPI",e.CPI.toFixed(2),e.CPI>=1?"var(--green)":"var(--red)",e.CPI>=1?"Within budget":"Over budget"],
+    ["Finish",fmtDate(data._finish),slip===null?"var(--text)":slip>=0?"var(--green)":"var(--red)",slip===null?"CPM calculated":(slip>=0?"+":"")+slip+"d vs contract"],
+    ["Critical",crit,crit?"var(--red)":"var(--muted)","activities on path"],
+    ["Negative float",neg,neg?"var(--red)":"var(--green)",neg?"needs recovery":"none"],
+    ["Complete",done+"/"+data.activities.length,"var(--cyan)","activities finished"],
+    ["EAC",cur(e.EAC),e.VAC>=0?"var(--green)":"var(--red)",(e.VAC>=0?"saving ":"overrun ")+money(Math.abs(e.VAC))]
+  ];
+}
+function toolbar(){
+  const t=ui.tab;
+  const common=`<button class="btn pri" onclick="runSchedule();render();toast('Schedule recalculated')" title="F9">⟳ Schedule (F9)</button>
+    <button class="btn" onclick="applyProgress()">Apply progress…</button>
+    <button class="btn" onclick="saveBaseline()">Save baseline</button>
+    <div class="tsep"></div>
+    <button class="btn" onclick="undo()" title="Ctrl+Z">↶</button><button class="btn" onclick="redo()">↷</button>`;
+  let extra="";
+  if(t==="Activities"){
+    extra=`<div class="tsep"></div>
+      <button class="btn ok" onclick="addActivity()">+ Activity</button>
+      <button class="btn dan" onclick="delActivity()">Delete</button>
+      <div class="tsep"></div>
+      <span class="tlabel">Group</span><select class="tsel" onchange="ui.group=this.value;render()">${["WBS","Responsible","Phase","None"].map(g=>`<option ${ui.group===g?"selected":""}>${g}</option>`).join("")}</select>
+      <input class="tin" placeholder="Filter by ID or name…" value="${esc(ui.filter.text)}" oninput="ui.filter.text=this.value;render()">
+      <button class="btn ${ui.filter.crit?"on":""}" onclick="ui.filter.crit=!ui.filter.crit;render()">Critical only</button>
+      <button class="btn ${ui.filter.inc?"on":""}" onclick="ui.filter.inc=!ui.filter.inc;render()">Incomplete</button>
+      <button class="btn" onclick="exportCSV()">Export CSV</button>`;
+  }else if(t==="Gantt"){
+    extra=`<div class="tsep"></div>
+      <span class="tlabel">Zoom</span><select class="tsel" onchange="ui.zoom=this.value;render()">${Object.keys(ZOOM).map(z=>`<option ${ui.zoom===z?"selected":""}>${z}</option>`).join("")}</select>
+      <button class="btn ${ui.showRel?"on":""}" onclick="ui.showRel=!ui.showRel;render()">Logic lines</button>
+      <button class="btn ${ui.showBase?"on":""}" onclick="ui.showBase=!ui.showBase;render()">Baseline</button>
+      <button class="btn ${ui.showFloat?"on":""}" onclick="ui.showFloat=!ui.showFloat;render()">Float</button>
+      <button class="btn ${ui.showCritOnly?"on":""}" onclick="ui.showCritOnly=!ui.showCritOnly;render()">Critical only</button>
+      <div class="tsep"></div><div class="legend">
+        <span><i class="sw" style="background:#28558f;border:1px solid #4a9eff"></i>Remaining</span>
+        <span><i class="sw" style="background:#a02a25;border:1px solid #f85149"></i>Critical</span>
+        <span><i class="sw" style="background:#3fb950"></i>Complete</span>
+        <span><i class="sw" style="background:#5d6d86"></i>Baseline</span></div>`;
+  }else if(t==="Reports"){
+    extra=`<div class="tsep"></div><button class="btn" onclick="printReport()">Print / PDF</button><button class="btn" onclick="exportCSV()">Export CSV</button>`;
+  }else if(t==="Settings"){
+    extra=`<div class="tsep"></div><button class="btn" onclick="exportJSON()">Export .json</button><button class="btn" onclick="importJSON()">Import .json</button>`;
+  }
+  return `<div class="toolbar">${common}${extra}</div>`;
+}
+function view(){
+  switch(ui.tab){
+    case "Activities":return activitiesView();
+    case "Gantt":return ganttView();
+    case "Relationships":return relsView();
+    case "WBS":return wbsView();
+    case "S-Curve":return curveView();
+    case "EVM":return evmView();
+    case "Resources":return resView();
+    case "Calendars":return calView();
+    case "Risks":return risksView();
+    case "Reports":return reportView();
+    default:return settingsView();
+  }
+}
+function render(){
+  const P=data.project;
+  const full=ui.tab==="Activities"||ui.tab==="Gantt";
+  const scrollKeep={};
+  document.querySelectorAll(".gridwrap,.scroll,#gchart").forEach((el,i)=>scrollKeep[i]=[el.scrollTop,el.scrollLeft]);
+  document.getElementById("app").innerHTML=`
+    <div class="titlebar">
+      <div class="brand">⬡ EngineX <span>Scheduler</span></div>
+      <div class="projmeta"><b>${esc(P.name)}</b> · ${esc(P.client)} · ${esc(P.contractNo)}${data.activeBaseline?" · "+esc(P.baselineName):""}</div>
+      <div class="spacer"></div>
+      <span class="ddbadge">Data date <b>${fmtDate(P.dataDate)}</b></span>
+      <button class="btn" onclick="persist();toast('Saved')">Save</button>
+    </div>
+    <div class="tabs">${TABS.map(t=>`<button class="tab ${ui.tab===t?"active":""}" onclick="ui.tab='${t}';render()">${t}</button>`).join("")}</div>
+    ${toolbar()}
+    <div class="kpibar">${kpis().map(k=>`<div class="kpi"><label>${k[0]}</label><b style="color:${k[2]}">${k[1]}</b><small>${k[3]}</small></div>`).join("")}</div>
+    <div class="body">${full?view():`<div class="scroll">${view()}</div>`}</div>
+    ${statusbar()}`;
+  document.querySelectorAll(".gridwrap,.scroll,#gchart").forEach((el,i)=>{if(scrollKeep[i]){el.scrollTop=scrollKeep[i][0];el.scrollLeft=scrollKeep[i][1];}});
+  syncGantt();
+}
+function statusbar(){
+  const crit=data.activities.filter(a=>calc[a.id]&&calc[a.id].crit).length;
+  const neg=data.activities.filter(a=>calc[a.id]&&calc[a.id].tf<0).length;
+  const errs=log.filter(l=>l.t==="e").length;
+  return `<div class="statusbar">
+    <span>⬡ EngineX Scheduler</span>
+    <span><b>${data.activities.length}</b> activities</span>
+    <span><b>${data.rels.length}</b> relationships</span>
+    <span><b>${data.wbs.length}</b> WBS</span>
+    <span>Start <b>${fmtDate(data.project.start)}</b></span>
+    <span>Finish <b>${fmtDate(data._finish)}</b></span>
+    <span style="color:${crit?'var(--red)':'inherit'}">${crit} critical</span>
+    <span style="color:${neg?'var(--red)':'inherit'}">${neg} negative float</span>
+    <span style="color:${errs?'var(--red)':'var(--green)'}">${errs?errs+" logic error(s) — see Reports":"Logic OK"}</span>
+    <span style="margin-left:auto">${data.project.retainedLogic?"Retained Logic":"Progress Override"} · ${data.baselines.length} baseline(s)</span>
+  </div>`;
+}
+
+/* ---------- seed baseline: CPM of the original un-progressed plan ---------- */
+function buildSeedBaseline(){
+  const keepD=data;
+  const clone=JSON.parse(JSON.stringify(data));
+  clone.activities.forEach(a=>{a.as="";a.af="";a.pct=0;a.ac=0;a.rd=num(a.od);if(a.cstr==="FNLT")a.cstr="";});
+  clone.project.dataDate=clone.project.start;
+  clone.baselines=[];clone.activeBaseline=null;
+  data=clone; runSchedule();
+  const acts={};
+  clone.activities.forEach(a=>{const k=calc[a.id];acts[a.id]={start:k.start,finish:k.finish,od:num(a.od),budget:num(a.budget)};});
+  const fin=clone._finish;
+  data=keepD;
+  data.baselines=[{id:"B0",name:"BL01 — Contract Baseline",at:new Date().toISOString(),finish:fin,acts}];
+  data.activeBaseline="B0"; data.project.baselineName="BL01 — Contract Baseline";
+}
+
+/* ---------- boot ---------- */
+data=loadData();
+if(!data.baselines)data.baselines=[];
+if(!data.codes)data.codes=seed().codes;
+if(!data.baselines.length) buildSeedBaseline();
+runSchedule();
+render();
+
+</script>
+</body>
+</html>

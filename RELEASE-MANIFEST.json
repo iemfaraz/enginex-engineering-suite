@@ -1,0 +1,92 @@
+{
+  "product": "ENGINEX Engineering Suite",
+  "version": "8.3-scheduler-p6",
+  "package": "ENGINEX-Engineering-Suite-Professional-Workspace-v8.3-Scheduler-P6.zip",
+  "createdBy": "ENGINEX",
+  "generatedAt": "2026-09-15T19:30:00+00:00",
+  "files": [
+    {
+      "file": "README-OFFLINE.md",
+      "bytes": 4131,
+      "sha256": "8b0f8d1194552b4e120b48018fe1f3201530fd647c6227b42eae47fc24c70fcd"
+    },
+    {
+      "file": "README-VIDEO-UPDATE.md",
+      "bytes": 621,
+      "sha256": "94e10cd9b03e0cca79d7cdbdaa2408a57bf2a0f6c3aed9be0fefb4ca62507dd9"
+    },
+    {
+      "file": "app/copperline-transformer-suite.html",
+      "bytes": 49715,
+      "sha256": "b6956c5bcebcdbdce98fc9e9ad5362867b2c9b608d47763203aafde2543db3d1"
+    },
+    {
+      "file": "app/enginex-automatic-board-sizing.html",
+      "bytes": 33660,
+      "sha256": "99e9d1eff13a923fbd8ff59df42ab2f9d783e894ae0ce6dcf7f4c92717ec1ad3"
+    },
+    {
+      "file": "app/enginex-project-planning-tutorial.html",
+      "bytes": 136005,
+      "sha256": "b1f0f16c62c32dc76dc332f954cf41c4e3d267c7558b5730f91621880021f392"
+    },
+    {
+      "file": "app/enginex-site-forms.html",
+      "bytes": 95221,
+      "sha256": "cbee513887c67fd1ad216d3b96a9e1d7250ee64f14b0a6c8a8be8c0ba5124a77"
+    },
+    {
+      "file": "app/enginex-smart-project-schedule.html",
+      "bytes": 118442,
+      "sha256": "5cc59ca3441046e675700a229a8a9e180d5d7ea1a14148622493fc048591cc14"
+    },
+    {
+      "file": "app/workspace.html",
+      "bytes": 1990998,
+      "sha256": "b809ded5e95920c4493c2bb84ce7699b91d662e86c4661bfa0bcfb2b8a231378"
+    },
+    {
+      "file": "assets/enginex-engineering-suite-introduction.mp4",
+      "bytes": 3959476,
+      "sha256": "9c52dc66a97ccb17a219a0768309360e9b6ce0921e1e52200aa67ed1a42b9068"
+    },
+    {
+      "file": "assets/enginex-login-cover.png",
+      "bytes": 1899291,
+      "sha256": "cc86065315ea1a266c101a58b685659099c7813754eee0ed9413bfc8338d2f58"
+    },
+    {
+      "file": "assets/enginex-login-page.png",
+      "bytes": 2753099,
+      "sha256": "af77b6eedc78d4646a89765bc1c3b119ad18044cbb61f1ef2cd2c569ccc75631"
+    },
+    {
+      "file": "assets/enginex-professional-introduction-fullscreen.mp4",
+      "bytes": 3590352,
+      "sha256": "35689d9539ce5ae2a42cad6ec7dc0caf762e34732a68ce5f4be1f771f8c863da"
+    },
+    {
+      "file": "index.html",
+      "bytes": 614,
+      "sha256": "5f94e4f56d8bebacbc7ea406ac99573031c497c6c4122e6712042df85572bb7d"
+    }
+  ],
+  "updates": [
+    "Automatic board generator now creates a utility-to-MDB-SMDB-DB single-line diagram.",
+    "Saudi LV reference shown as 230/400 V, 3-phase, 4-wire, 60 Hz.",
+    "SLD can be downloaded as SVG and printed/exported to PDF.",
+    "Design basis notes reference SBC 401 and the Saudi Arabian Distribution Code; project-specific SEC requirements remain subject to engineer verification.",
+    "Smart Project Schedule now opens in a true viewport-wide/full-height focus mode.",
+    "Workspace sidebar, header, footer and collapse toggle are hidden while Smart Schedule is open so no workspace controls cover the tool.",
+    "Smart Schedule modal uses 100vw \u00d7 100vh with zero outer padding and a full-size iframe.",
+    "Project Schedule now opens in the same true viewport-wide/full-height tool focus mode as Smart Schedule.",
+    "Project Schedule hides the Workspace sidebar, header, footer and collapse toggle while active.",
+    "Site Forms & Document Control now opens in true 100vw \u00d7 100vh fullscreen tool mode with no outer Workspace padding or overlay margin.",
+    "Site Forms hides the Workspace sidebar, header, footer and collapse toggle while active.",
+    "All three dedicated tools return cleanly to the Workspace when closed.",
+    "Smart Schedule replaced with EngineX Scheduler P6: full CPM engine (forward/backward pass, total/free float, critical path), FS/SS/FF/SF relationships with lag/lead, working-day calendars with KSA holidays, constraints (SNET/SNLT/FNET/FNLT/MSO/MFO/ALAP), baselines with variance, EVM (PV/EV/AC/SPI/CPI/EAC), resource histograms, DCMA 14-point schedule quality check, and CSV/JSON import-export. Same launcher slot and file name, so no other workspace changes were needed.",
+    "Users & Access is now Administrator-only: non-administrator accounts do not see the Users & Access tab, and create/delete user actions are also blocked by an in-app role check. The administrator can provision usernames, passwords, and roles while regular engineers retain normal workspace access.",
+    "GitHub import: introduction videos optimized to 720p H.264/AAC for web delivery; file checksums refreshed."
+  ],
+  "notes": "Added functional Users & Access account provisioning, username/password login validation, password update persistence, reliable Home Portal sign-out return, and Administrator-only user management access."
+}

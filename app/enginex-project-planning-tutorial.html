@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)https://8ead4838-177c-4f48-adc5-e41137f987d7.frame.claudeusercontent.com/_f/1789582617-c01e/ -->
+<html lang="en" crxlauncher-bridged="" crxlauncher="" data-theme="light" style="color-scheme: light;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"cred":"cookie","capabilities":{"artifact":"artifact.O-h4mzdy.js","assets":"assets.DhQw8DTi.js","comments":"comments.DcGvuXoo.js","db":"db.DV02l9iB.js","downloads":"downloads.axDW2QAi.js","embed":"embed.swQslL0W.js","endpoints":"endpoints.BPfoKaE1.js","mcp":"mcp.C8qKIFvQ.js","network":"network.B5UA9Su4.js","permissions":"permissions.DWFFeHI0.js","room":"room.BF1j0KPr.js","sample":"sample.C7KQQdQj.js","self":"artifact.O-h4mzdy.js","user":"user.CCh6oTS_.js"},"transforms":"_transforms.BIL0COdN.js","comments":"_comments.CoT-GWno.js","translate":"_translate.DqxC5ek1.js","ldx":"_ldx.CqNtBrkk.js"}                                                                                                                                                                                                                                                                                                                                                                              </script><script>(function(){"use strict";var Rn=3e5;function tr(t,e){try{const n=t("navigation")[0],o=[n.responseStart,n.redirectEnd-n.redirectStart,n.domContentLoadedEventStart,e()];for(let a=0;a<o.length;a++){if(!(o[a]>=0&&o[a]<=3e5))return;o[a]=o[a]|0}return o}catch{return}}var rr=["light","dark","system"],nr=/^[A-Za-z0-9_-]{1,64}$/,wt=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,or=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function ar(t){const e=t.toLowerCase();return e.startsWith("data-")||e.startsWith("aria-")||or.has(e)}var bt="data-ldx-props";function sr(t,e){if(e.toLowerCase()===bt)return!0;const n=t.getAttribute(bt);if(n===null)return!1;try{const o=JSON.parse(n);if(o===null||typeof o!="object"||Array.isArray(o))return!0;const a=e.toLowerCase();return Object.keys(o).some(s=>s.toLowerCase()===a)}catch{return!0}}var Tn="http://www.w3.org/1999/xhtml",lr="http://www.w3.org/2000/svg",ir=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),cr=new Set(["script","style"]);function ur(t){const e=t.localName.toLowerCase();return t.namespaceURI==="http://www.w3.org/1999/xhtml"?!ir.has(e):t.namespaceURI===lr?!cr.has(e):!1}function Ve(t,e){return t===e||(t===160||t===32)&&(e===160||e===32)}function fr(t,e){const n=t.length,o=e.length;let a=0;for(;a<n&&a<o&&Ve(t.charCodeAt(a),e.charCodeAt(a));)a++;let s=0;for(;s<n-a&&s<o-a&&Ve(t.charCodeAt(n-1-s),e.charCodeAt(o-1-s));)s++;return{p:a,s}}function dr(t,e){const n=t.firstChild;if(t.childNodes.length!==1||n===null||n.nodeType!==Node.TEXT_NODE){t.textContent=e;return}const o=n.data,a=o.length,s=e.length,{p:c,s:d}=fr(o,e);c===a&&d===0&&a===s||n.replaceData(c,a-c-d,e.slice(c,s-d));const O=n.data,S=t.ownerDocument.getSelection?.()??null,M=S!==null&&S.rangeCount>0&&(S.anchorNode===n||S.focusNode===n)?{anchor:S.anchorNode,anchorOffset:S.anchorOffset,focus:S.focusNode,focusOffset:S.focusOffset}:null;let v=-1,T=-1;for(let h=0;h<O.length&&h<e.length;h++){const I=O.charCodeAt(h),$=e.charCodeAt(h);I!==$&&Ve(I,$)&&(v<0&&(v=h),T=h)}const m=v>=0;if(m&&n.replaceData(v,T-v+1,e.slice(v,T+1)),m&&M!==null&&M.anchor!==null&&M.focus!==null)try{S.setBaseAndExtent(M.anchor,M.anchorOffset,M.focus,M.focusOffset)}catch{}}var hr=new Set(["html","head","body","frameset"]);function pr(t){return t.namespaceURI==="http://www.w3.org/1999/xhtml"&&hr.has(t.localName)}function mr(t){if(t===null||typeof t!="object")return!1;const e=t;if(typeof e.target!="string"||!nr.test(e.target)||e.text!==void 0&&typeof e.text!="string")return!1;if(e.attrsSet!==void 0){if(e.attrsSet===null||typeof e.attrsSet!="object")return!1;for(const[n,o]of Object.entries(e.attrsSet))if(!wt.test(n)||typeof o!="string")return!1}if(e.attrsRemoved!==void 0){if(!Array.isArray(e.attrsRemoved))return!1;for(const n of e.attrsRemoved)if(typeof n!="string"||!wt.test(n))return!1}return!0}function vr(t,e){if(t===null||typeof t!="object")return!1;const{seq:n,elements:o}=t;if(typeof n!="number"||!Number.isSafeInteger(n)||!Array.isArray(o)||o.length===0||o.length>64)return!1;for(let a=0;a<o.length;a++)if(!e(o[a]))return!1;return!0}function _r(t){return t===null||typeof t!="object"?!1:vr(t.__frame_patch,mr)}function yr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_init;return e!==null&&typeof e=="object"}function gr(t){return t!==null&&typeof t=="object"&&t.__frame_size_poke===!0}function wr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_host_visible;return e!==null&&typeof e=="object"&&typeof e.visible=="boolean"}function br(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_theme;if(e===null||typeof e!="object")return!1;const n=e.theme;return typeof n=="string"&&rr.includes(n)}var Er=["ok","empty","snapshot_error","snapshot_timeout","unclonable","oversize","unavailable","restore_error","withheld"],Sr=["TypeError","RangeError","ReferenceError","SyntaxError","DataCloneError","QuotaExceededError","AbortError","TimeoutError","SecurityError","Error","other"];function kr(t){return typeof t=="string"&&Sr.includes(t)?t:"other"}var Ar=Object.freeze({until:null,now:!1}),Rr="__claude_hot",Tr="__claude_hot_in",Or=/^__claude_hot(?:_in)?(?::|$)/,Et=/^[0-9a-z]{1,32}$/,We=t=>t===void 0?Rr:"__claude_hot:"+t,ye=t=>t===void 0?Tr:"__claude_hot_in:"+t;function Lr(t,e){const n=[];for(let o=0;o<t.length;o++){const a=t.key(o);a!==null&&a!==e&&Or.test(a)&&n.push(a)}for(const o of n)t.removeItem(o)}function Pr(t){let e=null;try{e=B(JSON.parse(t)?.hot)}catch{return null}return e===null||typeof e.k!="string"||!Et.test(e.k)?null:ae(e.g)?{k:e.k,g:e.g}:{k:e.k}}var On=262144,Mr=3e3,Nr=5e3,St=/^[a-z0-9._:-]{1,64}$/,Cr=["none","hot-restart","hard-reload"],jr=["asset","doc","added","removed"],Ir=1500,Fr=/^[0-9a-f]{64}$/;function B(t){return t!==null&&typeof t=="object"?t:null}function ae(t){return typeof t=="number"&&Number.isInteger(t)&&t>=0&&t<2**31}function kt(t){return t===void 0||typeof t=="number"&&Number.isFinite(t)}function xr(t){return t===void 0||typeof t=="string"&&St.test(t)}function At(t){const e=B(t);return e!==null&&(e.until===null||typeof e.until=="number"&&Number.isFinite(e.until))&&typeof e.now=="boolean"}function Xe(t){const e=B(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&kt(e.seq)&&typeof e.handoff=="string"&&Er.includes(e.handoff)&&xr(e.note)}function Dr(t){const e=B(t);return e!==null&&ae(e.gen)&&(e.phase==="final"||e.phase==="pending")&&(e.from===null||Xe(e.from))}function Hr(t){const e=B(t);return e!==null&&e.kv===1&&ae(e.gen)&&Xe(e.from)&&Object.hasOwn(e,"data")}function qr(t){const e=B(t);return e!==null&&e.__frame_hot_snapshot===!0&&ae(e.gen)&&typeof e.timeoutMs=="number"&&e.timeoutMs>=0&&e.timeoutMs<=6e4&&(e.handoff===void 0||typeof e.handoff=="boolean")&&(e.deadline===void 0||At(e.deadline))&&kt(e.seq)&&(e.note===void 0||typeof e.note=="string")&&(e.key===void 0||typeof e.key=="string")}function Br(t){const e=B(t);return e!==null&&e.__frame_hot_start===!0&&ae(e.gen)&&Xe(e.from)}function Ur(t){return typeof t=="string"&&t.length>=1&&t.length<=128}function Rt(t){return B(t)!==null&&!Array.isArray(t)}function Gr(t){const e=B(t);return e!==null&&e.__frame_cap_grant===!0&&typeof e.cap=="string"&&Ur(e.ver)&&(e.grant===void 0||Rt(e.grant))&&(e.budgets===void 0||Rt(e.budgets)&&Object.values(e.budgets).every(Number.isFinite))&&(e.brokerGen===void 0||ae(e.brokerGen))}function zr(t){const e=B(t);return e!==null&&e.__frame_cap_rewired===!0&&(e.caps===void 0||Array.isArray(e.caps)&&e.caps.every(n=>typeof n=="string"))&&(e.brokerGen===void 0||ae(e.brokerGen))}function Tt(t){const e=B(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Number.isFinite(e.seq)}function Ot(t){if(t==null||typeof t=="string")return!0;const e=B(t);return e!==null&&typeof e.doc=="string"&&typeof e.profile=="string"}function Kr(t){const e=B(t);return e!==null&&typeof e.path=="string"&&jr.includes(e.kind)&&Ot(e.from)&&Ot(e.to)}function $r(t){return t===null?null:Object.freeze(t.filter(Kr))}function Vr(t){const e=B(t);return e!==null&&e.__frame_hot_update===!0&&Number.isFinite(e.id)&&Tt(e.from)&&Tt(e.to)&&(e.changed===null||Array.isArray(e.changed))&&Cr.includes(e.required)&&At(e.deadline)&&typeof e.verdictTimeoutMs=="number"&&e.verdictTimeoutMs>=0&&e.verdictTimeoutMs<=6e4&&(e.preflight===void 0||typeof e.preflight=="string"&&Fr.test(e.preflight))}var se=/^[\w.-]+\.js$/;function Wr(t,e,n){return n?"inert":typeof e=="string"&&se.test(e)?t?[e]:"inert":t?"inert":"framed"}var Lt=Object.freeze({[Symbol("claude.hot.restart")]:!0});function Pt(t,e){let n;try{n=t??sessionStorage}catch{return null}const o=We(e?.k),a=ye(e?.k);let s=null;try{s=n.getItem(o)}catch{}try{n.removeItem(o)}catch{}try{Lr(n,a)}catch{}let c=null;if(s!==null&&!(e!==null&&e.g===void 0))try{const d=JSON.parse(s);Hr(d)&&(e===null||d.gen===e.g)&&(c=d)}catch{}if(c===null)try{n.removeItem(a)}catch{}return c}function Xr(){const t=/^\/_f\/([^/]{1,128})\//.exec(location.pathname);return t?t[1]:""}var Yr=/^[^/\\?#]{1,128}$/,Mt=t=>Yr.test(t)&&t!=="."&&t!=="..";function Nt(t,e,n){const o=new URL(t),a="/_f/"+e+"/";if(!e||!o.pathname.startsWith(a)||!Mt(n))return null;const s=o.search.slice(1).split("&").filter(c=>!/^__frame_t(?:=|$)/.test(c)).join("&");return o.origin+"/_f/"+n+"/"+o.pathname.slice(a.length)+(s?"?"+s:"")+o.hash}var Ce="{}";function ge(t){if(!t)return null;const e={ver:t.ver,handoff:t.handoff};return t.seq!==void 0&&(e.seq=t.seq),t.note!==void 0&&(e.note=t.note),e}function Ct(t,e){return t!==null&&t.note===void 0&&e?.note!==void 0?{...t,note:e.note}:t}function jt(t){const e=t?.k;return e!==null&&typeof e=="object"?e:void 0}function Jr(t,e,n,o=null){const a=setTimeout,s=clearTimeout,c=queueMicrotask,d=performance.now.bind(performance),O=new TextEncoder;let S=null,M=null;try{S=history,M=S.replaceState.bind(S)}catch{}const v=(...r)=>{try{console.warn(...r)}catch{}};let T=Xr(),m=null;try{m=sessionStorage}catch{}const h={storage:m,fetch:typeof fetch=="function"?fetch.bind(globalThis):null,entry:location.origin+location.pathname+location.search,ver:T,key:o?.k};let I=o?.k;const $=typeof requestAnimationFrame=="function"?requestAnimationFrame:r=>a(()=>r(d()),16);let y=e?.data??{},N=ge(e?.from),A=e?.gen??0,F=e!==null,V=!1,Q=!1,W=null,Se=!1;const ke=new AbortController;let Ae=null,q=null,Re=null,Te=!1,i=()=>{};const p=new Promise(r=>{i=r});let g=!1,x=!1,C=!1,D,L=null,ce=!1,De=!1,re=!1,Oe=!1,ne=!1,de=!1;const oe=r=>{for(const u of[We(r),ye(r)])try{m?.removeItem(u)}catch{}},H=(r,u)=>{try{u!==null&&n.post(r,u)}catch{}},he=()=>ne||=re&&(q===null||Oe),X=()=>{const r={__frame_hot:!0,ready:q!==null,accept:Re!==null,demand:!0};de=!ne,de&&(r.booting=!0),g&&(r.readData=!0),C&&(r.threw=!0),L?.assess&&(r.preflight=!0),H(r,W)};let Le=!1,Pe=!1,l=!1,w=!1;const _=()=>{Le||!Se||l||(Le=!0,H({__frame_reveal_hold:!0},"*"))},P=()=>new Promise(r=>{let u,f=0;const b=j=>{if(u===void 0)u=j;else if(j!==u||++f>=8){r();return}try{$(b)}catch{r()}};try{$(b)}catch{r()}}),Y=()=>{l=!0,H({__frame_reveal_ready:!0},"*")},K=r=>{Pe||(Pe=!0,r.then(u=>{if(u===!1)return;let f=null;try{f=L?.settle?.()??null}catch{}return(f===null?P():new Promise(b=>{a(b,50),Promise.resolve(f).then(b,b)}).then(P)).then(Y)}))},Me=()=>{if(w||!l)return;w=!0;const r=()=>{try{L?.afterReveal?.()}catch{}};r(),P().then(()=>{r(),Y()})},He=(r=!1)=>{if(Te||q===null||!F||!Q)return;Te=!0;const u=q,f=y;c(()=>{let b;try{b=u(f)}catch(U){throw i(!1),U}let j=!1;try{j=typeof b?.then=="function"}catch{}if(!j){i(!0);return}Promise.resolve(b).then(()=>i(!0),U=>{i(!1),c(()=>{throw U})})}),K(r?p:n.dcl.then(()=>p))},qe=r=>typeof r=="string"&&St.test(r)?r:void 0,ct=r=>{const u={__frame_hot_restart:!0},f=qe(r?.note);f!==void 0&&(u.note=f),r?.required==="hard-reload"&&(u.required="hard-reload"),H(u,W)},Vt=Object.freeze({get data(){return Q||(x=!0),!F&&!g&&(g=!0,Q&&X()),y},get from(){return N},get gen(){return A},signal:ke.signal,snapshot(r){typeof r=="function"&&(Ae=r)},ready(r){typeof r!="function"||q!==null||(q=r,_(),X(),V&&H({__frame_hot_ready:!0,gen:A},W),He())},accept(r){typeof r=="function"&&(Re=r,X())},restart(r){const u={note:r?.note,required:r?.required};if(Q){ct(u);return}const f=D;D={note:qe(f?.note)??u.note,required:f?.required==="hard-reload"||u.required==="hard-reload"?"hard-reload":void 0}}});let Be=null,Wt=()=>{};const yn=new Promise(r=>{Wt=r});let gn=null;const Xt=()=>gn??=n.dcl.then(()=>{let r=!1;try{r=Be!==null&&Be.expect()}catch{}if(!r)return;const u=Be.maxMs;return new Promise(f=>{yn.then(f),a(f,u)})}),Yt=()=>{if(!ce||De||L===null)return;De=!0;const r=L;Xt().then(()=>{try{l||r.afterStart(jt(e),!1)}catch{}})},Jt=r=>{e!==null&&x&&(g=!0),y={},N=null,A=0;try{m?.removeItem(ye(o?.k))}catch{}e!==null&&!r&&K(n.dcl.then(()=>q!==null?p:void 0))},wn=()=>{ce=!0,K(Xt().then(()=>q!==null?p:void 0)),Yt()};try{addEventListener("error",()=>{C||q!==null||(C=!0,X())})}catch{}const Zt=()=>{a(()=>{!ne&&he()&&de&&X()},0)};try{re=document.readyState==="complete",re||addEventListener("load",()=>{re=!0,Zt()},{once:!0})}catch{re=!0}he(),p.then(()=>{Oe=!0,Zt()});let ue=-1,ut,ft,Ne=!0,dt=!1,ht,Ue=null;const pt=r=>{const u=Ue===null;Ue=Ne&&r[0]!=="withheld"?r:["withheld",r[1],Ce];let f=r[0];if(Ne&&f!=="withheld"){const j={ver:T,handoff:f};ut!==void 0&&(j.seq=ut),ft!==void 0&&(j.note=ft);try{if(m===null)throw new Error("no storage");m.setItem(We(I),'{"kv":1,"gen":'+ue+',"from":'+JSON.stringify(j)+(ht!==void 0?',"k":'+JSON.stringify(ht):"")+',"data":'+(f==="ok"?r[2]:Ce)+"}")}catch{f="unavailable"}}else{f="withheld",oe(I);try{L?.release?.()}catch{}}const b={__frame_hot_snapshotted:!0,gen:ue,handoff:f,bytes:r[1]};r[3]!==void 0&&(b.errName=r[3]),H(b,W),u&&(f==="snapshot_error"||f==="unclonable"||f==="oversize")&&v("claude.hot: snapshot",f,r[3])},pe=r=>{try{return kr(r?.name)}catch{return"other"}},me=(r,u,f=0)=>pt(u===void 0?[r,f,Ce]:[r,f,Ce,pe(u)]),bn=r=>{if(r.gen<=ue)return;const u=ue>=0;if(ue=r.gen,ut=r.seq,ft=qe(r.note),typeof r.key=="string"&&Et.test(r.key)&&r.key!==I&&(oe(I),I=r.key),Ne&&=r.handoff!==!1,u){Ue!==null?pt(Ue):dt&&H({__frame_hot_held:!0,gen:ue},W);return}ke.abort();const f=Object.freeze({handoff:Ne,timeoutMs:r.timeoutMs,deadline:r.deadline??Ar}),b=Ae,j=()=>{if(Ne)try{ht=L?.capture()}catch{}if(b===null){me("empty");return}let k=!1;const G=a(()=>{k||(k=!0,me("snapshot_timeout"))},Math.max(0,f.timeoutMs));Promise.resolve().then(()=>b(f)).then(ve=>{if(k)return;k=!0,s(G);let ee;try{ee=JSON.stringify(ve)}catch(mt){me("unclonable",mt);return}if(typeof ee!="string"){me("unclonable");return}let te=ee.length;try{te=O.encode(ee).length}catch{}if(te>262144){me("oversize",void 0,te);return}pt(["ok",te,ee])},ve=>{k||(k=!0,s(G),me("snapshot_error",ve))})};let U=null;try{U=L?.holdForIme()??null}catch{}if(U===null)j();else{dt=!0,H({__frame_hot_held:!0,gen:ue},W);const k=()=>{dt=!1,j()};U.then(k,k)}},En=r=>{if(!V||F||q===null||r.gen!==A)return;let u=null;try{u=Pt(m,o&&{k:o.k,g:r.gen})}catch{}if(u!==null&&u.gen!==r.gen){u=null;try{m?.removeItem(ye(o?.k))}catch{}}y=u?.data??{},N=Ct(ge(u?.from??r.from),ge(r.from)),u!==null&&(A=u.gen),F=!0,V=!1;const f=jt(u);p.then(b=>{try{b&&L?.afterStart(f,!0)}catch{}}),He(!0)};let Ge=0;const Sn=r=>{const u=Re;if(u===null||r.id<=Ge)return;Ge=r.id;const f=L?.assess;if(r.preflight===void 0||f===void 0){Qt(r,u);return}let b=!1;const j=G=>{b||(b=!0,s(k),r.id===Ge&&Qt(r,u,G))},U=()=>j(f.timeout(r)),k=a(U,Ir+100);f.run(r,window).then(j,U)},Qt=(r,u,f)=>{let b,j=!1,U=!1,k,G,ve=null;const ee=E=>{if(U)return!1;if(k!==void 0&&k!==E)return v(`claude.hot: u.${E}() ignored - u.${k}() was called first`),!1;const Z=k===void 0;return k=E,Z},te=E=>{k="restart",v(`claude.hot: ${E} - restarting`)},mt=()=>{if(!ee("adopt")||r.id!==Ge)return;const E=r.to.ver;if(ze.required!=="none"){te(`u.adopt() needs required 'none', it is '${ze.required}'`);return}if(!Mt(E)){te("u.adopt() cannot address this version");return}if(!T||E===T)return;const Z=T,J=h.entry;let Ke="",_t,_e=null,$e;try{Ke=location.href,_t=S.state,_e=Nt(Ke,Z,E),_e!==null&&(M(_t,"",_e),location.pathname.startsWith("/_f/"+E+"/")?_e=location.href:$e="navigate event canceled")}catch(gt){$e=pe(gt)}if($e!==void 0){G="adopt_failed",te(`adopt_failed ${$e}; URL not changed`);return}_e===null?(G="adopt_skipped",v(`claude.hot: adopt_skipped - page already left /_f/${Z}/; URL not changed, update still applied`)):G="adopted",T=h.ver=E;try{h.entry=Nt(J,Z,E)??J}catch{}const yt=_e;ve=()=>{if(T===E){if(yt!==null)try{if(location.href!==yt)v("claude.hot: adopt_revert_skipped - update not applied; URL left where the page navigated");else{if(M(_t,"",Ke),location.href!==Ke){v("claude.hot: adopt_revert_failed navigate event canceled - URL still at the new version");return}G="adopt_reverted",v("claude.hot: adopt_reverted - adopt() was called but the handler threw; URL restored")}}catch(gt){v(`claude.hot: adopt_revert_failed ${pe(gt)} - URL still at the new version`);return}T=h.ver=Z,h.entry=J,yt===null&&(G=void 0)}}},ze=Object.freeze({from:{ver:r.from.ver,seq:r.from.seq},to:{ver:r.to.ver,seq:r.to.seq},changed:$r(r.changed),required:r.required,deadline:r.deadline,adopt:mt,defer(){return ee("defer")&&ze.deadline.now&&te("u.defer() past the deadline"),Lt},restart(E){return ee("restart"),k==="restart"&&!U&&(b??=qe(E?.note),j||=E?.required==="hard-reload"),Lt},...f?.update}),kn=(E,Z)=>{U=!0,E==="threw"?(ve?.(),b??=pe(Z).toLowerCase()):k===void 0&&v(E==="timeout"?"claude.hot: accept handler did not answer in time - restarting":"claude.hot: accept handler settled without defer/restart/adopt - restarting");const J={__frame_hot_verdict:!0,id:r.id};J.verdict=E==="threw"||k===void 0||k==="restart"?"restart":k==="adopt"?"applied":"deferred",J.verdict==="restart"&&(j&&(J.required="hard-reload"),b!==void 0&&(J.note=b)),G!==void 0&&(J.verdict==="applied"||G!=="adopted")&&(J.adopt=G),H(Object.assign(J,f?.verdict),W)};let er=!1;const vt=(E,Z)=>er?!1:(er=!0,s(An),kn(E,Z),!0),An=a(()=>vt("timeout"),r.verdictTimeoutMs);Promise.resolve().then(()=>u(ze)).then(()=>vt("settled"),E=>{!vt("threw",E)&&k==="adopt"&&ct({note:pe(E).toLowerCase()}),v("claude.hot: accept",pe(E))})};try{t.hot===void 0&&Object.defineProperty(t,"hot",{value:Vt,writable:!1,configurable:!1,enumerable:!1})}catch{}return{hot:Vt,boot:h,afterConnect(){Se=!0,(e!==null||q!==null)&&_()},onInit(r,u){W=u,Q=!0;const f=Dr(r)?r:null;f?.phase==="final"&&e!==null&&e.gen===f.gen?(F=!0,N=Ct(N,ge(f.from)),wn()):(V=f?.phase==="pending",Jt(V),F=!V,A=f?.gen??0,N=ge(f?.from)),X(),de&&a(()=>{ne||(ne=!0,X())},Nr),V&&q!==null&&H({__frame_hot_ready:!0,gen:A},u),D!==void 0&&(ct(D),D=void 0),He()},onNoInit(){Q=!0,Jt(!1),F=!0,He()},onShell(r){return r?.__frame_revealed===!0?(Me(),!1):qr(r)?(bn(r),!0):Br(r)?(En(r),!0):Vr(r)?(Sn(r),!0):!1},attachExtras(r){L=r,Yt(),r.assess&&X()},inSlot:()=>ye(I),hydration(r,u){Be??={expect:r,maxMs:u}},hydrated(){Wt()},carried(){return F?y:{}},presented:()=>l}}var Ln="frame_ldx_runtime",Zr="frame_ldx_build",Pn="script#an-form",Qr=256;function It(t,e,n){for(const o of t)n(o)&&t.delete(o);t.size>=Qr&&!t.has(e)&&t.delete(t.values().next().value),t.add(e)}function Ye(t,e,n){try{const o=t[e];if(typeof o!="function")return;t[e]=function(...a){const s=o.apply(this,a);try{n(this)}catch{}return s}}catch{}}var Je;function en(){if(Je)return Je;const t={media:new Set,contexts:new Set,onStart:null,onPause:null};Je=t;const e=window.HTMLMediaElement?.prototype;e&&(Ye(e,"play",a=>{It(t.media,a,s=>s.paused),t.onStart?.(a)}),Ye(e,"pause",a=>t.onPause?.(a)));const n=window.AudioContext,o=window.AudioNode?.prototype;return n&&o&&Ye(o,"connect",a=>{const s=a.context;s instanceof n&&(It(t.contexts,s,c=>c.state==="closed"),t.onStart?.(s))}),t}function tn(t){let e=window;for(let n=0;e.parent&&e.parent!==e&&n<8;n++)if(e=e.parent,t(e))return!0;return!1}function rn(){let t=null;const e=()=>t??parent,n=o=>t?o===t:tn(a=>a===o);return{post(o,a){if(t){e().postMessage(o,a);return}let s=parent;for(let c=0;c<8&&(s.postMessage(o,a),!(!s.parent||s.parent===s));c++)s=s.parent},on(o){const a=s=>{const c=s.source;n(c)&&o(s.data,s.origin,s.isTrusted,()=>{t??=c})};return addEventListener("message",a),()=>removeEventListener("message",a)},port:o=>({post(a,s){if(s?.activation){e().postMessage(a,{targetOrigin:o,includeUserActivation:!0});return}if(s?.transfer){e().postMessage(a,o,s.transfer);return}e().postMessage(a,o)},on(a,s){const c=d=>{n(d.source)&&d.origin===o&&a(d.data,d)};return addEventListener("message",c,s),()=>removeEventListener("message",c,s)}})}}function nn(){const t={post:()=>{},on:()=>()=>{}};return{...t,port:()=>t}}var Ze="__frame_scroll",on=150,an=310,sn=160,ln=3e4;function cn(){let t=0,e=!1,n=!1,o=!1,a=0,s=null;const c=y=>{try{sessionStorage.setItem(Ze,JSON.stringify({y}))}catch{}},d=()=>{if(clearTimeout(t),s===null)return;const y=s;s=null,c(y)},O=()=>{if(e){e=!1;return}n=!0,s=scrollY,clearTimeout(t),t=setTimeout(d,on)};try{addEventListener("scroll",O,{passive:!0}),addEventListener("pagehide",d)}catch{}const S=()=>{let y;try{y=sessionStorage.getItem(Ze)}catch{return null}if(y===null)return null;let N;try{N=JSON.parse(y)}catch{N=null}const A=N?.y;if(!(typeof A=="number"&&Number.isFinite(A)&&A>=0)){try{sessionStorage.removeItem(Ze)}catch{}return null}return A};let M=!1;const v=y=>{try{const N=scrollY;scrollTo({top:y,left:0,behavior:"instant"}),a=y,o=!0,clearTimeout(t),s=null,c(y);const A=scrollY;A!==N&&(e=!0),A!==y&&!M&&(M=!0,addEventListener("load",()=>{try{if(scrollY===A){const F=S();v(F!==null?F:a)}}catch{}},{once:!0}))}catch{}},T=()=>{try{return!!location.hash}catch{return!0}};let m=!1;const h=()=>{try{if(m||innerWidth>an||innerHeight>sn)return;m=!0;const y=Date.now(),N=()=>{try{removeEventListener("resize",N)}catch{}if(Date.now()-y>ln||n||T())return;const A=S();v(A!==null?A:a)};addEventListener("resize",N)}catch{}};let I=!1,$=!1;return{restore(){if(I||(I=!0,T()))return;const y=S();y!==null&&(v(y),h())},promoted(){if($||($=!0,T()))return;const y=S();y!==null?(v(y),h()):o&&v(a)}}}function un(t,e,n,o){let a=null;try{a=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:O=>O})??null}catch{}const s=window.Worker,c=s?.prototype,d=Object.freeze({Worker:s,workerOn:c?.addEventListener,workerPost:c?.postMessage,workerTerminate:c?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,now:Date.now,policy:a,origins:e});n(t).then(O=>O?.bootTopLevel?O.bootTopLevel(d,o):o.settle()).catch(()=>o.settle())}var Mn="modulepreload",Nn=function(t){return"/"+t},Cn={},fn=function(e,n,o){let a=Promise.resolve();function s(c){const d=new Event("vite:preloadError",{cancelable:!0});if(d.payload=c,window.dispatchEvent(d),!d.defaultPrevented)throw c}return a.then(c=>{for(const d of c||[])d.status==="rejected"&&s(d.reason);return e().catch(s)})},dn=window===top,Ft=Object.getOwnPropertyDescriptor(window,"claude"),je=Wr(dn,window.__FRAME_PREAMBLE?.topLevel,Ft?.writable===!1),Qe=typeof je=="object"&&je[0],R=Qe?nn():rn();(function(){const t=Object.defineProperty,e=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let o=0;for(let a=0;a<n.length;a++){const s=n[a];try{t(e,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete e[s]}catch{}try{t(e,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof e[s]=="function"&&o++}if(o&&je==="framed")try{R.post({__frame_rtc_lockdown_failed:o},"*")}catch{}})();var xt=1e4,hn=2e3,et=2e3,Dt=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function Ht(t){for(const e of Dt)if(e.endsWith(":*"))try{const n=new URL(t);if(`${n.protocol}//${n.hostname}:*`===e)return!0}catch{}else if(t===e)return!0;return!1}var we=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),Ie=window.__FRAME_PREAMBLE?.transforms,tt=window.__FRAME_PREAMBLE?.comments,rt=window.__FRAME_PREAMBLE?.translate,be=window.__FRAME_PREAMBLE?.ldx;function qt(t){return fn(()=>import("/_runtime/"+t),void 0)}var Ee=new Set,pn=setTimeout,mn=800+800*Math.random();function le(t){return qt(t).catch(()=>new Promise(e=>pn(e,mn)).then(()=>qt(t+"?r=1")).then(e=>(e!==void 0&&Ee.add(t),e)))}function Bt(t,e,n){return{contract:t.contract,changes:new Set(t.changes??[]),flags:new Set(t.flags??[]),capabilities:t.capabilities??{},capBudgets:t.capBudgets??{},brokerGen:t.brokerGen,transforms:new Map,shellOrigin:e,shell:n,mount:it,hooks:Fe,pipe:()=>({wrap:(o,a)=>(...s)=>{try{return a(...s)}catch(c){return Promise.reject(c)}}})}}var fe=null,z=null;function Ut(t,e,n){try{Object.defineProperty(t,e,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(t,e,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var nt=!1,Fe={editBefore:null,edit:null};function vn(t,e,n=!1){const o=[];let a;if(n)try{Fe.editBefore?.(t)}catch{}for(const s of t.elements){const c=document.querySelector(`[data-id="${s.target}"]`);if(!c){a=s.target;break}if([...Object.keys(s.attrsSet??{}),...s.attrsRemoved??[]].some(d=>!ar(d)||sr(c,d))){a=s.target;break}if(s.text!==void 0&&(!ur(c)||pr(c))){a=s.target;break}for(const[d,O]of Object.entries(s.attrsSet??{}))if(!zt(c,d)){try{c.setAttribute(d,O)}catch{}Gt(c,d,O)}for(const d of s.attrsRemoved??[])zt(c,d)||(c.removeAttribute(d),Gt(c,d,null));typeof s.text=="string"&&dr(c,s.text),o.push(s.target)}if(n)try{Fe.edit?.(t.seq,o,a)}catch{}if(a!==void 0){R.post({__frame_patch_miss:{seq:t.seq}},e);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:t.seq,targets:o}}))}catch{}}function Gt(t,e,n){if(!(t instanceof HTMLInputElement))return;const o=e.toLowerCase();o==="checked"?t.checked=n!==null:o==="value"&&t.type!=="file"&&(t.value=n??"")}function zt(t,e){const n=e.toLowerCase(),o=t;return n==="data-id"||(n==="value"||n==="checked")&&(o.__artifactSecret===!0||/^(password|hidden|file)$/.test(o.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${t.getAttribute("autocomplete")??""} ${o.autocomplete??""}`))}function Kt(t){const e=document.documentElement;t==="light"||t==="dark"?(e.dataset.theme=t,e.style.colorScheme=t,nt=!0):nt&&(delete e.dataset.theme,e.style.colorScheme="",nt=!1)}var ie=new Map,ot=null;function at(){let t;const e={u:new Promise(n=>{t=n}),r:n=>{e.done=!0,t(n)},done:!1,nulled:!1};return e}function xe(t,e){t.nulled=!0,t.ver=e,t.r(null)}function st(t,e){for(const[n,o]of ie)o.done||(e&&o.asked?e(n,o):xe(o,t))}var _n=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),lt=!1,it=(t,e)=>{let n=ie.get(t);if(n?.nulled&&lt)n=at(),ie.set(t,n);else if(!n||n.done){n?.nulled&&z&&R.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:t,phase:"install"}},z);return}const o=typeof e=="function"?Object.setPrototypeOf(e,_n):Object.assign(Object.create(null),e);typeof o.then=="function"&&delete o.then,n.want=void 0,n.r(Object.freeze(o))};function $t(){const t=Ft?.value??{};Ut(window,"claude",t);for(const e of Object.keys(we)){if(t[e]!==void 0){Ut(t,e,t[e]);continue}ie.set(e,at())}if(t.use===void 0){const e=n=>{if(typeof n!="string"||!Object.hasOwn(we,n))return Promise.resolve(null);let o=ie.get(n);return o?(ot&&(o.nulled||o.want!==void 0)&&(o=ot(n,o)),o.asked=!0,o.u):Promise.resolve(t[n]??null)};try{Object.defineProperty(t,"use",{value:e,writable:!0,configurable:!0,enumerable:!1})}catch{}}return t}if(je==="framed"){const t=Ie&&se.test(Ie)?le(Ie).catch(()=>{}):Promise.resolve(void 0),e=i=>{if(i.type==="auxclick"&&i.button!==1)return;const p=i.target,g=p&&p.closest?p.closest("a[href],area[href]"):null;if(!g)return;const x=g.getAttribute("href");if(!x)return;let C;try{C=new URL(x,document.baseURI)}catch{return}if((C.protocol==="http:"||C.protocol==="https:")&&C.origin!==location.origin){i.preventDefault();const D=(g.getAttribute("target")??"").toLowerCase(),L=i.type==="auxclick"||i.metaKey||i.ctrlKey||i.shiftKey||i.altKey||!["","_self","_top","_parent"].includes(D);R.post({__frame_nav:!0,url:C.href,newTab:L},"*")}};addEventListener("click",e,!0),addEventListener("auxclick",e,!0);const n={},o=i=>{i.isTrusted&&(n.pointer=!0)},a=i=>{i.isTrusted&&(n.click=!0)};addEventListener("pointermove",o,{capture:!0,passive:!0}),addEventListener("click",a,{capture:!0,passive:!0});const s={cb:null};addEventListener("keydown",i=>s.cb?.(i),!0);const c={cb:null};addEventListener("keydown",i=>c.cb?.(i));const d=en();t.then(i=>i?.installEscapeForward?.(s,p=>{z&&R.post(p,z)})),t.then(i=>{try{i?.installFocusKeep?.()}catch{}}),t.then(i=>{if(!i?.wireNav)return;const p=R.port("*");i.wireNav(p),removeEventListener("click",e,!0),removeEventListener("auxclick",e,!0),removeEventListener("pointermove",o,!0),removeEventListener("click",a,!0),i.wireEngagement?.(n,p,d)});let O=null;try{O=cn()}catch{}const S=document.readyState==="loading"?new Promise(i=>document.addEventListener("DOMContentLoaded",()=>i(),{once:!0})):Promise.resolve();let M=null,v=null;try{v=Pr(window.name),M=Pt(null,v)}catch{}const T=$t();let m=null;try{m=Jr(T,M,{post:(i,p)=>R.post(i,p),dcl:S},v)}catch{}t.then(i=>{try{m&&i?.installHotExtras?.(m)}catch{}});let h=null;const I=()=>Array.isArray(h?.flags)&&h.flags.includes("frame_ldx_runtime")&&!!be&&se.test(be)&&document.querySelector("script#an-form")!==null;try{m?.hydration(I,Mr)}catch{}let $=null,y=0;const N=R.on((i,p,g,x)=>{Ht(p)&&yr(i)&&(x(),h=i.__frame_init,z=p,N(),clearTimeout(y),$?.())});R.post({__frame_connect:!0},"*");try{m?.afterConnect()}catch{}const A=setTimeout,F=clearTimeout;let V=()=>NaN,Q=()=>[];try{V=performance.now.bind(performance),Q=performance.getEntriesByType.bind(performance)}catch{}let W=0;const Se=()=>{try{R.post({__frame_alive:!0},"*")}catch{}W=A(Se,hn)},ke=()=>F(W);Se(),addEventListener("load",ke,{once:!0});const Ae=new Promise(i=>{$=i,y=setTimeout(()=>{N(),i()},xt)}),q=new WeakSet;addEventListener("error",i=>{i.target&&q.add(i.target)},!0);const Re=()=>{let i=[];try{i=[...document.querySelectorAll("link[rel~=stylesheet]:not([rel~=alternate])")].filter(g=>!g.sheet&&!g.disabled&&!q.has(g)&&g.getAttribute("href")&&URL.canParse(g.href)&&(!g.media||matchMedia(g.media).matches))}catch{}let p=i.length;return p===0?Promise.resolve():new Promise(g=>{try{const x=et-V(),C=A(g,x>0?x<et?x:et:0),D=()=>{--p===0&&(F(C),g())};for(const L of i)L.addEventListener("load",D,{once:!0}),L.addEventListener("error",D,{once:!0})}catch{g()}})};S.then(()=>{try{O?.restore()}catch{}}),Promise.all([Ae,S,t]).then(([,,i])=>{if(h?.hostOverlays!==!0||!z)return;let p=!1;try{p=i?.declaresCover?.()===!0}catch{}R.post({__frame_layout:{cover:p}},z)});const Te={cb:null};R.on((i,p)=>{if(Ht(p)&&gr(i)){try{O?.promoted()}catch{}Te.cb?.()}}),Ae.then(async()=>{if(!h||!z){st();try{m?.onNoInit()}catch{}return}if(Kt(h.theme),h.hostVisible===!1&&t.then(l=>l?.applyHostVisible?.(!1,d)),h.hostKeys!==void 0){const l=z,w=h.hostKeys;t.then(_=>_?.installHostKeyForward?.(c,w,P=>R.post(P,l)))}try{m?.onInit(h.hot,z)}catch{}const i=z,p=R.port(i),g=(l,w)=>R.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:l,phase:w}},i),x=l=>R.post({__frame_cap_recovered:{cap:l}},i);let C=h.brokerGen;const D=()=>m?.boot.ver??"",L=D(),ce=(l,w)=>{const _=D();F(w.t),w.want=_,w.t=A(()=>{w.done||xe(w,_)},xt),R.post({__frame_cap_want:!0,cap:l,ver:_},i)},De=(l,w)=>{const _=ie.get(l.cap),P=we[l.cap];if(!w||!_||_.done||_.want!==l.ver||!se.test(P))return;if(F(_.t),_.want=void 0,C=l.brokerGen??C,l.ver!==D()){ce(l.cap,_);return}if(!l.grant||l.cap==="network"){xe(_,l.ver);return}const Y=fe,K=fe={...Y,capabilities:{...Y.capabilities,[l.cap]:l.grant},capBudgets:{...Y.capBudgets,[l.cap]:{...Y.capBudgets[l.cap],...l.budgets}}};le(P).then(Me=>{Ee.has(P)&&x(l.cap),K.brokerGen=C,lt=!0;try{Me?.install?.(K)}catch{g(l.cap,"install")}finally{lt=!1}},()=>g(l.cap)).then(()=>{_.done||xe(_,l.ver)})};let re=!1,Oe=!1;R.on((l,w,_)=>{if(w!==i)return;try{if(m?.onShell(l))return}catch{}if(br(l)&&Kt(l.__frame_theme.theme),Gr(l)&&De(l,_),_&&zr(l)&&(C=l.brokerGen??C),wr(l)){const K=l.__frame_host_visible.visible;t.then(Me=>Me?.applyHostVisible?.(K,d))}_r(l)&&vn(l.__frame_patch,i,_);const P=l?.__fc_mode;P&&typeof P=="object"&&!re&&tt&&se.test(tt)&&(re=!0,le(tt).then(K=>K.install?.(i,P.on===!0,p)).catch(()=>{}));const Y=l?.__ft_cmd;Y&&typeof Y=="object"&&!Oe&&rt&&se.test(rt)&&(Oe=!0,le(rt).then(K=>K.install?.(i,Y,p)).catch(()=>{}))});const ne=Object.keys(h.capabilities??{}).filter(l=>Object.hasOwn(we,l)).map(l=>[l,we[l]]).filter(l=>typeof l[1]=="string"&&se.test(l[1])),de=await Promise.allSettled(ne.map(([,l])=>le(l))),oe=await t,H=i;if(oe?.buildBoot||g("_transforms"),oe?.buildBoot)try{fe=oe.buildBoot(h,oe.TRANSFORMS??{},{shellOrigin:H,mount:it,hooks:Fe,shell:p},l=>R.post({__frame_cap_telemetry:l},H))}catch{g("_transforms","install"),fe=Bt(h,H,p)}else fe=Bt(h,H,p);oe?.buildBoot&&Ee.has(Ie??"")&&x("_transforms");const he=fe;he.brokerGen=C,de.forEach((l,w)=>{const[_,P]=ne[w];if(l.status!=="fulfilled"){g(_);return}Ee.has(P)&&x(_);try{l.value?.install?.(he)}catch{g(_,"install")}});const X=h.capWants===!0;X&&(ot=(l,w)=>{const _=D();if(!_)return w;if(!w.nulled)return w.want!==_&&ce(l,w),w;if(_===w.ver)return w;const P=at();return ie.set(l,P),ce(l,P),P}),st(L,X&&D()!==L?ce:void 0),await S,await Re(),ke();const Le=tr(Q,V);R.post(Le?{__frame_ready:!0,nav:Le}:{__frame_ready:!0},z),t.then(l=>{l?.installSizeReporter?.(H,Te,p),l?.installPaintReporter?.(p)});let Pe=!1;try{Pe=I()}catch{}be&&Pe?le(be).then(l=>l?.boot?.({shellOrigin:i,build:he.flags.has(Zr),hot:m?.hot??null,carried:m?.carried(),presented:()=>m?.presented()??!0})).catch(()=>!1).then(l=>{m?.hydrated(),l!==!0?g("_ldx"):Ee.has(be)&&x("_ldx")}):m?.hydrated()})}else Qe&&($t(),un(Qe,Dt,le,{settle:st,mount:it}))})();</script><!-- /frame-runtime -->
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EngineX Scheduler — Complete Video Tutorial</title>
+<style>
+:root{
+  --bg:#0b1120; --chrome:#111827; --panel:#161e2e; --border:#1f2d42;
+  --text:#e2eaf5; --muted:#7b93b5; --dim:#4a607f;
+  --blue:#3d8bfd; --green:#3fb950; --amber:#e3b341; --red:#f85149;
+  --cyan:#39c5cf; --violet:#a371f7; --orange:#fb923c;
+  --row:38px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font:13px/1.5 "Segoe UI",Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+
+/* ===== LAYOUT ===== */
+#root{display:flex;height:100vh}
+#sidebar{width:280px;flex:none;background:var(--chrome);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ===== SIDEBAR ===== */
+.sb-header{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
+.sb-logo{font-size:14px;font-weight:800;color:var(--blue);margin-bottom:2px}
+.sb-logo span{color:var(--text);font-weight:600}
+.sb-sub{font-size:10.5px;color:var(--muted)}
+.sb-progress{margin-top:8px;height:4px;background:#1e2d40;border-radius:2px}
+.sb-progress-bar{height:100%;background:var(--blue);border-radius:2px;transition:.4s}
+.sb-progress-label{font-size:10px;color:var(--dim);margin-top:3px}
+
+.sb-list{flex:1;overflow-y:auto;padding:8px 0}
+.sb-section{font-size:9.5px;font-weight:700;letter-spacing:.8px;color:var(--dim);padding:12px 14px 4px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:7px 14px;cursor:pointer;border-left:2px solid transparent;transition:.15s}
+.sb-item:hover{background:#1a2540;color:var(--text)}
+.sb-item.active{background:#122240;border-left-color:var(--blue);color:var(--blue)}
+.sb-item.done .sb-num{background:var(--green);color:#000}
+.sb-num{width:20px;height:20px;border-radius:50%;background:#1e2d40;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;color:var(--muted)}
+.sb-title{font-size:12px;flex:1;line-height:1.3}
+.sb-dur{font-size:10px;color:var(--dim);flex:none}
+.sb-item.active .sb-title{color:var(--blue);font-weight:600}
+
+/* ===== PLAYER AREA ===== */
+.player-wrap{flex:none;position:relative;background:#000;border-bottom:1px solid var(--border)}
+.player-screen{width:100%;aspect-ratio:16/9;max-height:55vh;background:#060d1a;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.slide-content{position:absolute;inset:0;display:flex;flex-direction:column;padding:20px 28px;overflow:hidden}
+
+/* progress bar */
+.player-bar{height:3px;background:#1e2d40;cursor:pointer;position:relative}
+.player-bar-fill{height:100%;background:var(--blue);transition:.1s linear;position:relative}
+.player-bar-fill::after{content:'';position:absolute;right:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.player-controls{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--chrome)}
+.ctrl-btn{background:none;border:none;color:var(--muted);font-size:14px;padding:4px 7px;border-radius:3px;cursor:pointer;transition:.15s}
+.ctrl-btn:hover{color:var(--text);background:#1e2d40}
+.ctrl-btn.active{color:var(--blue)}
+.time-display{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:80px}
+.speed-sel{background:var(--bg);border:1px solid var(--border);border-radius:3px;color:var(--muted);font-size:11px;padding:3px 6px}
+.ctrl-spacer{flex:1}
+
+/* ===== CONTENT AREA ===== */
+.content-area{flex:1;overflow-y:auto;padding:16px 20px}
+.lesson-header{margin-bottom:16px}
+.lesson-badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:3px 9px;border-radius:12px;margin-bottom:8px}
+.lesson-title{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.lesson-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+.tabs-row{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:7px 14px;font-size:11.5px;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* key points */
+.kp-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.kp-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:5px;font-size:12px;line-height:1.5}
+.kp-icon{font-size:15px;flex:none;margin-top:1px}
+.kp-item b{display:block;font-size:11.5px;margin-bottom:2px}
+
+/* steps */
+.step-list{display:flex;flex-direction:column;gap:10px}
+.step-item{display:flex;gap:12px;padding:11px 13px;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:5px;cursor:pointer;transition:.15s}
+.step-item:hover{background:#19253a}
+.step-item.active{background:#122240;border-left-color:var(--blue)}
+.step-item.done{border-left-color:var(--green)}
+.step-num{width:22px;height:22px;border-radius:50%;background:#1e2d40;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;color:var(--muted)}
+.step-item.active .step-num{background:var(--blue);color:#000}
+.step-item.done .step-num{background:var(--green);color:#000}
+.step-body{flex:1}
+.step-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.step-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+.step-time{font-size:10px;color:var(--dim);margin-top:4px}
+
+/* quiz */
+.quiz-q{font-size:13px;font-weight:600;margin-bottom:12px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:7px}
+.quiz-opt{padding:9px 13px;background:var(--panel);border:1px solid var(--border);border-radius:5px;cursor:pointer;font-size:12px;transition:.15s}
+.quiz-opt:hover{border-color:var(--blue);background:#122240}
+.quiz-opt.correct{border-color:var(--green);background:#0d2218;color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:#2a0f0e;color:var(--red)}
+.quiz-feedback{margin-top:10px;padding:10px 13px;border-radius:5px;font-size:12px;line-height:1.5}
+.quiz-feedback.ok{background:#0d2218;border:1px solid var(--green);color:var(--green)}
+.quiz-feedback.bad{background:#2a0f0e;border:1px solid var(--red);color:var(--red)}
+.quiz-nav{display:flex;gap:8px;margin-top:12px}
+.btn{padding:7px 14px;border-radius:4px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:#1e2d40;color:var(--text)}
+.btn:hover{background:#243550}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn.pri:hover{background:#5a9eff}
+.btn.ok{background:#238636;border-color:#2ea043;color:#fff}
+
+/* slide designs */
+.slide-title-card{text-align:center;justify-content:center;align-items:center}
+.slide-tag{font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 10px;border-radius:12px;background:#0e2040;border:1px solid #1f4a8f;color:#5ba3ff;margin-bottom:12px;display:inline-block}
+.slide-h{font-size:clamp(14px,2.5vw,26px);font-weight:800;margin-bottom:8px;line-height:1.2}
+.slide-sub{font-size:clamp(10px,1.3vw,14px);color:var(--muted);max-width:600px}
+.slide-icon{font-size:clamp(24px,5vw,56px);margin-bottom:10px}
+
+.slide-2col{flex-direction:row;gap:20px;align-items:flex-start}
+.slide-col{flex:1;min-width:0}
+.slide-col-label{font-size:9.5px;font-weight:700;letter-spacing:.6px;color:var(--dim);margin-bottom:8px;text-transform:uppercase}
+.slide-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.slide-list li{font-size:clamp(10px,1.2vw,13px);color:var(--muted);padding:5px 9px;background:#0e1c30;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;gap:6px}
+.slide-list li b{color:var(--text);display:block;font-size:clamp(9px,1.1vw,12px)}
+.bullet-dot{width:6px;height:6px;border-radius:50%;flex:none}
+
+.slide-diagram{display:flex;flex-direction:column;gap:0;align-items:center;justify-content:center;width:100%;height:100%}
+.flow-box{padding:6px 14px;border-radius:5px;font-size:clamp(9px,1.1vw,12px);font-weight:600;text-align:center;border:1px solid;min-width:100px}
+.flow-arrow{color:var(--muted);font-size:14px;margin:2px 0}
+.flow-row{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+
+.gantt-demo{width:100%;height:100%;display:flex;flex-direction:column;padding:4px}
+.gd-header{display:flex;height:24px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.gd-label{width:120px;flex:none;font-size:9px;color:var(--dim);display:flex;align-items:center;padding:0 6px}
+.gd-months{flex:1;display:flex}
+.gd-month{flex:1;font-size:9px;color:var(--dim);text-align:center;border-left:1px solid var(--border)}
+.gd-row{display:flex;height:18px;margin-bottom:2px;align-items:center}
+.gd-name{width:120px;flex:none;font-size:9px;padding:0 6px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gd-bar-area{flex:1;position:relative;height:100%}
+.gd-bar{position:absolute;height:10px;top:4px;border-radius:3px}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;width:100%}
+.kpi-card{background:#0e1c30;border:1px solid var(--border);border-radius:5px;padding:8px 10px;text-align:center}
+.kpi-val{font-size:clamp(12px,2vw,22px);font-weight:700;font-variant-numeric:tabular-nums;display:block;margin:2px 0}
+.kpi-lbl{font-size:9px;color:var(--dim);letter-spacing:.4px}
+.kpi-sub{font-size:9px;color:var(--muted)}
+
+.highlight{color:var(--blue);font-weight:700}
+.hl-green{color:var(--green)}
+.hl-red{color:var(--red)}
+.hl-amber{color:var(--amber)}
+.hl-violet{color:var(--violet)}
+
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#2a3f5f;border-radius:4px}
+</style>
+<style></style></head>
+<body>
+<div id="root">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">⬡ EngineX <span>Scheduler</span></div>
+    <div class="sb-sub">Complete Project Planning Tutorial</div>
+    <div class="sb-progress"><div class="sb-progress-bar" id="overallBar" style="width:0%"></div></div>
+    <div class="sb-progress-label" id="overallLabel">0% complete · 0 / 10 lessons</div>
+  </div>
+  <div class="sb-list" id="lessonList"><div class="sb-section">Getting Started</div><div class="sb-item" onclick="goLesson(0)">
+      <div class="sb-num">1</div>
+      <div class="sb-title">Introduction to EngineX Scheduler</div>
+      <div class="sb-dur">4:20</div>
+    </div><div class="sb-item" onclick="goLesson(1)">
+      <div class="sb-num">2</div>
+      <div class="sb-title">Project Settings &amp; Calendars</div>
+      <div class="sb-dur">5:10</div>
+    </div><div class="sb-section">Project Structure</div><div class="sb-item" onclick="goLesson(2)">
+      <div class="sb-num">3</div>
+      <div class="sb-title">WBS — Work Breakdown Structure</div>
+      <div class="sb-dur">4:50</div>
+    </div><div class="sb-section">Building Your Schedule</div><div class="sb-item" onclick="goLesson(3)">
+      <div class="sb-num">4</div>
+      <div class="sb-title">Creating Activities</div>
+      <div class="sb-dur">6:30</div>
+    </div><div class="sb-item" onclick="goLesson(4)">
+      <div class="sb-num">5</div>
+      <div class="sb-title">Relationships &amp; Logic Links</div>
+      <div class="sb-dur">5:40</div>
+    </div><div class="sb-section">Analysis &amp; Reporting</div><div class="sb-item" onclick="goLesson(5)">
+      <div class="sb-num">6</div>
+      <div class="sb-title">Gantt Chart &amp; Critical Path</div>
+      <div class="sb-dur">5:00</div>
+    </div><div class="sb-section">Project Control</div><div class="sb-item" onclick="goLesson(6)">
+      <div class="sb-num">7</div>
+      <div class="sb-title">Updating Progress</div>
+      <div class="sb-dur">5:30</div>
+    </div><div class="sb-item" onclick="goLesson(7)">
+      <div class="sb-num">8</div>
+      <div class="sb-title">Earned Value Management (EVM)</div>
+      <div class="sb-dur">5:00</div>
+    </div><div class="sb-item" onclick="goLesson(8)">
+      <div class="sb-num">9</div>
+      <div class="sb-title">Resources &amp; Risk Register</div>
+      <div class="sb-dur">4:30</div>
+    </div><div class="sb-section">Reporting &amp; Export</div><div class="sb-item active" onclick="goLesson(9)">
+      <div class="sb-num">10</div>
+      <div class="sb-title">Baselines, Export &amp; Reporting</div>
+      <div class="sb-dur">4:00</div>
+    </div></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="player-wrap">
+    <div class="player-screen" id="playerScreen">
+      <div id="slideDisplay" class="slide-content"><div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">COURSE COMPLETE</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,20px);margin-bottom:8px;text-align:center">🎉 You're Ready to Schedule!</div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="slide-sub">You've completed all 10 lessons. Here's your end-to-end workflow:</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;text-align:center">
+        <div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">⚙️</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Settings</div>
+          <div style="font-size:8.5px;color:var(--dim)">Configure project</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">🗂️</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">WBS</div>
+          <div style="font-size:8.5px;color:var(--dim)">Build hierarchy</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">📋</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Activities</div>
+          <div style="font-size:8.5px;color:var(--dim)">Add tasks</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">🔗</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Logic</div>
+          <div style="font-size:8.5px;color:var(--dim)">Link activities</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">⟳</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Schedule</div>
+          <div style="font-size:8.5px;color:var(--dim)">Run CPM (F9)</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">📊</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Gantt</div>
+          <div style="font-size:8.5px;color:var(--dim)">Review chart</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">📈</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Progress</div>
+          <div style="font-size:8.5px;color:var(--dim)">Update status</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">💰</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">EVM</div>
+          <div style="font-size:8.5px;color:var(--dim)">Check performance</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">⚠️</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Risks</div>
+          <div style="font-size:8.5px;color:var(--dim)">Manage threats</div>
+        </div><div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">📤</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">Report</div>
+          <div style="font-size:8.5px;color:var(--dim)">Export &amp; submit</div>
+        </div>
+      </div>
+    </div></div>
+    </div>
+    <div class="player-bar" id="playerBar" onclick="seekBar(event)">
+      <div class="player-bar-fill" id="playerBarFill" style="width: 95.7692%;"></div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn" onclick="prevSlide()" title="Previous">⏮</button>
+      <button class="ctrl-btn" id="playBtn" onclick="togglePlay()" title="Play/Pause">▶</button>
+      <button class="ctrl-btn" onclick="nextSlide()" title="Next">⏭</button>
+      <div class="time-display" id="timeDisplay">0:24 / 0:26</div>
+      <div class="ctrl-spacer"></div>
+      <select class="speed-sel" onchange="setSpeed(this.value)">
+        <option value="1">1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+        <option value="0.5">0.5×</option>
+      </select>
+      <button class="ctrl-btn" onclick="toggleFullLesson()" title="Expand">⛶</button>
+    </div>
+  </div>
+  <div class="content-area" id="contentArea">
+    <div class="lesson-header">
+      <div class="lesson-badge" style="background:#12060e;border:1px solid #6a1a5f;color:#d171c7">📤 Reports — Lesson 10 of 10</div>
+      <div class="lesson-title">Baselines, Export &amp; Reporting</div>
+      <div class="lesson-desc">Save contract baselines, generate printed project reports, export CSV and JSON, and use the S-Curve for SEC/client submissions. The complete reporting workflow.</div>
+    </div>
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="switchTab(&#39;keypoints&#39;)">📌 Key Points</button>
+      <button class="tab-btn" onclick="switchTab(&#39;steps&#39;)">🚶 Step by Step</button>
+      <button class="tab-btn" onclick="switchTab(&#39;quiz&#39;)">🧠 Quiz</button>
+    </div>
+    <div id="tabContent"><ul class="kp-list"><li class="kp-item">
+      <div class="kp-icon">📸</div>
+      <div><b>Save BL01 Before Starting</b>Always save the Contract Baseline (BL01) immediately after finalising the approved schedule — before any actual progress. This is your legal benchmark.</div>
+    </li><li class="kp-item">
+      <div class="kp-icon">💾</div>
+      <div><b>Export JSON Weekly</b>Export your schedule as .json at least weekly as a backup. Store it on SharePoint or email it to the team. Browser localStorage can be cleared accidentally.</div>
+    </li><li class="kp-item">
+      <div class="kp-icon">📊</div>
+      <div><b>CSV for Excel Analysis</b>Export CSV to Excel for advanced filtering, pivot tables and custom charts. Useful for weekly site reports when you need to format data differently.</div>
+    </li><li class="kp-item">
+      <div class="kp-icon">🖨️</div>
+      <div><b>Print = Client Report</b>The Print function generates a formatted PDF of your schedule and EVM metrics. This is your monthly progress report for SEC, ARAMCO or consultant review.</div>
+    </li></ul></div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ============================================================
+   CURRICULUM DATA
+   ============================================================ */
+const LESSONS = [
+{
+  id:0, title:"Introduction to EngineX Scheduler",
+  badge:"🎬 Overview", badgeColor:"#0e2040", badgeBorder:"#1f4a8f", badgeText:"#5ba3ff",
+  duration:"4:20", category:"Getting Started",
+  desc:"Understand what EngineX Scheduler is, its CPM engine, and how it compares to Primavera P6. Learn the interface layout before diving into your first project.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card" style="background:linear-gradient(135deg,#060d1a 0%,#0e1f38 100%)">
+      <div class="slide-tag">LESSON 1 — INTRODUCTION</div>
+      <div class="slide-icon">⬡</div>
+      <div class="slide-h">EngineX Scheduler<br><span style="color:var(--blue)">CPM Project Controls</span></div>
+      <div class="slide-sub">A browser-based Critical Path Method scheduler modelled after Primavera P6 — designed for KSA electrical & substation projects</div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:18px 24px">
+      <div class="slide-tag">WHAT IS IT?</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,20px);margin-bottom:12px">CPM Scheduling — The Industry Standard</div>
+      <div class="slide-2col" style="flex:1;display:flex;gap:16px">
+        <div class="slide-col">
+          <div class="slide-col-label">Critical Path Method (CPM)</div>
+          <ul class="slide-list">
+            <li><span class="bullet-dot" style="background:var(--blue)"></span><div><b>Forward Pass</b>Calculates Earliest Start & Finish for every activity</div></li>
+            <li><span class="bullet-dot" style="background:var(--violet)"></span><div><b>Backward Pass</b>Calculates Latest Start & Finish from project end</div></li>
+            <li><span class="bullet-dot" style="background:var(--red)"></span><div><b>Float Calculation</b>Total Float = Late Finish − Early Finish</div></li>
+            <li><span class="bullet-dot" style="background:var(--amber)"></span><div><b>Critical Path</b>Activities with Zero (or negative) Total Float</div></li>
+          </ul>
+        </div>
+        <div class="slide-col">
+          <div class="slide-col-label">EngineX vs Primavera P6</div>
+          <ul class="slide-list">
+            <li><span class="bullet-dot" style="background:var(--green)"></span><div><b>Same logic</b>Retained Logic &amp; Progress Override modes</div></li>
+            <li><span class="bullet-dot" style="background:var(--green)"></span><div><b>Same outputs</b>WBS, Gantt, EVM, S-Curve, Resources</div></li>
+            <li><span class="bullet-dot" style="background:var(--cyan)"></span><div><b>No install</b>Runs in any browser — open &amp; go</div></li>
+            <li><span class="bullet-dot" style="background:var(--cyan)"></span><div><b>KSA-ready</b>SAR currency, 6-day KSA calendar pre-loaded</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">INTERFACE TOUR</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">10 Tabs — One Screen</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;flex:1;align-content:start">
+        ${[
+          ["📋","Activities","Edit tasks, durations, pct"],
+          ["📊","Gantt","Visual timeline + logic lines"],
+          ["🔗","Relationships","FS/SS/FF/SF links"],
+          ["🗂️","WBS","Work breakdown structure"],
+          ["📈","S-Curve","Cost &amp; progress curves"],
+          ["💰","EVM","Earned Value metrics"],
+          ["👷","Resources","Labor &amp; equipment"],
+          ["📅","Calendars","KSA &amp; custom calendars"],
+          ["⚠️","Risks","Risk register"],
+          ["⚙️","Settings","Project setup &amp; export"]
+        ].map(([ic,nm,desc])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-radius:5px;padding:8px;text-align:center">
+          <div style="font-size:20px">${ic}</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text);margin:3px 0">${nm}</div>
+          <div style="font-size:9px;color:var(--dim)">${desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">KPI BAR</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:12px">Always-visible Dashboard</div>
+      <div class="kpi-grid" style="margin-bottom:12px">
+        ${[
+          ["SPI","0.94","var(--amber)","Schedule Performance"],
+          ["CPI","0.97","var(--amber)","Cost Performance"],
+          ["EV","SAR 12.4M","var(--cyan)","Earned Value"],
+          ["VAC","−SAR 0.8M","var(--red)","Cost Variance"],
+          ["Finish","31-Dec-26","var(--text)","Planned Completion"],
+          ["Critical","8","var(--red)","Activities on CP"]
+        ].map(([lbl,val,col,sub])=>`<div class="kpi-card">
+          <div class="kpi-lbl">${lbl}</div>
+          <div class="kpi-val" style="color:${col}">${val}</div>
+          <div class="kpi-sub">${sub}</div>
+        </div>`).join('')}
+      </div>
+      <div style="font-size:11px;color:var(--muted);background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:8px 10px">
+        💡 <span style="color:var(--text)">KPIs update automatically</span> every time you press <span class="highlight">⟳ Schedule (F9)</span>. They reflect the current data date and progress entries.
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"⬡",title:"CPM Engine",text:"EngineX runs a true forward + backward pass Critical Path Method calculation — the same algorithm used in Primavera P6 and Oracle P6 EPPM."},
+    {icon:"🇸🇦",title:"KSA-Ready",text:"Pre-loaded KSA 6-Day (Sat–Thu) calendar with Saudi National Day and Eid holidays. Currency set to SAR by default."},
+    {icon:"📊",title:"10 Modules",text:"Activities, Gantt, Relationships, WBS, S-Curve, EVM, Resources, Calendars, Risks and Settings — all in one file."},
+    {icon:"💾",title:"Auto-Save",text:"Data is automatically saved to browser localStorage. Export to JSON anytime for backup or sharing across machines."},
+  ],
+  steps:[
+    {title:"Open the file",desc:"Double-click EngineX_Scheduler_P6.html or drag it into any browser (Chrome recommended). No internet connection needed.",time:"0:00"},
+    {title:"Review the KPI bar",desc:"The top bar shows SPI, CPI, EV, Finish date and Critical activities count — always visible across all tabs.",time:"0:45"},
+    {title:"Explore the tabs",desc:"Click each tab (Activities → Gantt → Relationships → ...) to familiarise yourself with all 10 modules before editing anything.",time:"1:30"},
+    {title:"Check the status bar",desc:"The bottom bar shows total activities, relationships, WBS count, start/finish dates and logic health (green = no errors).",time:"2:15"},
+  ],
+  quiz:{q:"In CPM scheduling, which activities form the Critical Path?",opts:["Activities with the longest durations","Activities with Zero or Negative Total Float","Activities with the highest budgets","Activities assigned to the Project Manager"],ans:1,feedback:"Correct! The Critical Path is the sequence of activities with zero (or negative) total float. Any delay to these activities will delay the project finish date."}
+},
+{
+  id:1, title:"Project Settings & Calendars",
+  badge:"⚙️ Setup", badgeColor:"#1a1a08", badgeBorder:"#5a4a10", badgeText:"#e3b341",
+  duration:"5:10", category:"Getting Started",
+  desc:"Configure your project details, set the data date, choose scheduling mode, and set up KSA calendars with holidays before creating activities.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 2</div>
+      <div class="slide-icon">⚙️</div>
+      <div class="slide-h">Project Settings<br><span style="color:var(--amber)">Calendars & Configuration</span></div>
+      <div class="slide-sub">Before creating any activity, configure your project details and calendar rules — they drive every CPM date calculation.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">SETTINGS TAB</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Project Details Form</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        ${[
+          ["Project Name","Commercial Tower Substation","Name visible in title bar and reports"],
+          ["Client","Saudi Electricity Company","Owner / client organisation"],
+          ["Contract No","SEC-2026-0847","Reference number for reports"],
+          ["Project Manager","Faraz","Responsible PM name"],
+          ["Start Date","03-Jan-2026","Project start — drives forward pass origin"],
+          ["Data Date","14-Sep-2026","Status date — separates past from future"],
+          ["Must Finish","31-Dec-2026","Contract completion — drives backward pass"],
+          ["Currency","SAR","Shown on all cost KPIs and EVM values"],
+        ].map(([lbl,val,hint])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 10px">
+          <div style="font-size:9px;color:var(--dim);margin-bottom:2px">${lbl}</div>
+          <div style="font-size:11.5px;font-weight:600;color:var(--text)">${val}</div>
+          <div style="font-size:9.5px;color:var(--muted)">${hint}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">CALENDARS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">3 Pre-Loaded KSA Calendars</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:10px">
+        ${[
+          ["C1","KSA 6-Day (Sat–Thu)","Works Sat–Thu, Friday off. 8 hrs/day. KSA national holidays pre-loaded.","var(--blue)"],
+          ["C2","5-Day (Sun–Thu)","Standard office week for design/procurement teams. KSA holidays included.","var(--cyan)"],
+          ["C3","7-Day Continuous","No rest days — used for long-lead delivery activities like transformer shipping.","var(--amber)"],
+        ].map(([id,name,desc,col])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-left:3px solid ${col};border-radius:4px;padding:8px 12px;display:flex;gap:10px;align-items:flex-start">
+          <div style="background:#1e2d40;border:1px solid var(--border);border-radius:3px;padding:2px 6px;font-size:9.5px;font-weight:700;color:${col};flex:none">${id}</div>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">${name}</div><div style="font-size:10.5px;color:var(--muted)">${desc}</div></div>
+        </div>`).join('')}
+      </div>
+      <div style="font-size:11px;color:var(--muted);background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:8px 10px">
+        💡 Each <b>activity</b> can override the project default calendar. Assign C3 to procurement activities with continuous delivery timelines.
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">SCHEDULING MODE</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Retained Logic vs Progress Override</div>
+      <div style="display:flex;gap:10px;margin-bottom:12px">
+        <div style="flex:1;background:#0e1c30;border:1px solid var(--green);border-radius:5px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:5px">✓ Retained Logic (Default)</div>
+          <div style="font-size:11px;color:var(--muted)">An in-progress activity cannot start its successors until after the Data Date, even if it started late. Preserves original logic. <b>Use for SEC/client reporting.</b></div>
+        </div>
+        <div style="flex:1;background:#0e1c30;border:1px solid var(--amber);border-radius:5px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:5px">⚡ Progress Override</div>
+          <div style="font-size:11px;color:var(--muted)">Successors of in-progress activities can start as soon as logic is satisfied, even before Data Date. <b>Use for what-if recovery scenarios.</b></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">Toggle in <span class="highlight">Settings tab → Retained Logic checkbox</span>. The status bar shows the active mode at bottom-right.</div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"📅",title:"Data Date is Critical",text:"The Data Date separates completed work from future work. Always advance it to today before updating progress. All CPM calculations are anchored to this date."},
+    {icon:"🗓️",title:"Calendar Assignment",text:"Assign C3 (7-Day) to procurement activities like 'MV Switchgear Manufacturing & Delivery' to get accurate calendar-day counts without weekend gaps."},
+    {icon:"🔒",title:"Must Finish Date",text:"Setting a Must Finish date drives the backward pass from that date. Activities beyond it show negative float, flagging recovery needed."},
+    {icon:"💱",title:"SAR Currency",text:"All budget, EV and cost values display in SAR (Saudi Riyal) — matching SEC and Saudi Aramco contract documentation standards."},
+  ],
+  steps:[
+    {title:"Go to Settings tab",desc:"Click the Settings tab (last on the right). You'll see the full project configuration form.",time:"0:00"},
+    {title:"Set Project Details",desc:"Fill in Project Name, Client, Contract No, PM name. These appear in the title bar and all printed reports.",time:"0:30"},
+    {title:"Set Start, Data Date & Must Finish",desc:"Start = contract kick-off date. Data Date = today's reporting cut-off. Must Finish = contractual completion date (drives negative float warnings).",time:"1:15"},
+    {title:"Review Calendars tab",desc:"Click the Calendars tab. Verify C1 (KSA 6-Day) is your default. Add any additional Saudi public holidays not pre-loaded.",time:"2:30"},
+    {title:"Choose Scheduling Mode",desc:"In Settings, check/uncheck 'Retained Logic'. For SEC project reporting, leave it ON (Retained Logic).",time:"3:45"},
+    {title:"Press Schedule (F9)",desc:"Hit the blue ⟳ Schedule button or press F9. The scheduler re-runs the CPM with your new settings.",time:"4:30"},
+  ],
+  quiz:{q:"What does the 'Data Date' control in the CPM engine?",opts:["The project start date","The boundary between actual past work and future scheduled work","The calendar holiday list","The must-finish constraint for the backward pass"],ans:1,feedback:"Correct! The Data Date is the scheduling status date. Activities before it are treated as actual progress; activities after it are future-scheduled work. Always advance it before each update cycle."}
+},
+{
+  id:2, title:"WBS — Work Breakdown Structure",
+  badge:"🗂️ WBS", badgeColor:"#12180d", badgeBorder:"#2d5a1a", badgeText:"#3fb950",
+  duration:"4:50", category:"Project Structure",
+  desc:"Build your project hierarchy before adding activities. The WBS organises deliverables into phases — a mandatory step in professional P6 scheduling.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 3</div>
+      <div class="slide-icon">🗂️</div>
+      <div class="slide-h">Work Breakdown Structure<br><span style="color:var(--green)">Organise Before You Schedule</span></div>
+      <div class="slide-sub">The WBS is the foundation. Build it before adding activities — every activity must belong to a WBS node.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">SAMPLE WBS — SEC SUBSTATION PROJECT</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Commercial Tower Substation</div>
+      <div style="flex:1;font-size:11.5px;line-height:2">
+        <div style="color:var(--blue);font-weight:700">⬡ ST — Commercial Tower Substation</div>
+        <div style="margin-left:20px">
+          <div style="color:var(--cyan);font-weight:600">├─ ST.1 Engineering &amp; Approvals</div>
+          <div style="color:var(--muted);margin-left:16px">A1000 Notice to Proceed · A1010 SLD Design · A1020 Approval · A1030 Shop Drawings</div>
+          <div style="color:var(--cyan);font-weight:600">├─ ST.2 Procurement</div>
+          <div style="color:var(--muted);margin-left:16px">A2000 MV Switchgear PO · A2010 Manufacturing · A2020 Transformer · A2030 LV Switchboard</div>
+          <div style="color:var(--cyan);font-weight:600">├─ ST.3 Containment &amp; Cable Trays</div>
+          <div style="color:var(--muted);margin-left:16px">A3000 Main Cable Tray · A3010 Conduit &amp; Trunking · A3020 Earthing Grid</div>
+          <div style="color:var(--cyan);font-weight:600">├─ ST.4 MV / LV Installation</div>
+          <div style="color:var(--muted);margin-left:16px">A4000 MV Room Handover · A4010 Transformer · A4020 MV Switchgear · A4030 LV Board</div>
+          <div style="color:var(--cyan);font-weight:600">├─ ST.5 Cabling &amp; Termination</div>
+          <div style="color:var(--muted);margin-left:16px">A5000 HV Cable Pulling · A5010 MV Termination · A5020 LV Feeders · A5040 Megger Tests</div>
+          <div style="color:var(--cyan);font-weight:600">└─ ST.6 Testing &amp; Commissioning</div>
+          <div style="color:var(--muted);margin-left:16px">A6000 FAT · A6010 Pre-Comm · A6020 SAT · A6030 Protection Relay · A6050 Energisation</div>
+        </div>
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">WBS ROLLUPS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Auto-Calculated WBS Summaries</div>
+      <div style="display:flex;gap:10px;flex:1">
+        ${[
+          ["ST.1 Engineering","100%","SAR 385k","Jan – Mar","var(--green)","Complete"],
+          ["ST.2 Procurement","95%","SAR 8.2M","Jan – Sep","var(--amber)","In Progress"],
+          ["ST.3 Containment","100%","SAR 870k","Feb – Jun","var(--green)","Complete"],
+          ["ST.4 MV/LV Install","65%","SAR 1.3M","Jun – Sep","var(--amber)","In Progress"],
+          ["ST.5 Cabling","48%","SAR 1.6M","Jun – Oct","var(--red)","Critical"],
+          ["ST.6 Test &amp; Comm","0%","SAR 1.1M","Oct – Dec","var(--muted)","Not Started"]
+        ].map(([wbs,pct,bud,dates,col,status])=>`<div style="flex:1;background:#0e1c30;border:1px solid var(--border);border-radius:5px;padding:8px;text-align:center">
+          <div style="font-size:9px;color:var(--dim);margin-bottom:4px">${wbs}</div>
+          <div style="font-size:16px;font-weight:700;color:${col}">${pct}</div>
+          <div style="font-size:9px;color:var(--muted)">${bud}</div>
+          <div style="font-size:9px;color:var(--muted)">${dates}</div>
+          <div style="font-size:9px;margin-top:3px;color:${col}">${status}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"🌲",title:"Build Top-Down",text:"Create the root WBS node first (e.g. ST — Commercial Tower Substation), then add child nodes for each phase (Engineering, Procurement, Construction, Testing)."},
+    {icon:"🔄",title:"Automatic Rollups",text:"WBS nodes automatically roll up Start, Finish, Budget, EV and % Complete from all activities beneath them. You never manually enter WBS-level data."},
+    {icon:"🏷️",title:"Activity Must Have WBS",text:"Every activity requires a WBS assignment. In the Activities view, the WBS column is mandatory — activities without it show as 'Unknown' and won't roll up."},
+    {icon:"📊",title:"Grouping & Filtering",text:"In the Activities tab, use the Group dropdown to group by WBS. This collapses/expands phases exactly like P6 Project View."},
+  ],
+  steps:[
+    {title:"Open WBS tab",desc:"Click the WBS tab. You'll see the hierarchy tree with root node at the top.",time:"0:00"},
+    {title:"Add root WBS node",desc:"The root node (e.g. 'Commercial Tower Substation') is already created. It represents the whole project.",time:"0:30"},
+    {title:"Add Phase nodes",desc:"Click 'Add Child' to add phase nodes: Engineering, Procurement, Construction, Testing & Commissioning.",time:"1:00"},
+    {title:"Add sub-phases if needed",desc:"For large projects, add Level-3 nodes (e.g. ST.3.1 Cable Tray, ST.3.2 Earthing) under each phase.",time:"2:00"},
+    {title:"Assign WBS when creating activities",desc:"When you later create activities in the Activities tab, set the WBS column to the correct phase code.",time:"3:00"},
+  ],
+  quiz:{q:"What happens to WBS summary values (budget, dates, % complete) in EngineX?",opts:["You must manually enter them for each WBS node","They are automatically rolled up from the activities beneath each node","They are only calculated when you print a report","They are imported from an external spreadsheet"],ans:1,feedback:"Correct! WBS rollups are fully automatic. EngineX sums the budget, calculates weighted % complete, and spans the earliest start to latest finish from all child activities. No manual entry needed."}
+},
+{
+  id:3, title:"Creating Activities",
+  badge:"📋 Activities", badgeColor:"#0e1836", badgeBorder:"#1f4a8f", badgeText:"#5ba3ff",
+  duration:"6:30", category:"Building Your Schedule",
+  desc:"Add activities, set durations, assign types (Task/Milestone/LOE), select calendars, and assign WBS and responsible parties — the core scheduling workflow.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 4</div>
+      <div class="slide-icon">📋</div>
+      <div class="slide-h">Creating Activities<br><span style="color:var(--blue)">The Core Scheduling Workflow</span></div>
+      <div class="slide-sub">Activities are the building blocks. Learn activity types, durations, milestones, and how to assign WBS, calendar and responsible party.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">ACTIVITY TYPES</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">5 Activity Types</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${[
+          ["TD","Task Dependent","Standard work activity with duration. Dates driven by logic and calendars. Most activities are TD.","var(--blue)"],
+          ["SM","Start Milestone","Zero-duration event marking a project start point (e.g. Notice to Proceed, Material Delivery).","var(--green)"],
+          ["FM","Finish Milestone","Zero-duration event marking a deliverable completion (e.g. MV Room Handover, Energisation).","var(--violet)"],
+          ["LOE","Level of Effort","Spans between its predecessor and successor — used for management/support activities (e.g. Site Supervision).","var(--amber)"],
+          ["WS","WBS Summary","Auto-spans all activities in a WBS node. Read-only — used for bar-chart reporting.","var(--cyan)"],
+        ].map(([code,name,desc,col])=>`<div style="display:flex;gap:10px;align-items:flex-start;background:#0e1c30;border:1px solid var(--border);border-left:3px solid ${col};border-radius:4px;padding:7px 11px">
+          <span style="background:#1e2d40;border:1px solid ${col};color:${col};font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:3px;flex:none">${code}</span>
+          <div><div style="font-size:11.5px;font-weight:600;margin-bottom:1px">${name}</div><div style="font-size:10.5px;color:var(--muted)">${desc}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">ACTIVITY FIELDS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Key Fields to Fill</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+        ${[
+          ["Activity ID","A4020","Unique code — use prefix for phase (A1xxx=Eng, A4xxx=Install)"],
+          ["Name","MV Switchgear Installation","Describe the work clearly for client reports"],
+          ["WBS","ST.4 MV/LV Installation","Phase this activity belongs to"],
+          ["Duration (OD)","25","Original duration in working days on assigned calendar"],
+          ["Calendar","C1 KSA 6-Day","Working-day rule for this activity"],
+          ["Budget","SAR 480,000","Planned value for EVM calculations"],
+          ["Responsible","Site","Team or person owning delivery"],
+          ["Phase","Construction","Code for grouping and filtering"],
+        ].map(([lbl,val,hint])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 10px">
+          <div style="font-size:9px;color:var(--dim);margin-bottom:1px">${lbl}</div>
+          <div style="font-size:11.5px;font-weight:600;color:var(--blue)">${val}</div>
+          <div style="font-size:9.5px;color:var(--muted)">${hint}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">CONSTRAINTS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">8 Constraint Types</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        ${[
+          ["SNET","Start On or After","Activity cannot start before the constraint date. Common for delivery milestones.","var(--blue)"],
+          ["SNLT","Start On or Before","Latest allowable start — used for regulatory deadlines.","var(--cyan)"],
+          ["FNET","Finish On or After","Finish no earlier than this date.","var(--blue)"],
+          ["FNLT","Finish On or Before","SEC Witness Test — must finish by 24-Dec-2026. Hard deadline.","var(--red)"],
+          ["MSO","Mandatory Start","Locks the start date absolutely. Use sparingly.","var(--red)"],
+          ["MFO","Mandatory Finish","Locks the finish date absolutely.","var(--red)"],
+          ["ALAP","As Late As Possible","Activity floats to the latest possible position.","var(--amber)"],
+        ].map(([code,name,desc,col])=>`<div style="display:flex;gap:8px;align-items:center;font-size:10.5px;padding:4px 8px;background:#0e1c30;border:1px solid var(--border);border-radius:3px">
+          <span style="color:${col};font-weight:700;font-family:monospace;flex:none;width:46px">${code}</span>
+          <span style="color:var(--text);font-weight:600;flex:none;width:130px">${name}</span>
+          <span style="color:var(--muted)">${desc}</span>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"🔢",title:"Activity ID Convention",text:"Use prefix numbers for phase: A1xxx=Engineering, A2xxx=Procurement, A3xxx=Containment, A4xxx=MV/LV, A5xxx=Cabling, A6xxx=Testing. Keeps activities sorted logically."},
+    {icon:"📅",title:"Original Duration vs Remaining",text:"OD (Original Duration) is never changed. RD (Remaining Duration) is what's left to do. Once actual start is entered, OD stays frozen and RD drives the schedule."},
+    {icon:"⚠️",title:"Use FNLT Sparingly",text:"FNLT (Finish No Later Than) creates a hard deadline that can cause negative float cascade. Only use it for regulatory deadlines like SEC Witness Test or energisation permits."},
+    {icon:"💰",title:"Budget Drives EVM",text:"The Budget field feeds Planned Value (PV). Without budgets, the S-Curve and EVM tab show zero. Enter budgets in SAR for all work activities."},
+  ],
+  steps:[
+    {title:"Click Activities tab",desc:"Switch to the Activities tab. The spreadsheet shows all existing activities grouped by WBS.",time:"0:00"},
+    {title:"Click '+ Activity'",desc:"Press the green '+ Activity' button in the toolbar. A new row appears at the bottom of the list.",time:"0:30"},
+    {title:"Fill in Activity ID and Name",desc:"Click the ID cell and type your code (e.g. A4020). Click Name and describe the work clearly.",time:"1:00"},
+    {title:"Set WBS, Duration and Calendar",desc:"Click the WBS dropdown and select the phase. Enter duration (working days). Calendar defaults to C1 KSA 6-Day.",time:"1:45"},
+    {title:"Add budget and responsible",desc:"Click the row to open the Detail panel at the bottom. Fill Budget (SAR), Responsible and Phase fields.",time:"3:00"},
+    {title:"Add constraints if needed",desc:"In the Detail panel → General tab, select a constraint type and date (e.g. FNLT = 24-Dec-2026 for SEC Witness Test).",time:"4:30"},
+    {title:"Press F9 to recalculate",desc:"Press Schedule (F9) after adding activities. CPM recalculates — dates appear, critical path highlights in red.",time:"5:30"},
+  ],
+  quiz:{q:"You need to add the activity 'MV Switchgear Manufacturing & Delivery' which runs 24×7 without weekends. Which calendar should you assign?",opts:["C1 — KSA 6-Day (Sat–Thu)","C2 — 5-Day (Sun–Thu)","C3 — 7-Day Continuous","The project default calendar"],ans:2,feedback:"Correct! C3 (7-Day Continuous) has no rest days, making it perfect for supplier manufacturing and delivery lead times that continue through weekends and holidays."}
+},
+{
+  id:4, title:"Relationships & Logic Links",
+  badge:"🔗 Logic", badgeColor:"#14100e", badgeBorder:"#7a3d1a", badgeText:"#fb923c",
+  duration:"5:40", category:"Building Your Schedule",
+  desc:"Link activities with FS, SS, FF and SF relationships and add lag values. Correct logic is the most important part of a CPM schedule — wrong links create wrong dates.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 5</div>
+      <div class="slide-icon">🔗</div>
+      <div class="slide-h">Relationships<br><span style="color:var(--orange)">Connecting Your Activities</span></div>
+      <div class="slide-sub">Logic links define the order of work. Without them, every activity starts on the project start date — there is no critical path.</div>
+    </div>`},
+    {dur:9, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">4 RELATIONSHIP TYPES</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">FS · SS · FF · SF</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${[
+          ["FS","Finish-to-Start","Successor starts after predecessor finishes. Most common — 80% of all links.","MV Switchgear PO → Manufacturing starts after PO finishes","var(--blue)"],
+          ["SS","Start-to-Start","Successor starts after predecessor starts. Used with lag for overlapping work.","Cable Tray (SS+20d) → Conduit: conduit starts 20 days after tray begins","var(--green)"],
+          ["FF","Finish-to-Finish","Both finish together (or successor finishes after predecessor).","MV Panel Manufacturing (FF) → FAT: FAT can only finish when panels are ready","var(--violet)"],
+          ["SF","Start-to-Finish","Rare — successor finishes when predecessor starts.","Rarely used in construction — avoid unless essential","var(--amber)"],
+        ].map(([code,name,desc,ex,col])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-left:3px solid ${col};border-radius:4px;padding:8px 12px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+            <span style="color:${col};font-weight:700;font-family:monospace;font-size:13px">${code}</span>
+            <span style="font-size:11.5px;font-weight:600">${name}</span>
+          </div>
+          <div style="font-size:10.5px;color:var(--muted);margin-bottom:3px">${desc}</div>
+          <div style="font-size:10px;color:${col};font-style:italic">Example: ${ex}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">LAG &amp; LEAD</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Shifting Relationships in Time</div>
+      <div style="display:flex;gap:10px;margin-bottom:12px">
+        <div style="flex:1;background:#0e1c30;border:1px solid var(--border);border-radius:5px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:5px">Lag (+)</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Delay between predecessor and successor.</div>
+          <div style="font-size:10.5px;color:var(--text)">A2000 → A2030 (SS+10d)<br>LV Switchboard PO starts 10 working days after MV PO is placed</div>
+        </div>
+        <div style="flex:1;background:#0e1c30;border:1px solid var(--border);border-radius:5px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:5px">Lead (−)</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Overlap — successor starts before predecessor finishes.</div>
+          <div style="font-size:10.5px;color:var(--text)">A3000 → A3010 (FS−5d)<br>Conduit work starts 5 days before cable tray finishes</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted)">⚠️ Avoid negative lag (lead) on critical path — it can mask true float and confuse client reviewers. Use SS or FF relationships instead.</div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">LOGIC ERRORS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Common Mistakes to Avoid</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${[
+          ["Circular Logic","A→B→C→A","Open loops in Reports tab. Status bar shows red 'logic error'.","var(--red)"],
+          ["Missing Predecessor","Activity A has no predecessor","It starts on Project Start — may be unrealistic. Every activity should have a predecessor.","var(--amber)"],
+          ["Missing Successor","Activity B has no successor","It won't drive the project finish. Check all end activities link to a finish milestone.","var(--amber)"],
+          ["Dangling logic","Activity with only 1 link","Activities should typically have both predecessors AND successors (except project start/end).","var(--cyan)"],
+          ["Wrong relationship type","SS where FS is needed","Can compress the critical path incorrectly. Verify each link type matches the physical work sequence.","var(--violet)"],
+        ].map(([name,example,fix,col])=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 10px;background:#0e1c30;border:1px solid var(--border);border-radius:3px">
+          <span style="color:${col};font-size:13px;flex:none">⚠</span>
+          <div><span style="font-weight:600;font-size:11.5px;color:${col}">${name}</span> <span style="font-size:10px;color:var(--dim);font-family:monospace">${example}</span><div style="font-size:10.5px;color:var(--muted)">${fix}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"🔗",title:"FS is Default",text:"Finish-to-Start is the default and most common relationship. When in doubt, use FS. Only add SS/FF/SF when the physical work genuinely allows parallelism."},
+    {icon:"📊",title:"Open the Relationships Tab",text:"The Relationships tab shows every link in a grid: Predecessor ID, Successor ID, Type and Lag. You can add, edit or delete links directly in this view."},
+    {icon:"🔴",title:"Check Logic in Reports",text:"The Reports tab shows a Schedule Log with errors flagged in red. Always check for circular logic warnings before submitting a schedule to a client."},
+    {icon:"📏",title:"Logic Lines in Gantt",text:"In the Gantt tab, toggle 'Logic lines' to see dependency arrows. Red arrows = critical path links. Use this to visually verify your network logic."},
+  ],
+  steps:[
+    {title:"Open Relationships tab",desc:"Click the Relationships tab. The grid shows all existing Predecessor → Successor links with their types and lags.",time:"0:00"},
+    {title:"Click 'Add Relationship'",desc:"Press the '+ Relationship' button. A dialog appears with Predecessor, Successor, Type and Lag fields.",time:"0:30"},
+    {title:"Select Predecessor and Successor",desc:"Type or select the Activity IDs. Choose the relationship type (FS/SS/FF/SF). Enter lag in working days (0 for no lag).",time:"1:00"},
+    {title:"Add all logic links",desc:"Work through your activity list systematically — every activity except the project start milestone needs at least one predecessor.",time:"2:00"},
+    {title:"Enable Logic Lines in Gantt",desc:"Switch to the Gantt tab and toggle 'Logic lines' ON. Verify the arrows visually represent the correct work sequence.",time:"3:30"},
+    {title:"Check Reports for errors",desc:"Open the Reports tab → Schedule Log section. Green = Logic OK. Red = circular logic or missing links to fix.",time:"4:30"},
+  ],
+  quiz:{q:"Activity A is 'Main Cable Tray Installation' (60 days). Activity B is 'Conduit & Trunking' which can start 20 working days after the cable tray work begins. Which relationship type + lag is correct?",opts:["FS with lag 20","SS with lag 20","FF with lag 20","FS with lag −20"],ans:1,feedback:"Correct! SS+20 (Start-to-Start with 20-day lag) means the conduit work starts 20 working days after the cable tray installation begins — capturing the physical overlap correctly without needing lead (negative lag)."}
+},
+{
+  id:5, title:"Gantt Chart & Critical Path",
+  badge:"📊 Gantt", badgeColor:"#100814", badgeBorder:"#4a1e8f", badgeText:"#a371f7",
+  duration:"5:00", category:"Analysis & Reporting",
+  desc:"Navigate the Gantt chart, identify the critical path (red bars), view float, toggle baseline comparison, and use zoom levels for different reporting needs.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 6</div>
+      <div class="slide-icon">📊</div>
+      <div class="slide-h">Gantt Chart<br><span style="color:var(--violet)">Visual Timeline & Critical Path</span></div>
+      <div class="slide-sub">The Gantt is your primary communication tool. Master it to identify delays, critical activities and baseline variance in seconds.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:12px 18px">
+      <div class="slide-tag">GANTT ELEMENTS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,17px);margin-bottom:10px">Reading the Gantt Chart</div>
+      <div class="gantt-demo">
+        <div class="gd-header">
+          <div class="gd-label">Activity</div>
+          <div class="gd-months">
+            ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m=>`<div class="gd-month">${m}</div>`).join('')}
+          </div>
+        </div>
+        ${[
+          ["A1010 SLD Design",0/12,1.7/12,false,false,"Done"],
+          ["A2010 MV Manufacturing",1.7/12,10/12,true,true,"Critical"],
+          ["A3000 Cable Tray",1.7/12,5.5/12,false,false,"Done"],
+          ["A4020 MV Installation",5.5/12,7.7/12,true,false,"Partial"],
+          ["A5000 HV Cable Pull",5.7/12,8.5/12,true,false,"In Prog"],
+          ["A6050 SEC Test",9.5/12,11.5/12,true,false,"Future"],
+        ].map(([name,s,e,crit,done,status])=>{
+          const col = done ? '#3fb950' : crit ? '#f85149' : '#4a9eff';
+          const pct = done ? 100 : crit ? 45 : status==='Future' ? 0 : 38;
+          return `<div class="gd-row">
+            <div class="gd-name" title="${name}">${name}</div>
+            <div class="gd-bar-area">
+              <div class="gd-bar" style="left:${s*100}%;width:${(e-s)*100}%;background:${col};opacity:0.85"></div>
+              ${pct>0&&pct<100?`<div class="gd-bar" style="left:${s*100}%;width:${(e-s)*pct/100*100}%;background:${col};opacity:1;height:8px;top:5px"></div>`:''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:14px;font-size:9.5px;color:var(--muted);margin-top:6px">
+        <span><i style="display:inline-block;width:12px;height:8px;background:#4a9eff;border-radius:2px"></i> Remaining</span>
+        <span><i style="display:inline-block;width:12px;height:8px;background:#f85149;border-radius:2px"></i> Critical</span>
+        <span><i style="display:inline-block;width:12px;height:8px;background:#3fb950;border-radius:2px"></i> Complete</span>
+        <span><i style="display:inline-block;width:12px;height:8px;background:#5d6d86;border-radius:2px"></i> Baseline</span>
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">GANTT CONTROLS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Toolbar Options</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${[
+          ["Zoom","Day / Week / Month / Quarter","Adjust timeline density. Month is best for overview; Day for near-term detail work.","var(--blue)"],
+          ["Logic Lines","Toggle ON/OFF","Shows dependency arrows between activities. Red = critical path links.","var(--red)"],
+          ["Baseline","Toggle ON/OFF","Shows grey baseline bars below current bars — immediate visual of slip/gain.","var(--muted)"],
+          ["Float","Toggle ON/OFF","Extends bars to show total float as a thin line — identifies scheduling slack.","var(--cyan)"],
+          ["Critical Only","Toggle ON/OFF","Hides non-critical activities. Focus on the critical path for recovery planning.","var(--amber)"],
+        ].map(([name,options,desc,col])=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:7px 10px;background:#0e1c30;border:1px solid var(--border);border-radius:4px">
+          <span style="color:${col};font-weight:700;font-size:11px;flex:none;width:80px">${name}</span>
+          <div><div style="font-size:10.5px;color:var(--text);font-family:monospace;margin-bottom:2px">${options}</div><div style="font-size:10.5px;color:var(--muted)">${desc}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"🔴",title:"Critical Path = Red",text:"Red bars are critical activities — zero total float. Any delay here delays project completion. Focus your daily site management on keeping red bars on schedule."},
+    {icon:"📏",title:"Total Float = Schedule Buffer",text:"Total Float shows how many days an activity can slip before hitting the project finish. High float = low risk. Zero float = critical. Negative float = already late."},
+    {icon:"📐",title:"Baseline Comparison",text:"Toggle Baseline to show grey bars (BL01 Contract Baseline). If the current blue bar is to the right of the grey bar, that activity is delayed vs contract."},
+    {icon:"🔍",title:"Zoom for Reporting",text:"Use Quarter zoom for executive summaries, Month for weekly progress meetings, and Week/Day for site team planning. Export each as PDF using Print."},
+  ],
+  steps:[
+    {title:"Switch to Gantt tab",desc:"Click the Gantt tab. The split view shows the activity list on the left and timeline on the right.",time:"0:00"},
+    {title:"Toggle Logic Lines ON",desc:"Click 'Logic lines' in the toolbar. Dependency arrows appear — verify they match your intended work sequence.",time:"0:45"},
+    {title:"Toggle Baseline ON",desc:"Click 'Baseline' to overlay the BL01 contract baseline as grey bars. Compare with current blue bars.",time:"1:30"},
+    {title:"Filter to Critical Only",desc:"Click 'Critical only' to show only red (critical path) activities. This is your recovery planning view.",time:"2:30"},
+    {title:"Change Zoom level",desc:"Use the Zoom dropdown to switch between Day/Week/Month/Quarter views for different reporting audiences.",time:"3:15"},
+    {title:"Scroll to see all activities",desc:"Scroll vertically to see all activities. Scroll horizontally to move through time. Both panels scroll in sync.",time:"4:00"},
+  ],
+  quiz:{q:"An activity has a Total Float of +15 days. What does this mean?",opts:["The activity is 15 days behind schedule","The activity can be delayed up to 15 working days without delaying the project finish","The activity has a 15-day lag to its successor","The activity has been completed 15 days early"],ans:1,feedback:"Correct! Total Float = Late Finish − Early Finish. A float of +15 means the activity can slip up to 15 working days before it impacts the project completion date. Activities with 0 float are critical."}
+},
+{
+  id:6, title:"Updating Progress",
+  badge:"📈 Progress", badgeColor:"#0a1a0d", badgeBorder:"#1a5a22", badgeText:"#3fb950",
+  duration:"5:30", category:"Project Control",
+  desc:"Enter actual start/finish dates, update % complete and remaining duration. Learn how to run the progress update cycle — the monthly/weekly schedule control process.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 7</div>
+      <div class="slide-icon">📈</div>
+      <div class="slide-h">Updating Progress<br><span style="color:var(--green)">Monthly Update Cycle</span></div>
+      <div class="slide-sub">Progress updates are how the schedule reflects reality. The discipline of monthly statusing is what separates a live schedule from a static plan.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">PROGRESS FIELDS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">What to Enter Per Activity</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        ${[
+          ["Actual Start (AS)","2026-03-09","Date the activity physically began on site. Enter even if activity is still in progress.","var(--green)"],
+          ["Actual Finish (AF)","2026-06-09","Date the activity completed. Leave blank if still in progress. Entering AF sets PCT to 100%.","var(--green)"],
+          ["% Complete (PCT)","93%","Duration % — how much of the planned duration has been consumed. Not physical %.","var(--blue)"],
+          ["Remaining Duration (RD)","8 days","How many working days remain. More reliable than PCT — base it on actual site estimate.","var(--cyan)"],
+          ["Actual Cost (AC)","SAR 2.85M","Actual money spent to date — feeds EVM cost performance calculations.","var(--amber)"],
+        ].map(([field,ex,desc,col])=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:7px 11px;background:#0e1c30;border:1px solid var(--border);border-left:3px solid ${col};border-radius:4px">
+          <div style="flex:none;width:140px"><div style="font-size:11px;font-weight:700;color:${col}">${field}</div><div style="font-size:10px;font-family:monospace;color:var(--text)">${ex}</div></div>
+          <div style="font-size:10.5px;color:var(--muted)">${desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">UPDATE CYCLE</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Monthly Statusing Process</div>
+      <div class="slide-diagram" style="gap:4px">
+        ${[
+          ["1","Advance Data Date","Set to today's reporting cut-off","var(--blue)"],
+          ["2","Enter Actual Starts","Date each in-progress activity began","var(--green)"],
+          ["3","Update % and RD","Enter current completion % and remaining days","var(--cyan)"],
+          ["4","Enter Actual Costs","AC for EVM CPI calculation","var(--amber)"],
+          ["5","Press F9 — Reschedule","CPM recalculates all future dates","var(--violet)"],
+          ["6","Check KPI Bar","SPI &lt;1 = behind schedule, CPI &lt;1 = over budget","var(--red)"],
+          ["7","Save Baseline if needed","Capture current plan as recovery baseline","var(--muted)"],
+        ].map(([n,step,desc,col])=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;background:#0e1c30;border:1px solid var(--border);border-radius:4px;width:100%">
+          <div style="width:20px;height:20px;border-radius:50%;background:${col};color:#000;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">${n}</div>
+          <div style="flex:none;width:180px;font-size:11px;font-weight:600;color:var(--text)">${step}</div>
+          <div style="font-size:10px;color:var(--muted)">${desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"📅",title:"Always Advance Data Date First",text:"Before entering any progress, move the Data Date forward to today's cut-off. If you forget, all new actual dates will be treated as future-scheduled work."},
+    {icon:"📏",title:"Use Remaining Duration, Not Just %",text:"% Complete is derived from duration consumed. Always check Remaining Duration (RD) with the site team — ask 'how many days left?' for the most accurate forecast."},
+    {icon:"💰",title:"Actual Cost Feeds CPI",text:"Enter Actual Cost (AC) for each activity to get the Cost Performance Index (CPI). CPI = EV/AC. CPI < 1.0 means you're spending more than the value being earned."},
+    {icon:"📸",title:"Save Recovery Baselines",text:"When the project is delayed and a recovery plan is agreed, save a new baseline (BL02 — Recovery Plan). Compare against both BL01 Contract and BL02 Recovery in reports."},
+  ],
+  steps:[
+    {title:"Advance the Data Date",desc:"Go to Settings tab. Update the Data Date to today's reporting cut-off date. This is the most critical first step.",time:"0:00"},
+    {title:"Open Activities tab",desc:"Switch to Activities. Find each in-progress activity. Click the row to open the Detail panel at the bottom.",time:"0:30"},
+    {title:"Enter Actual Start (AS)",desc:"In the Detail panel → General tab, enter the date the activity actually started on site.",time:"1:00"},
+    {title:"Enter % Complete and Remaining Duration",desc:"Update the % Complete field. Then verify the Remaining Duration — ask your site team how many days are actually left.",time:"1:45"},
+    {title:"Mark completed activities",desc:"For finished activities, enter both AS and AF (Actual Finish). The activity turns green and PCT becomes 100%.",time:"2:30"},
+    {title:"Enter Actual Costs (AC)",desc:"In the Detail panel → EVM sub-tab, enter the Actual Cost to date for EVM reporting.",time:"3:15"},
+    {title:"Press F9 and review",desc:"Press Schedule (F9). Check the KPI bar — SPI and CPI update. Red bars = new critical activities. Check for negative float.",time:"4:00"},
+  ],
+  quiz:{q:"After updating progress and pressing F9, you notice two activities now show negative float (e.g. −5d and −8d). What does this mean?",opts:["These activities are ahead of schedule by 5 and 8 days","These activities must be completed in negative time — a data entry error","The project is already delayed — these activities must finish before the Must Finish date to avoid project overrun","These activities have been marked as complete"],ans:2,feedback:"Correct! Negative float means the late finish is earlier than the early finish — the activity is already overrunning against the Must Finish date. Recovery action is required: compress the remaining schedule, add resources, or request a contract extension."}
+},
+{
+  id:7, title:"Earned Value Management (EVM)",
+  badge:"💰 EVM", badgeColor:"#0e1a0d", badgeBorder:"#1a5a22", badgeText:"#3fb950",
+  duration:"5:00", category:"Project Control",
+  desc:"Understand PV, EV, AC, SPI, CPI, EAC and VAC. Use the EVM tab and S-Curve to present cost and schedule performance to clients and management.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 8</div>
+      <div class="slide-icon">💰</div>
+      <div class="slide-h">Earned Value Management<br><span style="color:var(--green)">Cost & Schedule Performance</span></div>
+      <div class="slide-sub">EVM gives you three data points that tell the whole project performance story: Are we on time? Are we on budget? When will we finish and at what cost?</div>
+    </div>`},
+    {dur:9, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">EVM METRICS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">The 7 Core EVM Values</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        ${[
+          ["PV","Planned Value","Budget planned to be spent by data date. EngineX calculates from activity budgets × time-phased curve.","SAR 13.4M","var(--muted)"],
+          ["EV","Earned Value","Value of work actually completed. EV = Budget × % Complete.","SAR 12.4M","var(--cyan)"],
+          ["AC","Actual Cost","Money actually spent to date. You enter this per activity.","SAR 12.8M","var(--amber)"],
+          ["SV","Schedule Variance","SV = EV − PV. Negative = behind schedule.","−SAR 1.0M","var(--red)"],
+          ["CV","Cost Variance","CV = EV − AC. Negative = over budget.","−SAR 0.4M","var(--red)"],
+          ["SPI","Schedule Perf Index","SPI = EV/PV. <1 = behind, >1 = ahead.","0.93","var(--amber)"],
+          ["CPI","Cost Perf Index","CPI = EV/AC. <1 = over budget, >1 = under budget.","0.97","var(--amber)"],
+        ].map(([code,name,desc,val,col])=>`<div style="display:flex;gap:8px;align-items:center;padding:5px 9px;background:#0e1c30;border:1px solid var(--border);border-radius:3px">
+          <span style="font-weight:700;font-size:11px;color:${col};width:36px;flex:none">${code}</span>
+          <span style="font-size:11px;font-weight:600;width:120px;flex:none">${name}</span>
+          <span style="font-size:10px;color:var(--muted);flex:1">${desc}</span>
+          <span style="font-size:11.5px;font-weight:700;color:${col};flex:none">${val}</span>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">EAC &amp; VAC</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">Forecast at Completion</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div style="background:#0e1c30;border:1px solid var(--green);border-radius:5px;padding:12px;text-align:center">
+          <div style="font-size:9.5px;color:var(--dim);letter-spacing:.4px">EAC — Estimate at Completion</div>
+          <div style="font-size:24px;font-weight:700;color:var(--amber);margin:4px 0">SAR 16.3M</div>
+          <div style="font-size:10px;color:var(--muted)">EAC = BAC / CPI = 15.84M / 0.97</div>
+          <div style="font-size:9.5px;color:var(--muted);margin-top:4px">If current cost performance continues, this is the projected final cost</div>
+        </div>
+        <div style="background:#0e1c30;border:1px solid var(--red);border-radius:5px;padding:12px;text-align:center">
+          <div style="font-size:9.5px;color:var(--dim);letter-spacing:.4px">VAC — Variance at Completion</div>
+          <div style="font-size:24px;font-weight:700;color:var(--red);margin:4px 0">−SAR 0.5M</div>
+          <div style="font-size:10px;color:var(--muted)">VAC = BAC − EAC</div>
+          <div style="font-size:9.5px;color:var(--muted);margin-top:4px">Negative VAC = forecasted cost overrun at completion</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:8px 10px">
+        💡 For SEC/ARAMCO projects, submit EVM monthly with SPI, CPI and EAC trend charts. EngineX generates these automatically in the EVM and S-Curve tabs.
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"📐",title:"EV = Budget × PCT",text:"Earned Value = Budget × % Complete. This is why budget assignment and accurate % complete updates are essential — without them, EV is zero and all performance metrics are meaningless."},
+    {icon:"📊",title:"S-Curve = Visual EVM",text:"The S-Curve tab shows PV, EV and AC plotted over time. The gap between PV and EV shows schedule variance; the gap between EV and AC shows cost variance."},
+    {icon:"⚠️",title:"CPI < 0.85 = Crisis",text:"CPI below 0.85 means spending 15%+ more than value earned. This typically cannot be recovered without scope reduction. Escalate immediately if CPI drops below this threshold."},
+    {icon:"📋",title:"Use for SEC Reporting",text:"SEC, ARAMCO and NEOM project contracts typically require monthly EVM reporting with SPI, CPI, SV, CV and EAC. The Reports tab prints these in the standard format."},
+  ],
+  steps:[
+    {title:"Open EVM tab",desc:"Click the EVM tab. The dashboard shows all EVM metrics for the current data date.",time:"0:00"},
+    {title:"Verify budgets are entered",desc:"Check that all activities have Budget values. Without budgets, PV and EV are zero. Use the Activities tab to add SAR amounts.",time:"0:30"},
+    {title:"Check SPI and CPI",desc:"SPI < 1.0 = behind schedule. CPI < 1.0 = over budget. Both < 0.9 = project in trouble — recovery plan needed.",time:"1:30"},
+    {title:"Review EAC",desc:"EAC = BAC / CPI gives the forecast final cost if current performance continues. Compare to contract value.",time:"2:30"},
+    {title:"Open S-Curve tab",desc:"The S-Curve shows PV vs EV vs AC over time. The gap between curves is your schedule and cost variance trend.",time:"3:15"},
+    {title:"Export for reporting",desc:"Use the Print button in Reports tab to generate a PDF EVM report for SEC/client submission.",time:"4:00"},
+  ],
+  quiz:{q:"Your project has: PV = SAR 10M, EV = SAR 8M, AC = SAR 9M. What are the SPI and CPI?",opts:["SPI = 0.80, CPI = 0.89","SPI = 0.89, CPI = 0.80","SPI = 1.25, CPI = 1.13","SPI = 0.80, CPI = 1.13"],ans:0,feedback:"Correct! SPI = EV/PV = 8/10 = 0.80 (behind schedule), CPI = EV/AC = 8/9 = 0.89 (over budget). Both are below 1.0, indicating a project in difficulty that needs recovery action."}
+},
+{
+  id:8, title:"Resources & Risk Register",
+  badge:"👷 Resources", badgeColor:"#0e1230", badgeBorder:"#1a2a8f", badgeText:"#6fa3ff",
+  duration:"4:30", category:"Project Control",
+  desc:"Assign labor and equipment resources to activities, check for overloads, and manage the Risk Register with probability/impact ratings and mitigation actions.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 9</div>
+      <div class="slide-icon">👷</div>
+      <div class="slide-h">Resources & Risk Register<br><span style="color:var(--blue)">People, Equipment & Risks</span></div>
+      <div class="slide-sub">Assign resources to activities to detect overloads. Use the Risk Register to track threats with probability, impact, and mitigation plans.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">RESOURCES — SUBSTATION PROJECT</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">6 Pre-Loaded Resources</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        ${[
+          ["R1","MV Technician","Labor","SAR 95/hr","Max 6","C1","A4010, A4020, A5010, A6010, A6020"],
+          ["R2","LV Electrician","Labor","SAR 70/hr","Max 12","C1","A3000, A3010, A4030, A5000, A5020"],
+          ["R3","Cable Jointer","Labor","SAR 120/hr","Max 4","C1","A5000, A5010, A5030"],
+          ["R4","Commissioning Engineer","Labor","SAR 180/hr","Max 3","C1","A5040, A6000–A6050"],
+          ["R5","Crane 50T","Equipment","SAR 1,400/day","Max 1","C1","A4010 — Transformer Lifting"],
+          ["R6","Site Supervisor","Labor","SAR 110/hr","Max 3","C1","Most activities — oversight role"],
+        ].map(([id,name,type,rate,max,cal,acts])=>`<div style="display:flex;gap:8px;align-items:center;padding:5px 9px;background:#0e1c30;border:1px solid var(--border);border-radius:3px;font-size:10px">
+          <span style="color:var(--blue);font-weight:700;flex:none;width:20px">${id}</span>
+          <span style="font-weight:600;flex:none;width:130px;color:var(--text)">${name}</span>
+          <span style="color:var(--muted);flex:none;width:60px">${type}</span>
+          <span style="color:var(--amber);flex:none;width:70px">${rate}</span>
+          <span style="color:var(--red);flex:none;width:42px">${max}</span>
+          <span style="color:var(--dim);font-size:9.5px">${acts}</span>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">RISK REGISTER</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">4 Open Risks — SEC Substation</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${[
+          ["R-01","MV Switchgear held at customs","A2010","High","High",15,"Expedite clearance; escalate to PM"],
+          ["R-02","HV pulling crew understaffed","A5000","High","Medium",8,"Subcontract extra crew immediately"],
+          ["R-03","SCADA IEC 61850 scope change","A6040","Low","Medium",5,"Raise change order to client"],
+          ["R-04","SEC witness slot availability","A6050","Medium","High",10,"Book witness slot by 01-Nov"],
+        ].map(([id,title,act,prob,impact,days,action])=>{
+          const pc = prob==="High"?"var(--red)":prob==="Medium"?"var(--amber)":"var(--green)";
+          const ic = impact==="High"?"var(--red)":impact==="Medium"?"var(--amber)":"var(--green)";
+          return `<div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 11px">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+              <span style="font-size:9.5px;color:var(--dim);flex:none">${id}</span>
+              <span style="font-size:11px;font-weight:600;flex:1">${title}</span>
+              <span style="font-size:9.5px;color:var(--muted);flex:none">Activity: ${act}</span>
+            </div>
+            <div style="display:flex;gap:10px;font-size:9.5px">
+              <span>Prob: <b style="color:${pc}">${prob}</b></span>
+              <span>Impact: <b style="color:${ic}">${impact}</b></span>
+              <span style="color:var(--red)">+${days}d risk</span>
+              <span style="color:var(--muted);flex:1">${action}</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"👷",title:"Resources Drive Cost Rate",text:"Each resource has an hourly/daily rate. Assigning resources to activities auto-calculates cost. This feeds into budget vs actual cost tracking."},
+    {icon:"📊",title:"Histogram Shows Overloads",text:"The Resources tab histogram shows daily resource demand. Bars exceeding the Max line (red) indicate overloading — you need to either add resources or delay work."},
+    {icon:"⚠️",title:"Risk Register Drives Actions",text:"For each open risk, record the linked activity, probability, impact, schedule risk days and mitigation action. High/High risks need immediate escalation."},
+    {icon:"📋",title:"Risk Report for SEC",text:"The Risk Register exports to PDF in Reports. SEC and NEOM contracts require a Risk Register update with each monthly progress report submission."},
+  ],
+  steps:[
+    {title:"Open Resources tab",desc:"Click the Resources tab. The pre-loaded resources (MV Technician, LV Electrician, etc.) are already defined.",time:"0:00"},
+    {title:"Assign resources to activities",desc:"Go to Activities tab → click an activity → Detail panel → Resources sub-tab. Add the resource and units (number of people/equipment).",time:"0:30"},
+    {title:"Check resource histogram",desc:"Back in the Resources tab, select a resource from the dropdown. The histogram shows daily demand. Red bars = overloaded days.",time:"1:30"},
+    {title:"Level resources if needed",desc:"If overloaded, either increase Max capacity or delay/split the conflicting activities to reduce peak demand.",time:"2:30"},
+    {title:"Open Risks tab",desc:"Click the Risks tab. Review all open risks, their probability/impact matrix and assigned mitigation actions.",time:"3:00"},
+    {title:"Add new risks",desc:"Click '+ Risk' to log a new threat. Link it to the affected activity, set P×I rating, add the owner and action plan.",time:"3:30"},
+  ],
+  quiz:{q:"The Commissioning Engineer (R4) resource shows red bars in the histogram during October. What does this mean and what should you do?",opts:["R4 is idle during October — reduce budget","R4 is overloaded — too many activities need commissioning engineers simultaneously. Add capacity or delay some commissioning activities.","R4 has completed their work in October","R4's calendar has the wrong working days"],ans:1,feedback:"Correct! Red bars in the resource histogram mean demand exceeds the Max capacity. For the Commissioning Engineer, either increase Max from 3 to 4 (add a person), or reschedule some commissioning activities to different dates to flatten the peak."}
+},
+{
+  id:9, title:"Baselines, Export & Reporting",
+  badge:"📤 Reports", badgeColor:"#12060e", badgeBorder:"#6a1a5f", badgeText:"#d171c7",
+  duration:"4:00", category:"Reporting & Export",
+  desc:"Save contract baselines, generate printed project reports, export CSV and JSON, and use the S-Curve for SEC/client submissions. The complete reporting workflow.",
+  slides:[
+    {dur:5, render:()=>`<div class="slide-content slide-title-card">
+      <div class="slide-tag">LESSON 10</div>
+      <div class="slide-icon">📤</div>
+      <div class="slide-h">Baselines, Export<br><span style="color:var(--violet)">& Project Reporting</span></div>
+      <div class="slide-sub">Save your plan as a baseline before starting work. Then use Reports, CSV export, JSON backup and Print to deliver professional project documentation.</div>
+    </div>`},
+    {dur:8, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">BASELINES</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">When & How to Save Baselines</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${[
+          ["BL01 — Contract Baseline","Saved at contract award, before any work starts. This is the benchmark for all SPI/schedule variance calculations. NEVER overwrite BL01.","var(--blue)","1"],
+          ["BL02 — Recovery Plan","Saved after an agreed recovery schedule is approved. Used to track recovery vs original.","var(--amber)","2"],
+          ["BL03 — Revised Baseline","Saved after an approved contract change order/extension. Replaces BL01 as the performance baseline.","var(--violet)","3"],
+        ].map(([name,desc,col,num])=>`<div style="background:#0e1c30;border:1px solid ${col};border-radius:5px;padding:10px 14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div style="width:20px;height:20px;border-radius:50%;background:${col};color:#000;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">${num}</div>
+            <div style="font-size:12px;font-weight:700;color:${col}">${name}</div>
+          </div>
+          <div style="font-size:10.5px;color:var(--muted)">${desc}</div>
+        </div>`).join('')}
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:8px;padding:7px 10px;background:#0e1c30;border:1px solid var(--border);border-radius:4px">
+        📍 To save: Toolbar → <b style="color:var(--text)">"Save baseline"</b> button. Name it clearly (e.g. BL01 — Contract Baseline — 03-Jan-2026).
+      </div>
+    </div>`},
+    {dur:7, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">EXPORT OPTIONS</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,18px);margin-bottom:10px">4 Ways to Share Your Schedule</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${[
+          ["🖨️","Print / PDF","Reports tab → Print button. Prints the schedule report, KPIs and EVM summary. Use for SEC monthly progress submissions.","Reports Tab"],
+          ["📊","Export CSV","Activities or Reports tab → Export CSV. Opens in Excel/LibreOffice. Filter, pivot and create charts for presentations.","Activities / Reports"],
+          ["💾","Export JSON","Settings tab → Export .json. Full schedule backup including all activities, relationships, baselines, resources. Share between computers.","Settings Tab"],
+          ["📥","Import JSON","Settings tab → Import .json. Restore a saved schedule or open a colleague's schedule file on your machine.","Settings Tab"],
+        ].map(([icon,name,desc,where])=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 12px;background:#0e1c30;border:1px solid var(--border);border-radius:4px">
+          <span style="font-size:20px;flex:none">${icon}</span>
+          <div style="flex:1"><div style="font-size:11.5px;font-weight:700;margin-bottom:2px">${name}</div><div style="font-size:10.5px;color:var(--muted)">${desc}</div></div>
+          <span style="font-size:9.5px;color:var(--dim);flex:none;text-align:right">${where}</span>
+        </div>`).join('')}
+      </div>
+    </div>`},
+    {dur:6, render:()=>`<div class="slide-content" style="padding:16px 22px">
+      <div class="slide-tag">COURSE COMPLETE</div>
+      <div class="slide-h" style="font-size:clamp(13px,2vw,20px);margin-bottom:8px;text-align:center">🎉 You're Ready to Schedule!</div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="slide-sub">You've completed all 10 lessons. Here's your end-to-end workflow:</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;text-align:center">
+        ${[
+          ["⚙️","Settings","Configure project"],
+          ["🗂️","WBS","Build hierarchy"],
+          ["📋","Activities","Add tasks"],
+          ["🔗","Logic","Link activities"],
+          ["⟳","Schedule","Run CPM (F9)"],
+          ["📊","Gantt","Review chart"],
+          ["📈","Progress","Update status"],
+          ["💰","EVM","Check performance"],
+          ["⚠️","Risks","Manage threats"],
+          ["📤","Report","Export & submit"],
+        ].map(([ic,nm,desc])=>`<div style="background:#0e1c30;border:1px solid var(--border);border-radius:4px;padding:7px 4px">
+          <div style="font-size:18px">${ic}</div>
+          <div style="font-size:9.5px;font-weight:700;color:var(--text)">${nm}</div>
+          <div style="font-size:8.5px;color:var(--dim)">${desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>`},
+  ],
+  keyPoints:[
+    {icon:"📸",title:"Save BL01 Before Starting",text:"Always save the Contract Baseline (BL01) immediately after finalising the approved schedule — before any actual progress. This is your legal benchmark."},
+    {icon:"💾",title:"Export JSON Weekly",text:"Export your schedule as .json at least weekly as a backup. Store it on SharePoint or email it to the team. Browser localStorage can be cleared accidentally."},
+    {icon:"📊",title:"CSV for Excel Analysis",text:"Export CSV to Excel for advanced filtering, pivot tables and custom charts. Useful for weekly site reports when you need to format data differently."},
+    {icon:"🖨️",title:"Print = Client Report",text:"The Print function generates a formatted PDF of your schedule and EVM metrics. This is your monthly progress report for SEC, ARAMCO or consultant review."},
+  ],
+  steps:[
+    {title:"Finalise and run schedule",desc:"Ensure all activities, relationships, budgets and calendars are correct. Press F9 (Schedule). Verify no logic errors in the Reports log.",time:"0:00"},
+    {title:"Save Contract Baseline (BL01)",desc:"Click 'Save baseline' in the toolbar. Name it 'BL01 — Contract Baseline — [Date]'. This locks the original approved plan.",time:"0:30"},
+    {title:"Export JSON backup",desc:"Settings tab → Export .json. Save the file to your project folder on SharePoint or USB. Name it with the project code and date.",time:"1:00"},
+    {title:"Review Reports tab",desc:"Click the Reports tab. Review the project summary, critical path, EVM metrics and schedule log. Check for any red warnings.",time:"1:30"},
+    {title:"Print project report",desc:"Click 'Print / PDF' in the Reports toolbar. The browser print dialog opens — save as PDF for client submission.",time:"2:30"},
+    {title:"Export CSV for Excel",desc:"Click 'Export CSV' to download the activity data. Open in Excel to create custom reports, pivot tables or Looker/Power BI connections.",time:"3:00"},
+  ],
+  quiz:{q:"You've just finished building the approved project schedule. What is the FIRST action you should take before any site work begins?",opts:["Start entering actual progress for completed activities","Export the schedule as CSV for the client","Save the Contract Baseline (BL01) immediately","Print the Gantt chart for the site office"],ans:2,feedback:"Correct! Saving BL01 (Contract Baseline) is the first priority after finalising the approved schedule. Once site work starts and progress is entered, the schedule will diverge from the original plan. Without a saved baseline, you have no benchmark to measure performance against."}
+},
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let state = {
+  lessonIdx: 0,
+  slideIdx: 0,
+  playing: false,
+  elapsed: 0,
+  speed: 1,
+  contentTab: 'keypoints',
+  quizAnswered: null,
+  stepsCompleted: {},
+  lessonsCompleted: {},
+  stepIdx: 0,
+};
+let timer = null;
+
+/* ============================================================
+   COMPUTED
+   ============================================================ */
+function currentLesson(){ return LESSONS[state.lessonIdx]; }
+function currentSlide(){ return currentLesson().slides[state.slideIdx]; }
+function totalSlides(){ return currentLesson().slides.length; }
+function lessonTotalSecs(){
+  return currentLesson().slides.reduce((s,sl)=>s+sl.dur,0);
+}
+function slideStartSec(idx){
+  const L=currentLesson();
+  let s=0; for(let i=0;i<idx;i++) s+=L.slides[i].dur;
+  return s;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderAll(){
+  renderSidebar();
+  renderSlide();
+  renderContent();
+  renderPlayer();
+}
+
+function renderSidebar(){
+  const done = Object.keys(state.lessonsCompleted).length;
+  const pct = Math.round(done/LESSONS.length*100);
+  document.getElementById('overallBar').style.width = pct+'%';
+  document.getElementById('overallLabel').textContent = pct+'% complete · '+done+' / '+LESSONS.length+' lessons';
+
+  let html='';
+  let prevCat='';
+  LESSONS.forEach((L,i)=>{
+    if(L.category!==prevCat){
+      html+=`<div class="sb-section">${L.category}</div>`;
+      prevCat=L.category;
+    }
+    const active = i===state.lessonIdx;
+    const done2 = state.lessonsCompleted[i];
+    html+=`<div class="sb-item${active?' active':''}${done2?' done':''}" onclick="goLesson(${i})">
+      <div class="sb-num">${done2?'✓':(i+1)}</div>
+      <div class="sb-title">${L.title}</div>
+      <div class="sb-dur">${L.duration}</div>
+    </div>`;
+  });
+  document.getElementById('lessonList').innerHTML=html;
+}
+
+function renderSlide(){
+  const slide = currentSlide();
+  document.getElementById('slideDisplay').innerHTML = slide.render();
+}
+
+function renderPlayer(){
+  const total = lessonTotalSecs();
+  const elapsed = Math.min(state.elapsed, total);
+  const pct = total>0 ? elapsed/total*100 : 0;
+  document.getElementById('playerBarFill').style.width = pct+'%';
+  document.getElementById('timeDisplay').textContent = fmtTime(elapsed)+' / '+fmtTime(total);
+  document.getElementById('playBtn').textContent = state.playing ? '⏸' : '▶';
+}
+
+function renderContent(){
+  const L = currentLesson();
+  const html=`
+    <div class="lesson-header">
+      <div class="lesson-badge" style="background:${L.badgeColor};border:1px solid ${L.badgeBorder};color:${L.badgeText}">${L.badge} — Lesson ${L.id+1} of ${LESSONS.length}</div>
+      <div class="lesson-title">${L.title}</div>
+      <div class="lesson-desc">${L.desc}</div>
+    </div>
+    <div class="tabs-row">
+      <button class="tab-btn${state.contentTab==='keypoints'?' active':''}" onclick="switchTab('keypoints')">📌 Key Points</button>
+      <button class="tab-btn${state.contentTab==='steps'?' active':''}" onclick="switchTab('steps')">🚶 Step by Step</button>
+      <button class="tab-btn${state.contentTab==='quiz'?' active':''}" onclick="switchTab('quiz')">🧠 Quiz</button>
+    </div>
+    <div id="tabContent">${renderTabContent(L)}</div>
+  `;
+  document.getElementById('contentArea').innerHTML=html;
+}
+
+function renderTabContent(L){
+  if(state.contentTab==='keypoints'){
+    return `<ul class="kp-list">${L.keyPoints.map(kp=>`<li class="kp-item">
+      <div class="kp-icon">${kp.icon}</div>
+      <div><b>${kp.title}</b>${kp.text}</div>
+    </li>`).join('')}</ul>`;
+  }
+  if(state.contentTab==='steps'){
+    return `<div class="step-list">${L.steps.map((s,i)=>{
+      const done = state.stepsCompleted[state.lessonIdx+'_'+i];
+      const active = i===state.stepIdx;
+      return `<div class="step-item${active?' active':''}${done?' done':''}" onclick="clickStep(${i})">
+        <div class="step-num">${done?'✓':(i+1)}</div>
+        <div class="step-body">
+          <div class="step-title">${s.title}</div>
+          <div class="step-desc">${s.desc}</div>
+          <div class="step-time">⏱ ${s.time}</div>
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="display:flex;gap:8px;margin-top:8px">
+      ${state.stepIdx>0?`<button class="btn" onclick="prevStep()">← Previous</button>`:''}
+      ${state.stepIdx<L.steps.length-1?`<button class="btn pri" onclick="nextStep()">Next →</button>`:`<button class="btn ok" onclick="markLessonDone()">✓ Complete Lesson</button>`}
+    </div>`;
+  }
+  if(state.contentTab==='quiz'){
+    const q = L.quiz;
+    const answered = state.quizAnswered;
+    return `<div>
+      <div class="quiz-q">Question: ${q.q}</div>
+      <div class="quiz-opts">${q.opts.map((opt,i)=>{
+        let cls='quiz-opt';
+        if(answered!==null){
+          if(i===q.ans) cls+=' correct';
+          else if(i===answered&&answered!==q.ans) cls+=' wrong';
+        }
+        return `<div class="${cls}" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${opt}</div>`;
+      }).join('')}</div>
+      ${answered!==null?`<div class="quiz-feedback ${answered===q.ans?'ok':'bad'}">
+        ${answered===q.ans?'✅':'❌'} ${q.feedback}
+      </div>`:''}
+      <div class="quiz-nav">
+        ${answered!==null&&answered!==q.ans?`<button class="btn" onclick="resetQuiz()">Try Again</button>`:''}
+        ${answered===q.ans?`<button class="btn ok" onclick="markLessonDone()">✓ Complete Lesson</button>`:''}
+        ${state.lessonIdx<LESSONS.length-1?`<button class="btn" onclick="nextLesson()">Next Lesson →</button>`:''}
+      </div>
+    </div>`;
+  }
+}
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+function togglePlay(){
+  state.playing=!state.playing;
+  if(state.playing) startTimer(); else stopTimer();
+  renderPlayer();
+}
+function startTimer(){
+  stopTimer();
+  timer=setInterval(()=>{
+    state.elapsed+=0.1*state.speed;
+    const total=lessonTotalSecs();
+    if(state.elapsed>=total){state.elapsed=total;stopTimer();state.playing=false;renderPlayer();return;}
+    // advance slide?
+    const L=currentLesson();
+    let acc=0;
+    for(let i=0;i<L.slides.length;i++){
+      acc+=L.slides[i].dur;
+      if(state.elapsed<acc){
+        if(i!==state.slideIdx){state.slideIdx=i;renderSlide();}
+        break;
+      }
+    }
+    renderPlayer();
+  },100);
+}
+function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+function setSpeed(v){ state.speed=parseFloat(v); }
+function seekBar(e){
+  const bar=document.getElementById('playerBar');
+  const pct=e.offsetX/bar.clientWidth;
+  state.elapsed=pct*lessonTotalSecs();
+  const L=currentLesson();
+  let acc=0;
+  for(let i=0;i<L.slides.length;i++){
+    acc+=L.slides[i].dur;
+    if(state.elapsed<acc){state.slideIdx=i;break;}
+  }
+  renderSlide();renderPlayer();
+}
+function nextSlide(){
+  if(state.slideIdx<totalSlides()-1){state.slideIdx++;state.elapsed=slideStartSec(state.slideIdx);}
+  else nextLesson();
+  renderSlide();renderPlayer();
+}
+function prevSlide(){
+  if(state.slideIdx>0){state.slideIdx--;state.elapsed=slideStartSec(state.slideIdx);}
+  renderSlide();renderPlayer();
+}
+function goLesson(i){
+  stopTimer();state.playing=false;
+  state.lessonIdx=i;state.slideIdx=0;state.elapsed=0;
+  state.contentTab='keypoints';state.quizAnswered=null;state.stepIdx=0;
+  renderAll();
+}
+function nextLesson(){
+  if(state.lessonIdx<LESSONS.length-1) goLesson(state.lessonIdx+1);
+}
+function switchTab(t){state.contentTab=t;state.quizAnswered=null;renderContent();}
+function answerQuiz(i){if(state.quizAnswered!==null)return;state.quizAnswered=i;renderContent();}
+function resetQuiz(){state.quizAnswered=null;renderContent();}
+function clickStep(i){state.stepIdx=i;renderContent();}
+function nextStep(){
+  state.stepsCompleted[state.lessonIdx+'_'+state.stepIdx]=true;
+  state.stepIdx=Math.min(state.stepIdx+1,currentLesson().steps.length-1);
+  renderContent();
+}
+function prevStep(){
+  state.stepIdx=Math.max(0,state.stepIdx-1);
+  renderContent();
+}
+function markLessonDone(){
+  state.lessonsCompleted[state.lessonIdx]=true;
+  renderAll();
+  if(state.lessonIdx<LESSONS.length-1){
+    setTimeout(()=>nextLesson(),600);
+  }
+}
+function toggleFullLesson(){
+  const pw=document.querySelector('.player-wrap');
+  pw.style.display=pw.style.display==='none'?'':'none';
+}
+function fmtTime(s){
+  const m=Math.floor(s/60);
+  return m+':'+(Math.floor(s%60)+'').padStart(2,'0');
+}
+
+/* BOOT */
+renderAll();
+</script>
+
+
+</body></html>
