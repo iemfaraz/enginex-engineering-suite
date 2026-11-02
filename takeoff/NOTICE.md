@@ -1,0 +1,15 @@
+# ENGINEX drawing takeoff — technical scope and third-party notices
+
+DWG decoding: @mlightcad/libredwg-web 0.8.3 / GNU LibreDWG, GPL-3.0-or-later. The distributed parser, WebAssembly runtime and the separate worker adapter retain that license. The complete GPL text is in vendor/libredwg/COPYING. Runtime compression changes packaging only; the parser code is unmodified.
+
+Corresponding upstream source and build instructions: https://github.com/mlightcad/libredwg-web and https://www.gnu.org/software/libredwg/ . The exact versioned distribution is https://registry.npmjs.org/@mlightcad/libredwg-web/-/libredwg-web-0.8.3.tgz . To reproduce the packaged runtime, copy dist/libredwg-web.js and wasm/libredwg-web.js, and gzip wasm/libredwg-web.wasm with gzip level 9. The worker source is distributed with this tool.
+
+DXF parsing: dxf-parser 1.1.2, MIT. License: vendor/DXF-LICENSE.txt. Source: https://github.com/gdsestimating/dxf-parser .
+
+Optional AI: Transformers.js 3.8.1 and Xenova/all-MiniLM-L6-v2, Apache-2.0. Runtime/model download hosts: jsDelivr and Hugging Face. No drawing content is sent to those services. AI runs on the user's device and proposes categories based on layer and block names. Model source/license: https://huggingface.co/Xenova/all-MiniLM-L6-v2 . Runtime source/license: https://github.com/huggingface/transformers.js/tree/3.8.1 .
+
+This is a 2D plan takeoff workflow, not a complete automatic tender estimator. Quantities are measured from decoded model-space entities, not inferred by the AI. CAD entities may be duplicated, schematic, hidden or outside the intended scope. Confirm units, symbol legends, block nesting, specifications, cable runs, allowances and exclusions. Hidden entities, off/frozen layers, text, hatches, splines, ellipses, unsupported/proxy/3D entities, non-planar coordinates, unbound Xrefs, and symbol-stroke route lengths are excluded and require review. Nested block insertions can be selected separately; do not select both an assembly and its components unless intended. Missing geometry cannot be recovered from the filename or inferred safely. Rates start at zero. BOM consolidation includes measured selected items only; accessories and installation consumables must be added separately.
+
+Project backups include the saved takeoff mappings and limited preview. The original uploaded file is not retained. Re-upload the original drawing for a new analysis.
+
+Known verification: the bundled electrical sample contains 12 lighting blocks, 8 socket blocks, 4 smoke-detector blocks and 1 distribution-board block, plus 25 m of cable route, 12 m of conduit route and 48 m² of closed floor area at millimetre drawing units. These are demonstration quantities only.
