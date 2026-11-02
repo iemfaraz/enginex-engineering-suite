@@ -34,6 +34,8 @@ function sync(){
  const password=overlay.querySelector('#engx-password');if(password)password.required=true;
  }
  const n=nav(),main=document.querySelector('#root>.engx-pro-workspace>main');if(!n||!main)return;
+ if(!document.getElementById('ex-engineering-hub')){const b=document.createElement('button');b.type='button';b.id='ex-engineering-hub';b.textContent='⌘ Electrical Engineering Tools · 13';b.onclick=()=>location.assign('../engineering.html');n.append(b);}
+
  if(!document.getElementById('ex-overview-button')){
  const b=document.createElement('button');b.type='button';b.id='ex-overview-button';b.innerHTML='<span aria-hidden="true">▦</span><span>Overview</span>';b.onclick=()=>{active='overview';sync();};n.prepend(b);
  const search=document.createElement('input');search.type='search';search.className='ex-nav-search';search.placeholder='Find an engineering tool…';search.setAttribute('aria-label','Find an engineering tool');search.oninput=()=>{const q=search.value.trim().toLowerCase();n.querySelectorAll('button').forEach(b=>{b.hidden=!!q&&!b.textContent.toLowerCase().includes(q);b.style.setProperty('display',b.hidden?'none':'flex','important');});};n.insertBefore(search,b);
@@ -42,7 +44,7 @@ function sync(){
  if(!main.querySelector('.ex-overview')){
  const dashboard=document.createElement('section');dashboard.className='ex-overview';dashboard.setAttribute('aria-label','Engineering overview');
  dashboard.innerHTML='<div class="ex-hero"><div><div class="ex-kicker">ENGINEX / ENGINEERING WORKSPACE</div><h2>Good work starts here.</h2><p class="ex-intro" style="margin-bottom:0">Plan with clarity. Design with confidence. Deliver with control.</p></div><div class="ex-hero-badge">EX<small>ENGINEERING SUITE</small></div></div><h3>Your engineering tools</h3><div class="ex-grid"></div><div class="ex-summary"><span>Design & calculations</span><span>Project controls</span><span>Site & quality records</span><span>Saved on this browser</span></div>';
- const grid=dashboard.querySelector('.ex-grid');cards.forEach(([label,title,copy,icon])=>{const b=document.createElement('button');b.type='button';b.className='ex-module';b.innerHTML='<span class="ex-icon" aria-hidden="true">'+icon+'</span><strong>'+title+'</strong><p>'+copy+'</p><span class="ex-open">OPEN TOOL &nbsp; ↗</span>';b.onclick=()=>{const t=target(label);if(t)t.click();};grid.append(b);});main.prepend(dashboard);
+ const grid=dashboard.querySelector('.ex-grid');cards.forEach(([label,title,copy,icon])=>{const b=document.createElement('button');b.type='button';b.className='ex-module';b.innerHTML='<span class="ex-icon" aria-hidden="true">'+icon+'</span><strong>'+title+'</strong><p>'+copy+'</p><span class="ex-open">OPEN TOOL &nbsp; ↗</span>';b.onclick=()=>{const t=target(label);if(t)t.click();};grid.append(b);});const hub=document.createElement('button');hub.type='button';hub.className='ex-module';hub.innerHTML='<span class="ex-icon" aria-hidden="true">⌘</span><strong>Electrical engineering workbench</strong><p>13 tools: cable schedules, SLDs, commissioning, lighting, fault calculations and more.</p><span class="ex-open">OPEN 13 TOOLS &nbsp; ↗</span>';hub.onclick=()=>location.assign('../engineering.html');grid.prepend(hub);main.prepend(dashboard);
  }
  main.classList.toggle('ex-overview-mode',active==='overview');document.getElementById('ex-overview-button')?.classList.toggle('ex-current',active==='overview');
  // The legacy floating print toolkit stays available as a compact panel.
