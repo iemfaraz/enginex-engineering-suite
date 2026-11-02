@@ -18,7 +18,7 @@ html.engx-embedded-engineering body>main>header{justify-content:flex-end!importa
 html.engx-embedded-engineering .tool-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important}
 html.engx-embedded-tool .sidebar>.brand,html.engx-embedded-tool .sb-logo,html.engx-embedded-tool .sb-sub{display:none!important}
 html.engx-embedded-legacy[data-engx-theme="dark"]{--boq-bg:#0b2036;--boq-text:#e4edf7;--boq-line:#26445f;--boq-input:#071a2d}
-html.engx-embedded-legacy[data-engx-theme="dark"] body,html.engx-embedded-legacy[data-engx-theme="dark"] #root>.engx-pro-workspace{background:#061628!important;color:#e4edf7!important}
+html.engx-embedded-legacy[data-engx-theme="dark"] body,html.engx-embedded-legacy[data-engx-theme="dark"] main,html.engx-embedded-legacy[data-engx-theme="dark"] #root>.engx-pro-workspace{background:#061628!important;color:#e4edf7!important}
 html.engx-embedded-legacy[data-engx-theme="dark"] main :is(.bg-white,[class*="bg-slate-50"],[class*="bg-slate-100"],.bg-gray-50):not([class*="print:shadow-none"]):not([class*="print:shadow-none"] *){background:#0b2036!important;color:#e4edf7!important;border-color:#26445f!important}
 html.engx-embedded-legacy[data-engx-theme="dark"] main :is(input,select,textarea):not([class*="print:shadow-none"] *){background:#071a2d!important;color:#e4edf7!important;border-color:#35536e!important;color-scheme:dark}
 html.engx-embedded-legacy[data-engx-theme="dark"] main :is(th,td,label,h2,h3,p,span):not([class*="print:shadow-none"]):not([class*="print:shadow-none"] *){border-color:#26445f}
