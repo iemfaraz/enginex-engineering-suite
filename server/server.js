@@ -1,3 +1,4 @@
+import{installShared}from './shared.js';
 import http from 'node:http';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual, createHash } from 'node:crypto';
@@ -14,6 +15,7 @@ const db=new DatabaseSync(dbPath);db.exec(`PRAGMA journal_mode=WAL; PRAGMA forei
 CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,password TEXT NOT NULL,role TEXT NOT NULL DEFAULT 'Engineer',active INTEGER NOT NULL DEFAULT 1,created_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,csrf TEXT NOT NULL,expires INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS workspaces(user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,data TEXT NOT NULL,updated_at TEXT NOT NULL);`);
+const shared=installShared(db);
 const hashToken=t=>createHash('sha256').update(t).digest('hex');
 async function passwordHash(p){const salt=randomBytes(16).toString('hex');return salt+':'+(await scrypt(p,salt,64)).toString('hex');}
 async function verify(p,stored){const[salt,hex]=stored.split(':');const h=await scrypt(p,salt,64);return timingSafeEqual(h,Buffer.from(hex,'hex'));}
@@ -27,17 +29,19 @@ if(process.env.ADMIN_EMAIL&&process.env.ADMIN_PASSWORD){
 const buckets=new Map();
 function limit(key,max=12){const now=Date.now();let b=buckets.get(key);if(!b||b.until<now){b={count:0,until:now+15*60e3};buckets.set(key,b);}return ++b.count<=max;}
 const cleanup=setInterval(()=>{const now=Date.now();for(const[k,b]of buckets)if(b.until<now)buckets.delete(k);db.prepare('DELETE FROM sessions WHERE expires < ?').run(now);},60000);cleanup.unref();
-function session(req){const token=(req.headers.cookie||'').split(';').map(s=>s.trim()).find(s=>s.startsWith('enginex_session='))?.slice(16);if(!token)return null;const row=db.prepare('SELECT s.*,u.email,u.name,u.role,u.active,u.created_at FROM sessions s JOIN users u ON s.user_id=u.id WHERE s.token=? AND s.expires>? AND u.active=1').get(hashToken(token),Date.now());return row?{...row,id:row.user_id}:null;}
+function session(req){const bearer=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization||'')?.[1];const token=bearer||(req.headers.cookie||'').split(';').map(s=>s.trim()).find(s=>s.startsWith('enginex_session='))?.slice(16);if(!token)return null;const row=db.prepare('SELECT s.*,u.email,u.name,u.role,u.active,u.created_at FROM sessions s JOIN users u ON s.user_id=u.id WHERE s.token=? AND s.expires>? AND u.active=1').get(hashToken(token),Date.now());return row?{...row,id:row.user_id}:null;}
 function headers(res){res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','SAMEORIGIN');res.setHeader('Cache-Control','no-store');if(production)res.setHeader('Strict-Transport-Security','max-age=31536000');}
 function json(res,status,data){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(data));}
 function fail(status,message){throw Object.assign(new Error(message),{status});}
 async function body(req,max=1024*1024*5){let n=0,s='';for await(const chunk of req){n+=chunk.length;if(n>max)fail(413,'Request too large');s+=chunk;}try{return JSON.parse(s||'{}');}catch{fail(400,'Invalid JSON');}}
 function sameOrigin(req){const expected=process.env.APP_ORIGIN||`${production?'https':'http'}://${req.headers.host}`;if(req.headers.origin!==expected)fail(403,'Origin rejected');}
-const cookie=(token,age)=>`enginex_session=${token}; Path=/; HttpOnly; SameSite=Strict${production?'; Secure':''}; Max-Age=${age}`;
-async function issue(res,u,remember){const token=randomBytes(32).toString('hex'),csrf=randomBytes(32).toString('hex'),age=remember?604800:28800;db.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(hashToken(token),u.id,csrf,Date.now()+age*1000);res.setHeader('Set-Cookie',cookie(token,age));json(res,200,{user:profile(u),csrf});}
+const crossSite=production&&process.env.CROSS_SITE_COOKIES==='true';
+const cookie=(token,age)=>`enginex_session=${token}; Path=/; HttpOnly; SameSite=${crossSite?'None':'Strict'}${production?'; Secure':''}; Max-Age=${age}`;
+async function issue(res,u,remember){const token=randomBytes(32).toString('hex'),csrf=randomBytes(32).toString('hex'),age=remember?604800:28800;db.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(hashToken(token),u.id,csrf,Date.now()+age*1000);res.setHeader('Set-Cookie',cookie(token,age));json(res,200,{user:profile(u),csrf,...(crossSite?{accessToken:token}:{})});}
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.mp4':'video/mp4','.svg':'image/svg+xml'};
 export const server=http.createServer(async(req,res)=>{headers(res);try{
  const path=new URL(req.url,'http://localhost').pathname,method=req.method,u=session(req);
+ if(path.startsWith('/api/')&&req.headers.origin===process.env.APP_ORIGIN){res.setHeader('Access-Control-Allow-Origin',process.env.APP_ORIGIN);res.setHeader('Access-Control-Allow-Credentials','true');res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Content-Type, X-CSRF-Token, Authorization');res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,OPTIONS');if(method==='OPTIONS'){res.writeHead(204);return res.end();}}
  if(path.startsWith('/api/')){
   if(method!=='GET')sameOrigin(req);
   if(path==='/api/health'&&method==='GET')return json(res,200,{status:'ok'});
@@ -60,6 +64,7 @@ export const server=http.createServer(async(req,res)=>{headers(res);try{
   }
   if(!u)fail(401,'Please sign in');
   if(method!=='GET'&&req.headers['x-csrf-token']!==u.csrf)fail(403,'Session verification failed');
+  if(await shared(path,method,u,()=>body(req,15*1024*1024),json,res))return;
   if(path==='/api/auth/me'&&method==='GET')return json(res,200,{user:profile(u),csrf:u.csrf});
   if(path==='/api/auth/logout'&&method==='POST'){db.prepare('DELETE FROM sessions WHERE token=?').run(u.token);res.setHeader('Set-Cookie',cookie('',0));return json(res,200,{ok:true});}
   if(path==='/api/auth/password'&&method==='POST'){
@@ -88,7 +93,7 @@ export const server=http.createServer(async(req,res)=>{headers(res);try{
  const publicFiles=new Set(['/login.html','/assets/enginex-interface.css','/assets/enginex-login.js','/assets/enginex-login.css','/assets/enginex-login-reference.png']);
  if(!publicFiles.has(path)&&!u){res.writeHead(302,{Location:'/login.html'});return res.end();}
  // Explicit allow-list: database, server, tests and configuration cannot be downloaded.
- if(path!=='/account.html'&&!publicFiles.has(path)&&!/^\/(app\/[a-z0-9-]+\.html|assets\/[a-z0-9-]+\.(png|mp4|css|js))$/.test(path))fail(404,'Not found');
+ if(!/^\/professional\/(?:core|review)\.js$/.test(path)&&path!=='/account.html'&&!publicFiles.has(path)&&!/^\/(app\/[a-z0-9-]+\.html|assets\/[a-z0-9-]+\.(png|mp4|css|js))$/.test(path))fail(404,'Not found');
  const file=resolve(root,'.'+path);let bytes;try{bytes=await readFile(file);}catch{fail(404,'Not found');}
  if(path.startsWith('/app/')&&path.endsWith('.html')){
   const saved=db.prepare('SELECT data FROM workspaces WHERE user_id=?').get(u.id);

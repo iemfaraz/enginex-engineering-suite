@@ -4,6 +4,8 @@ COPY --chown=node:node package.json ./
 COPY --chown=node:node server ./server
 COPY --chown=node:node app ./app
 COPY --chown=node:node assets ./assets
+COPY --chown=node:node portal ./portal
+COPY --chown=node:node professional ./professional
 COPY --chown=node:node index.html login.html account.html ./
 RUN mkdir /data && chown node:node /data
 USER node
