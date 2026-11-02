@@ -1,6 +1,6 @@
 // GPL-3.0-or-later: DWG parser adapter; upstream source and license are in vendor/libredwg/.
 import './vendor/dxf-parser.js';
-import {analyzeDrawing,fromDXF} from './core.js?v=legends1';
+import {analyzeDrawingAsync,fromDXF} from './core.js?v=large-auto1';
 import {cadFailure,releaseDrawing} from './errors.js';
 self.onmessage=async({data})=>{
  let stage='loading drawing engine';
@@ -40,7 +40,7 @@ self.onmessage=async({data})=>{
    database=fromDXF(new self.DxfParser().parseSync(text));
   }
   stage='measuring decoded geometry';postMessage({status:'Measuring geometry and block insertions…'});
-  const result=analyzeDrawing(database);if(decoderWarning)result.warnings.unshift({message:decoderWarning,count:1});
-  postMessage({result});
+  const result=await analyzeDrawingAsync(database,{onProgress:progress=>postMessage({status:'Measuring drawing · '+progress.processed.toLocaleString()+' object visits · '+progress.modelReviewed.toLocaleString()+' / '+progress.modelTotal.toLocaleString()+' model records',progress})});if(decoderWarning)result.warnings.unshift({message:decoderWarning,count:1});
+  const transfers=result.groups.filter(g=>g.instances instanceof Float64Array).map(g=>g.instances.buffer);postMessage({result},[...new Set(transfers)]);
  }catch(error){postMessage(cadFailure(error,{format:data.format,stage}));}
 };

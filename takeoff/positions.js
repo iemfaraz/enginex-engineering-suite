@@ -1,0 +1,5 @@
+export function positionCount(group){const p=group.instances;return p instanceof Float64Array?p.length/2:Array.isArray(p)?p.length:0;}
+export function* positions(group){const p=group.instances;if(p instanceof Float64Array){for(let i=0;i<p.length;i+=2)yield[p[i],p[i+1]];}else if(Array.isArray(p))yield* p;}
+export const regionKey=region=>region?JSON.stringify([region.minX,region.minY,region.maxX,region.maxY]):'';
+export function storePosition(group,x,y){const i=group._positionSize||0;if(!group._positions)group._positions=new Float64Array(16);if(i+2>group._positions.length){const next=new Float64Array(group._positions.length*2);next.set(group._positions);group._positions=next;}group._positions[i]=x;group._positions[i+1]=y;group._positionSize=i+2;}
+export function finishPositions(group){const p=group._positions,size=group._positionSize||0;if(size<=8192){group.instances=[];for(let i=0;i<size;i+=2)group.instances.push([p[i],p[i+1]]);}else group.instances=p.subarray(0,size);delete group._positions;delete group._positionSize;}
