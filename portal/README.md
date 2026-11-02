@@ -24,3 +24,9 @@ Create tasks from findings deduplicates currently open tasks. Copy BOQ into quot
 ## Verification
 
 `tests/portal.test.js` checks real-data metrics, zero-VAT quotations, rule disablement, overdue records, failed engineering checks, quotation/BOQ differences, task deduplication and dashboard-backup validation.
+
+## Embedded tool workspace
+
+The dashboard now hosts every internal tool in its central canvas. The main sidebar and top bar stay in place. `#tool=<encoded-relative-route>` supports refresh and browser Back/Forward. Main workspace tabs share one retained iframe; the thirteen engineering modules share another. Other standalone editors load on demand and are retained while this dashboard is open. Switching a tool never copies or resets its saved data. Native engineering record dialogs require confirmation before discarding fields when switching within the same editor.
+
+The router embeds only listed same-origin ENGINEX pages under this repository root. External references open separately. Files still download normally. Tool print actions invoke the tool document (or its existing quotation print preview); dashboard chrome is not included in those prints. Editing the underlying HTML files directly remains possible outside this dashboard for existing links.
