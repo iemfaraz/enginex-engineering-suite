@@ -1,0 +1,2 @@
+import{legendCandidates}from'./symbols.js?v=legends1';
+self.onmessage=({data})=>{try{if(data.items.length*data.groups.length>40000)throw Error('Compare fewer legend items at a time for this large drawing. The maximum is 40,000 legend/group comparisons per run.');const drawing={groups:data.groups},results=legendCandidates(drawing,data.items,null,data.options);for(const row of results){const group=data.groups.find(g=>g.id===row.groupId);row.rawCount=group.rawCount;row.excluded=row.rawCount-row.count;}postMessage({results});}catch(error){postMessage({error:error.message});}};

@@ -1,6 +1,6 @@
 // GPL-3.0-or-later: DWG parser adapter; upstream source and license are in vendor/libredwg/.
 import './vendor/dxf-parser.js';
-import {analyzeDrawing,fromDXF} from './core.js';
+import {analyzeDrawing,fromDXF} from './core.js?v=legends1';
 import {cadFailure,releaseDrawing} from './errors.js';
 self.onmessage=async({data})=>{
  let stage='loading drawing engine';
