@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {addSection,renameSection,removeSection,moveSection,normalizeSections,createBOQCsv} from '../assets/enginex-boq-sections.js';
+const state=()=>({sections:['Power','Lighting'],items:[{id:'a',section:'Power',quantity:2,unitRateSar:50},{id:'b',section:'Lighting',quantity:3,unitRateSar:10}]});
+test('empty sections persist and duplicate names are rejected',()=>{const next=addSection(state(),'ELV');assert.deepEqual(normalizeSections(next.sections,next.items),['Power','Lighting','ELV']);assert.throws(()=>addSection(next,'elv'));assert.throws(()=>addSection(next,''));});
+test('renaming updates items without changing original state',()=>{const s=state(),next=renameSection(s,'Power','Distribution');assert.equal(next.items[0].section,'Distribution');assert.equal(s.items[0].section,'Power');assert.throws(()=>renameSection(s,'Power','Lighting'));});
+test('removing by moving preserves quantities and value',()=>{const next=removeSection(state(),'Power','move','Lighting');assert.equal(next.items.length,2);assert.equal(next.items.reduce((v,i)=>v+i.quantity*i.unitRateSar,0),130);assert.deepEqual(next.sections,['Lighting']);assert.throws(()=>removeSection(state(),'Power','move','Power'));});
+test('deletion affects only selected section and reorder keeps items',()=>{const s=state();assert.deepEqual(removeSection(s,'Power','delete').items.map(i=>i.id),['b']);assert.deepEqual(moveSection(s,'Lighting',-1).sections,['Lighting','Power']);assert.deepEqual(moveSection(s,'Lighting',-1).items,s.items);});
+test('CSV follows section order, retains empty sections and computes VAT',()=>{const csv=createBOQCsv(state().items,['Lighting','ELV','Power'],15);assert.ok(csv.indexOf('Lighting')<csv.indexOf('ELV'));assert.ok(csv.indexOf('ELV')<csv.indexOf('Power'));assert.ok(csv.includes('149.50'));});

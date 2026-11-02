@@ -1,4 +1,4 @@
-import{installWorkspace}from './workspace-router.js?v=local-only';
+import{installWorkspace}from './workspace-router.js?v=boq-sections';
 import{safeJSON,money,metrics,findings,tasksFromFindings,progress,validateBackup}from './core.js';
 const $=id=>document.getElementById(id),el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;if(cls)n.className=cls;return n;},uid=()=>crypto.randomUUID(),localDay=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Riyadh'}),emptyEngineering=()=>({version:1,project:{},records:{},config:{}});
 let db,scope='guest',prefix='',engineeringDB,state={format:'enginex-portal-v1',projects:[],tasks:[],activity:[],settings:{calculations:true,review:true,commercial:true,references:true,open:true,periodic:true},history:[],lastBackup:null},snapshot={},alerts=[],editing=null,scanning=false,saving=false,ready=false,refreshTimer;
