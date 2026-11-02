@@ -26,3 +26,8 @@ Open a document, BOQ, quotation or load schedule and select **Print / Export**. 
 
 ## GitHub Pages browser edition
 The public GitHub Pages website opens the engineering workspace directly. Projects stay in that browser on that device; export JSON backups and import them to move work. This edition has no server-backed accounts, cloud database or cross-device synchronization. Its local guest profile is for interface display only and is not a security boundary. The Node backend remains available in this repository for a separate backend-capable host. Quotation printing preserves the original document layout.
+
+
+## Current GitHub Pages edition
+
+The published browser app requires no hosted-account setup or sign-in. Project data stays in the existing browser stores. Open Local settings for display preferences and workspace export. Dashboard and engineering-record backups retain their separate export/import options. The optional Node server source remains available separately; GitHub Pages runs the browser edition.

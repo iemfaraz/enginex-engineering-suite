@@ -7,15 +7,15 @@
 - BOQ and quotation totals are computed from the current main workspace's saved data, including entered VAT. Counts come from actual registered projects, tasks and commissioning records.
 - Project register progress/schedule are manually maintained. Register entries do not switch, replace or isolate the main technical workspace. The connected workspace name is edited in its own settings.
 - Trend bars accumulate actual daily snapshots. No sample projects, money values, trends or fabricated activity are inserted.
-- Dashboard metadata lives in IndexedDB `enginex-command-centre`, per authenticated user when configured, or `guest`. The original main workspace and engineering workbench use their existing stores and backups. Dashboard exports do not include those separate technical datasets.
-- Project data comes from the browser cache; open the main workspace to fetch the latest account cloud backup on another device. The dashboard's projects/tasks are browser-local even when account authentication is configured.
+- Dashboard metadata lives in IndexedDB `enginex-command-centre`, in the existing `guest` browser workspace. The original main workspace and engineering workbench use their existing stores and backups. Dashboard exports do not include those separate technical datasets.
+- Project data comes from this browser. No login or hosted account is required. Use export/import to move data between devices.
 - The assistant is deterministic local intent routing, not a connected generative AI. It can find tools, report totals/open RFIs, run checks, and create review tasks. It does not generate unconstrained engineering calculations or claim automatic compliance.
 
 ## Automation
 
 Optional checks run on opening/refresh and every 60 seconds while this page is open. Rules cover entered fault/emergency/containment/selectivity limits, SLD hierarchy errors, continuous cable cuts versus drum capacity, overdue maintenance/tasks, pending material reviews, missing design references and intentional/manual quotation differences. Users can disable rule groups.
 
-Create tasks from findings deduplicates currently open tasks. Copy BOQ into quotation requires explicit confirmation, preserves commercial terms, and overwrites quotation items only. An active configured account uses the Supabase API for that update and revalidates active access. This is not an unattended scheduler. No external messages, emails or browser-notification permissions are used. Background jobs while the page is closed require a separately deployed backend.
+Create tasks from findings deduplicates currently open tasks. Copy BOQ into quotation requires explicit confirmation, preserves commercial terms, and overwrites quotation items only. This is not an unattended scheduler. No external messages, emails or browser-notification permissions are used. Background jobs while the page is closed require a separately deployed backend.
 
 ## Main-workspace routes
 
