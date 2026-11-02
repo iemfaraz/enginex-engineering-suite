@@ -1,3 +1,4 @@
+import{reviewItems}from '../professional/review.js?v=pro1';
 // Quotation-only items: edits do not alter the BOQ or load schedule.
 export const number=value=>Math.max(0,Number.isFinite(Number(value))?Number(value):0);
 export function totals(items,vatRate){const subtotal=items.reduce((sum,item)=>sum+number(item.quantity)*number(item.unitRateSar),0),vat=subtotal*Math.min(100,number(vatRate))/100;return{subtotal,vat,total:subtotal+vat};}
@@ -16,7 +17,7 @@ export function QuotationItems({React:R,items,quotation,onChange,boqItems}){
  h('div',{style:{display:'flex',flexWrap:'wrap',gap:6,marginBottom:12}},
  button('+ Add item',()=>commit([...copyItems(items),blankItem()]),{disabled:items.length>=5000}),
  button('Start blank',()=>{if(!items.length||window.confirm('Remove all quotation line items and start with one empty row? The BOQ will stay unchanged.'))commit([blankItem()]);}),
- button('Copy current BOQ',()=>{if(window.confirm('Replace quotation items with a copy of the current BOQ?'))commit(copyItems(boqItems));}),
+ button('Review current BOQ',async()=>{try{const next=await reviewItems(items,boqItems,'BOQ → quotation review',()=>JSON.parse(localStorage.getItem('copperline_quote_v3')||'{}').items||items);if(next)commit(next);}catch(e){alert(e.message);}}),
  button('Undo',()=>{const previous=undo.at(-1);if(previous){onChange(old=>({...old,items:previous}));setUndo(history=>history.slice(0,-1));}},{disabled:!undo.length})),
  h('div',{style:{maxHeight:520,overflowY:'auto',display:'grid',gap:10}},items.length?items.map((item,i)=>h('div',{key:item.id||i,style:{padding:10,border:'1px solid #e2e8f0',borderRadius:8,background:'#f8fafc'}},
  h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},h('strong',{style:{fontSize:11}},'Item '+(i+1)),h('span',{style:{fontSize:11}},'SAR '+money(number(item.quantity)*number(item.unitRateSar)))),

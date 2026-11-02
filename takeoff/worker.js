@@ -1,6 +1,6 @@
 // GPL-3.0-or-later: DWG parser adapter; upstream source and license are in vendor/libredwg/.
 import './vendor/dxf-parser.js';
-import {analyzeDrawingAsync,fromDXF} from './core.js?v=large-auto1';
+import {analyzeDrawingAsync,fromDXF,duplicateInsertions} from './core.js?v=pro1';
 import {cadFailure,releaseDrawing} from './errors.js';
 self.onmessage=async({data})=>{
  let stage='loading drawing engine';
@@ -41,6 +41,6 @@ self.onmessage=async({data})=>{
   }
   stage='measuring decoded geometry';postMessage({status:'Measuring geometry and block insertions…'});
   const result=await analyzeDrawingAsync(database,{onProgress:progress=>postMessage({status:'Measuring drawing · '+progress.processed.toLocaleString()+' object visits · '+progress.modelReviewed.toLocaleString()+' / '+progress.modelTotal.toLocaleString()+' model records',progress})});if(decoderWarning)result.warnings.unshift({message:decoderWarning,count:1});
-  const transfers=result.groups.filter(g=>g.instances instanceof Float64Array).map(g=>g.instances.buffer);postMessage({result},[...new Set(transfers)]);
+  const audit=duplicateInsertions(result.groups);if(audit.duplicates)result.warnings.push({message:audit.duplicates+' potentially duplicated block insertions share the same block name and coordinates. Counts were not reduced; review the source drawing.',count:1});if(audit.limited)result.warnings.push({message:'Duplicate-position review sampled the first '+audit.scanned+' top-level insertions only.',count:1});const transfers=result.groups.filter(g=>g.instances instanceof Float64Array).map(g=>g.instances.buffer);postMessage({result},[...new Set(transfers)]);
  }catch(error){postMessage(cadFailure(error,{format:data.format,stage}));}
 };
