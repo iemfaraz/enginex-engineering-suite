@@ -1,6 +1,6 @@
 /* Shared report preview. Print clones never modify live project inputs. */
 (()=>{'use strict';
-let dialog,frame,source,title,quotationWidth=0,hasLetterhead=false,orientation='portrait',fit=false,fitChosen=false,oldFocus;
+let dialog,frame,source,title,quotationWidth=0,hasLetterhead=false,orientation='portrait',paperSize='A4',fit=false,fitChosen=false,oldFocus;
 const isWorkspace=location.pathname.endsWith('/workspace.html');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function stored(key){try{return JSON.parse(localStorage.getItem(key)||'{}');}catch{return {};}}
@@ -23,18 +23,20 @@ function originalQuotation(element){
  copy.style.width=quotationWidth+'px';copy.style.maxWidth='none';copy.style.height='auto';copy.style.boxShadow='none';copy.style.border='0';copy.style.borderRadius='0';
  return copy;
 }
+function paperDimensions(size,direction){const sides=size==='A3'?[297,420]:[210,297];if(direction==='landscape')sides.reverse();return{width:sides[0]-20,height:sides[1]-20};}
 function renderOriginalQuotation(){
- const availableWidth=(orientation==='landscape'?277:190)*96/25.4;
- const pageHeight=(orientation==='landscape'?190:277)*96/25.4-6;
+ const dimensions=paperDimensions(paperSize,orientation);
+ const availableWidth=dimensions.width*96/25.4;
+ const pageHeight=dimensions.height*96/25.4-6;
  frame.onload=()=>{
   const paper=frame.contentDocument.getElementById('print-paper');if(!paper)return;
   const widthScale=Math.min(1,availableWidth/quotationWidth),naturalHeight=paper.getBoundingClientRect().height;
   let scale=fit?Math.min(widthScale,pageHeight/naturalHeight):widthScale;
   if(fit&&!fitChosen&&scale<widthScale*.8){fit=false;scale=widthScale;dialog.querySelector('#ex-print-fit').checked=false;}
   paper.style.zoom=String(scale);
-  dialog.querySelector('#ex-print-hint').textContent='Original quotation layout · '+(fit?'Fit to one page':'Automatic pages')+' · '+Math.round(scale*100)+'% · Letterhead, columns, totals, terms and signatures preserved.';
+  dialog.querySelector('#ex-print-hint').textContent=paperSize+' · Original quotation layout · '+(fit?'Fit to one page':'Automatic pages')+' · '+Math.round(scale*100)+'% · Letterhead, columns, totals, terms and signatures preserved.';
  };
- frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><base href="'+esc(location.href)+'"><title>Quotation — ENGINEX</title><style>html,body{margin:0;background:white;}#print-paper{width:'+quotationWidth+'px;margin:0 auto;overflow:visible;}table{break-inside:auto;}thead{display:table-header-group;}tr{break-inside:avoid;}p{orphans:3;widows:3;}@page{size:A4 '+orientation+';margin:10mm;}@media print{html,body{overflow:visible!important;}#print-paper{margin:0!important;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div id="print-paper">'+source.outerHTML+'</div></body></html>';
+ frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><base href="'+esc(location.href)+'"><title>Quotation — ENGINEX</title><style>html,body{margin:0;background:white;}#print-paper{width:'+quotationWidth+'px;margin:0 auto;overflow:visible;}table{break-inside:auto;}thead{display:table-header-group;}tr{break-inside:avoid;}p{orphans:3;widows:3;}@page{size:'+paperSize+' '+orientation+';margin:10mm;}@media print{html,body{overflow:visible!important;}#print-paper{margin:0!important;}*{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div id="print-paper">'+source.outerHTML+'</div></body></html>';
 }
 function prepareSource(){
  title=isWorkspace?mode():document.querySelector('.sheet h1')?.textContent||'Site Document';
@@ -91,15 +93,15 @@ function render(){
  if(title==='Commercial Quotation'){renderOriginalQuotation();return;}
  const project=stored('copperline_project_v3'),company=stored('copperline_company_v3');
  const baseStyles=[...document.querySelectorAll('style')].filter(s=>!s.id).slice(0,1).map(s=>s.textContent).join('\n');
- const width=orientation==='landscape'?277:190;
- const markup=`<!doctype html><html><head><meta charset="utf-8"><base href="${esc(location.href)}"><title>${esc(title)} — ENGINEX</title><style>${baseStyles}</style><style>${reportCSS}\n@page{size:A4 ${orientation};margin:10mm} .ex-paper{width:${width}mm} </style></head><body class="${orientation} ${title==='Quality Document'||!isWorkspace?'document':'numeric-report'}"><div class="ex-paper" id="print-paper">${hasLetterhead?'':`<div class="ex-report-heading"><div><div class="ex-report-brand">${esc(company.name||company.nameEn||'ENGINEX ENGINEERING SUITE')}</div><h1>${esc(title)}</h1><div class="ex-meta">${esc(project.name||'')}${project.location?' · '+esc(project.location):''}</div></div><div class="ex-report-date">${esc(new Date().toLocaleDateString('en-GB'))}<br>A4 · ${orientation==='landscape'?'Landscape':'Portrait'}</div></div>`}<div class="ex-report-body">${source.outerHTML}</div><div class="ex-report-footer">ENGINEX · ${esc(title)} · ${esc(company.refNumber||'Engineering & Project Delivery')}</div></div></body></html>`;
+ const dimensions=paperDimensions(paperSize,orientation),width=dimensions.width;
+ const markup=`<!doctype html><html><head><meta charset="utf-8"><base href="${esc(location.href)}"><title>${esc(title)} — ENGINEX</title><style>${baseStyles}</style><style>${reportCSS}\n@page{size:${paperSize} ${orientation};margin:10mm} .ex-paper{width:${width}mm} </style></head><body class="${orientation} ${title==='Quality Document'||!isWorkspace?'document':'numeric-report'}"><div class="ex-paper" id="print-paper">${hasLetterhead?'':`<div class="ex-report-heading"><div><div class="ex-report-brand">${esc(company.name||company.nameEn||'ENGINEX ENGINEERING SUITE')}</div><h1>${esc(title)}</h1><div class="ex-meta">${esc(project.name||'')}${project.location?' · '+esc(project.location):''}</div></div><div class="ex-report-date">${esc(new Date().toLocaleDateString('en-GB'))}<br>${paperSize} · ${orientation==='landscape'?'Landscape':'Portrait'}</div></div>`}<div class="ex-report-body">${source.outerHTML}</div><div class="ex-report-footer">ENGINEX · ${esc(title)} · ${esc(company.refNumber||'Engineering & Project Delivery')}</div></div></body></html>`;
  frame.onload=()=>{
   const doc=frame.contentDocument,paper=doc.getElementById('print-paper');if(!paper)return;
-  const pageHeight=(orientation==='landscape'?190:277)*96/25.4-6;
+  const pageHeight=dimensions.height*96/25.4-6;
   let scale=fit?Math.min(1,pageHeight/paper.scrollHeight):1;
   if(fit&&!fitChosen&&scale<.8){fit=false;scale=1;dialog.querySelector('#ex-print-fit').checked=false;}
   if(fit){paper.style.zoom=String(scale);}
-  dialog.querySelector('#ex-print-hint').textContent=fit?`Fit to one page · ${Math.round(scale*100)}%${scale<.65?' · Small text: consider multi-page mode.':''}`:'Automatic pages · Tables repeat their column headings. No content is cropped.';
+  dialog.querySelector('#ex-print-hint').textContent=paperSize+' · '+(fit?`Fit to one page · ${Math.round(scale*100)}%${scale<.65?' · Small text: consider multi-page mode.':''}`:'Automatic pages · Tables repeat their column headings. No content is cropped.');
  };
  frame.srcdoc=markup;
 }
@@ -108,10 +110,10 @@ function open(){
  if(!prepareSource())return;
  oldFocus=document.activeElement;dialog=document.createElement('div');dialog.id='ex-print-dialog';dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Document print preview');
  dialog.style.cssText='position:fixed;inset:0;z-index:2147483600;background:#e7edf1;display:flex;flex-direction:column;color:#183747;font:13px Segoe UI,Arial,sans-serif';
- dialog.innerHTML='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 20px;background:white;border-bottom:1px solid #ccd8df"><strong style="margin-right:auto">Document print preview</strong><label>Paper <select id="ex-print-paper" style="padding:8px;border:1px solid #cad5dc;border-radius:6px"><option value="portrait">A4 portrait</option><option value="landscape">A4 landscape</option></select></label><label><input id="ex-print-fit" type="checkbox"> Fit one page</label><button id="ex-print-go" style="background:#173747;color:white;border:0;padding:10px 16px;border-radius:6px">Print / Save PDF</button><button id="ex-print-close" style="padding:10px;border:1px solid #ccd8df;border-radius:6px;background:white">Close preview</button></div><p id="ex-print-hint" role="status" style="margin:10px 20px;font-size:12px"></p><iframe title="Printable report" style="border:0;flex:1;width:100%;min-height:0;background:white"></iframe>';
+ dialog.innerHTML='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 20px;background:white;border-bottom:1px solid #ccd8df"><strong style="margin-right:auto">Document print preview</strong><label>Paper <select id="ex-print-paper" style="padding:8px;border:1px solid #cad5dc;border-radius:6px"><option value="A4-portrait">A4 portrait</option><option value="A4-landscape">A4 landscape</option><option value="A3-portrait">A3 portrait</option><option value="A3-landscape">A3 landscape</option></select></label><label><input id="ex-print-fit" type="checkbox"> Fit one page</label><button id="ex-print-go" style="background:#173747;color:white;border:0;padding:10px 16px;border-radius:6px">Print / Save PDF</button><button id="ex-print-close" style="padding:10px;border:1px solid #ccd8df;border-radius:6px;background:white">Close preview</button></div><p id="ex-print-hint" role="status" style="margin:10px 20px;font-size:12px"></p><iframe title="Printable report" style="border:0;flex:1;width:100%;min-height:0;background:white"></iframe>';
  document.body.append(dialog);frame=dialog.querySelector('iframe');
- dialog.querySelector('#ex-print-paper').value=orientation;dialog.querySelector('#ex-print-fit').checked=fit;
- dialog.querySelector('#ex-print-paper').onchange=e=>{orientation=e.target.value;render();};
+ dialog.querySelector('#ex-print-paper').value=paperSize+'-'+orientation;dialog.querySelector('#ex-print-fit').checked=fit;
+ dialog.querySelector('#ex-print-paper').onchange=e=>{[paperSize,orientation]=e.target.value.split('-');render();};
  dialog.querySelector('#ex-print-fit').onchange=e=>{fit=e.target.checked;fitChosen=true;render();};
  dialog.querySelector('#ex-print-close').onclick=close;
  dialog.querySelector('#ex-print-go').onclick=()=>{frame.contentWindow.focus();frame.contentWindow.print();};
@@ -125,3 +127,4 @@ document.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='p'){e.preventDefault();if(dialog){frame.contentWindow.focus();frame.contentWindow.print();}else open();}});
 window.ENGINEX_PRINT=open;
 })();
+

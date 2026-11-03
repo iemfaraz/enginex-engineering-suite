@@ -1,5 +1,5 @@
 import{FORMAT,newProjectData,validateProjectBackup,backupSummary,openVault,listRecovery,storeRecovery}from './project-vault.js?v=takeoff1';
-import{installWorkspace}from './workspace-router.js?v=release2';
+import{installWorkspace}from './workspace-router.js?v=paper1';
 import{safeJSON,money,metrics,findings,tasksFromFindings,progress,validateBackup}from './core.js';
 const $=id=>document.getElementById(id),el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;if(cls)n.className=cls;return n;},uid=()=>crypto.randomUUID(),localDay=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Riyadh'}),emptyEngineering=()=>({version:1,project:{},records:{},config:{}});
 let db,scope='guest',prefix='',engineeringDB,state={format:'enginex-portal-v1',projects:[],tasks:[],activity:[],settings:{calculations:true,review:true,commercial:true,references:true,open:true,periodic:true},history:[],lastBackup:null},snapshot={},alerts=[],editing=null,scanning=false,saving=false,ready=false,refreshTimer;
@@ -73,3 +73,4 @@ setInterval(()=>{if(ready&&!document.hidden)recoveryPoint().catch(e=>{$('backup-
 
 function requestSwitch(project){if(project.scopeId===scopeID)return;pendingSwitch=project;renderProjectSelector();$('switch-project-name').textContent='Open “'+project.name+'”?';$('switch-error').textContent='';$('project-switch-confirm').showModal();}
 $('confirm-project-switch').onclick=async()=>{const button=$('confirm-project-switch');if(!pendingSwitch||button.disabled)return;button.disabled=true;try{await switchProject(pendingSwitch);}catch(e){$('switch-error').textContent=e.message;}finally{button.disabled=false;}};
+
