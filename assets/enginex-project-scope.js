@@ -6,7 +6,7 @@
  const valid=value=>typeof value==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(value);
  let staleRestore=false;const assertFresh=()=>{if(staleRestore)throw Error('This project was restored in another tab. Reload before saving.');if((valid(rawGet.call(localStorage,ACTIVE))?rawGet.call(localStorage,ACTIVE):'legacy')!==id)throw Error('Project selection changed. Reload before saving.');};
  const stored=rawGet.call(localStorage,ACTIVE),id=valid(stored)?stored:'legacy';
- const managed=key=>/^(?:copperline_(?:project_v3|company_v3|circuits_v3|boq_v3|boq_sections_v1|quote_v3|vat_v3|qc_.*|forms_.*)|enginex_takeoff_v1|enginex_studio_v1|enginex_professional_v1|enginex_p6_v2|enginex_total_load_distribution_v[23]|cprln_xfmr_.+)$/.test(String(key));
+ const managed=key=>/^(?:copperline_(?:project_v3|company_v3|circuits_v3|boq_v3|boq_sections_v1|quote_v3|vat_v3|qc_.*|forms_.*)|enginex_circuit_builder_v1|enginex_takeoff_v1|enginex_studio_v1|enginex_professional_v1|enginex_p6_v2|enginex_total_load_distribution_v[23]|cprln_xfmr_.+)$/.test(String(key));
  const prefix=project=>'enginex_project:'+project+':',physical=(key,project=id)=>project==='legacy'?String(key):prefix(project)+key;
  Storage.prototype.getItem=function(key){return rawGet.call(this,this===localStorage&&managed(key)?physical(key):key);};
  Storage.prototype.setItem=function(key,value){if(this===localStorage&&managed(key))assertFresh();return rawSet.call(this,this===localStorage&&managed(key)?physical(key):key,value);};
